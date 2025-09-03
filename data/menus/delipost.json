@@ -2,9 +2,11 @@
   "config": {
     "nombre": "Delipost",
     "extension": "delipost",
+    "direccion": "Calle 8 # 11 - 05",
     "telefonoWhatsApp": "573003334444",
     "horarioApertura": 17,
     "horarioCierre": 23,
+    "logo": "/assets/fondos/delipost_logo.png",
     "colores": {
       "primario": "#ec4899",
       "secundario": "#ffffff",
