@@ -179,27 +179,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
 <body class="<%= config.fuente || 'font-sans' %>">
     <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold header-title text-white">
-                <span class="text-primary"><%= restauranteConfig.nombre.toUpperCase() %></span>
-            </h1>
-            <p class="font-subtitle text-gray-400 mt-2"></p>
+        <header class="text-center rounded-lg shadow-xl overflow-hidden">
+            <img src="<%= config.logo ||  `https://placehold.co/1200x400/1f2937/34d399?text=${restauranteConfig.nombre.toUpperCase()}`%>" alt="Logo" class="w-full h-auto">
         </header>
         
-         <!-- =========== SECCIÓN DEL BANNER - INICIO =========== -->
-        <div class="mb-10 bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <!-- Opción 1: Banner con imagen de fondo y texto 
-            <div class="h-48 md:h-64 bg-cover bg-center flex items-center justify-center p-4" style="background-image: url('https://placehold.co/1200x400/1f2937/34d399?text=Tu+Banner+Aqui');">
-                 <div class="text-center bg-black bg-opacity-50 p-6 rounded-lg">
-                    <h2 class="text-white text-3xl md:text-4xl font-bold">¡Promo del Día!</h2>
-                    <p class="text-gray-200 mt-2">Salchipapa Especial + Gaseosa por solo $22.000</p>
-                </div>
-            </div>
-            -->
-            <!-- Para usar una imagen simple, reemplaza el div anterior por: -->
-             <img src="<%= config.logo ||  `https://placehold.co/1200x400/1f2937/34d399?text=${restauranteConfig.nombre.toUpperCase()}`%>" alt="Logo" class="w-full h-auto">
+        <div class="mb-10">
+            <p class="font-subtitle text-gray-400 mt-2"><%= restauranteConfig.direccion %></p>
         </div>
-        <!-- =========== SECCIÓN DEL BANNER - FIN =========== -->
 
         <div class="md:grid md:grid-cols-3 md:gap-8">
             <!-- Columna del Menú -->
