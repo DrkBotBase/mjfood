@@ -108,7 +108,7 @@ app.get('/:restaurante', (req, res) => {
                 valor: restauranteData.config.colores?.fondo || "#2F384C"
             },
             fuentes: restauranteData.config.fuentes,
-            logo: restauranteData.config.logo || null
+            logo: restauranteData.config.logo
         }
     });
 });
