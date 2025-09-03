@@ -1,0 +1,38 @@
+{
+  "config": {
+    "nombre": "Sushi Paradise",
+    "extension": "sushi",
+    "telefonoWhatsApp": "573005678901",
+    "horarioApertura": 12,
+    "horarioCierre": 22,
+    "colores": {
+      "primario": "#2563EB",
+      "secundario": "#EF4444",
+      "fondo": "#111827",
+      "texto": "#E5E7EB"
+    },
+    "pwa": {
+      "short_name": "Sushi App",
+      "name": "Sushi Paradise - Pedidos",
+      "description": "App de pedidos de sushi fresco y delivery",
+      "theme_color": "#2563EB",
+      "background_color": "#111827",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/sushi-icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["food", "japanese", "restaurant"],
+      "lang": "es"
+    }
+  },
+  "menu": {
+    "ROLLOS": [
+      { "name": "California Roll", "price": 18000, "description": "Cangrejo, aguacate, pepino" }
+    ]
+  }
+}

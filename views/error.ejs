@@ -1,0 +1,26 @@
+<%- include('layout', {title: 'Restaurante no encontrado', styles: true}) %>
+
+<body class="bg-gray-900 text-white min-h-screen flex items-center">
+    <div class="container mx-auto px-4 text-center">
+        <div class="text-6xl mb-4">😕</div>
+        <h1 class="text-3xl font-bold text-red-400 mb-4"><%= message %></h1>
+        
+        <% if (restaurantesDisponibles && restaurantesDisponibles.length > 0) { %>
+        <div class="max-w-md mx-auto">
+            <h2 class="text-xl text-emerald-400 mb-4">Restaurantes disponibles:</h2>
+            <div class="grid grid-cols-2 gap-3">
+                <% restaurantesDisponibles.forEach(rest => { %>
+                    <a href="/<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
+                        <%= rest.nombre %>
+                    </a>
+                <% }); %>
+            </div>
+        </div>
+        <% } %>
+        
+        <a href="/" class="inline-block mt-8 bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-colors">
+            ← Volver al inicio
+        </a>
+    </div>
+</body>
+</html>

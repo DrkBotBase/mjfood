@@ -1,0 +1,40 @@
+<%- include('layout', {title: name_page, styles: true}) %>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-emerald-400 mb-4">🍽️ Nuestros Restaurantes</h1>
+            <p class="text-gray-400">Selecciona un restaurante para ver su menú</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <% restaurantes.forEach(restaurante => { %>
+                <a href="/<%= restaurante.id %>" class="bg-gray-800 rounded-lg p-6 text-center hover:bg-gray-700 transition-colors shadow-lg">
+                    <div class="text-4xl mb-4">
+                        <% if (restaurante.id.includes('pizza')) { %>
+                            🍕
+                        <% } else if (restaurante.id.includes('mexicano')) { %>
+                            🌮
+                        <% } else if (restaurante.id.includes('sushi')) { %>
+                            🍣
+                        <% } else if (restaurante.id.includes('helados')) { %>
+                            🍦
+                        <% } else if (restaurante.id.includes('cafe')) { %>
+                            ☕
+                        <% } else { %>
+                            🍔
+                        <% } %>
+                    </div>
+                    <h2 class="text-xl font-bold text-emerald-400"><%= restaurante.nombre %></h2>
+                    <p class="text-gray-400 text-sm mt-2"><%= restaurante.horario %></p>
+                    <p class="text-gray-500 text-xs mt-1">📞 <%= restaurante.telefono %></p>
+                </a>
+            <% }); %>
+        </div>
+
+        <footer class="text-center mt-12 text-gray-500">
+            <p>¿Eres propietario? <a href="#" class="text-emerald-400 hover:underline">Contáctanos para añadir tu restaurante</a></p>
+        </footer>
+    </div>
+</body>
+</html>

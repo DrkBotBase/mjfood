@@ -1,0 +1,1033 @@
+<%- include('layout', {
+    title: name_page,
+    styles: true,
+    pwaThemeColor: config.colores?.primario || '#10B981',
+    pwaDescription: restauranteConfig.pwa?.description || `Menú digital de ${restauranteConfig.nombre}`,
+    pwaShortName: restauranteConfig.pwa?.short_name || restauranteConfig.nombre,
+    manifestUrl: `/${restaurante}/manifest.json`
+}) %>
+
+<style>
+  :root {
+    --color-primary: <%= config.colores.primario %>;
+    --color-secondary: <%= config.colores.secundario %>;
+    --color-background: <%= config.colores.fondo %>;
+    --color-text: <%= config.colores.texto %>;
+    
+    --font-primary: '<%= config.fuentes && config.fuentes.primaria ? config.fuentes.primaria.familia : 'system-ui, -apple-system, sans-serif' %>';
+    --font-secondary: '<%= config.fuentes && config.fuentes.secundaria ? config.fuentes.secundaria.familia : 'Georgia, serif' %>';
+  }
+  
+  body {
+    color: var(--color-text);
+    <%- config.fuente ? `font-family: ${config.fuente.replace('font-', '')};` : '' %>
+    min-height: 100vh;
+    padding: 20px 0;
+    
+    /* FONDO FIJO - SIN JavaScript */
+    <% if (config.fondo.tipo === 'imagen') { %>
+      background: <%= config.fondo.degradado || 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6))' %>, 
+                  url('<%= config.fondo.valor %>');
+      background-position: <%= config.fondo.posicion || 'center' %>;
+      background-size: <%= config.fondo.tamaño || 'cover' %>;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: #1a0000; /* Color de fallback */
+    <% } else { %>
+      background-color: <%= config.fondo.valor %>;
+    <% } %>
+  }
+  
+  /* ========== APLICACIÓN DE FUENTES ========== */
+  
+  /* Fuente para títulos principales */
+  .font-title {
+    font-family: var(--font-secondary, 'Georgia, serif') !important;
+    font-weight: 600;
+  }
+  
+  /* Fuente para subtítulos */
+  .font-subtitle {
+    font-family: var(--font-secondary, 'Georgia, serif') !important;
+    font-weight: 500;
+  }
+  
+  /* Fuente para textos especiales */
+  .font-special {
+    font-family: var(--font-primary) !important;
+    font-weight: 500;
+  }
+  
+  /* Fuente para precios y números */
+  .font-numbers {
+    font-family: 'Courier New', monospace !important;
+    font-weight: 600;
+  }
+  
+  /* ========== CLASES ESPECÍFICAS ========== */
+  
+  /* Header principal */
+  .header-title {
+    font-family: var(--font-secondary) !important;
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  
+  /* Nombres de productos */
+  .product-name {
+    font-family: var(--font-primary, 'system-ui, sans-serif') !important;
+    font-weight: 500;
+  }
+  
+  /* Precios */
+  .product-price {
+    font-family: 'Courier New', monospace !important;
+    font-weight: 600;
+  }
+  
+  /* Botones */
+  .btn-font {
+    font-family: var(--font-primary) !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  /* ========== CONTENEDOR PRINCIPAL TRANSPARENTE ========== */
+  .container {
+    background-color: transparent !important;
+    margin: 0 auto;
+  }
+  
+  /* ========== ELEMENTOS CON FONDO SEMI-TRANSPARENTE ========== */
+  .bg-background {
+    background-color: rgba(var(--color-background-rgb), 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .menu-item.bg-background {
+    background-color: rgba(var(--color-background-rgb), 0.8) !important;
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .menu-item.bg-background:hover {
+    background-color: rgba(var(--color-primary-rgb), 0.2) !important;
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+  }
+  
+  /* Carrito */
+  .cart-container .bg-background {
+    background-color: rgba(var(--color-background-rgb), 0.9) !important;
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* ========== TEXTO ========== */
+  .text-text {
+    color: var(--color-text) !important;
+  }
+  
+  .text-text\/70 {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent) !important;
+  }
+  
+  .text-primary {
+    color: var(--color-primary) !important;
+  }
+  
+  /* ========== BOTONES ========== */
+  .btn-primary {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+    border: none;
+    border-radius: 8px;
+  }
+</style>
+
+<!-- Script SIMPLIFICADO - solo para RGB -->
+<script>
+// Convertir colores hex a RGB para transparencias
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : { r: 0, g: 0, b: 0 };
+}
+
+// Aplicar variables RGB SOLO UNA VEZ
+document.addEventListener('DOMContentLoaded', function() {
+  const styles = document.documentElement.style;
+  
+  // Colores principales
+  const primaryRgb = hexToRgb('<%= config.colores.primario %>');
+  const backgroundRgb = hexToRgb('<%= config.colores.fondo %>');
+  
+  // Aplicar variables RGB
+  styles.setProperty('--color-primary-rgb', `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`);
+  styles.setProperty('--color-background-rgb', `${backgroundRgb.r}, ${backgroundRgb.g}, ${backgroundRgb.b}`);
+  
+  console.log('Colores aplicados correctamente');
+});
+</script>
+  
+<body class="<%= config.fuente || 'font-sans' %>">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold header-title text-white">
+                <span class="text-primary"><%= restauranteConfig.nombre.toUpperCase() %></span>
+            </h1>
+            <p class="font-subtitle text-gray-400 mt-2"></p>
+        </header>
+        
+         <!-- =========== SECCIÓN DEL BANNER - INICIO =========== -->
+        <div class="mb-10 bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+            <!-- Opción 1: Banner con imagen de fondo y texto 
+            <div class="h-48 md:h-64 bg-cover bg-center flex items-center justify-center p-4" style="background-image: url('https://placehold.co/1200x400/1f2937/34d399?text=Tu+Banner+Aqui');">
+                 <div class="text-center bg-black bg-opacity-50 p-6 rounded-lg">
+                    <h2 class="text-white text-3xl md:text-4xl font-bold">¡Promo del Día!</h2>
+                    <p class="text-gray-200 mt-2">Salchipapa Especial + Gaseosa por solo $22.000</p>
+                </div>
+            </div>
+            -->
+            <!-- Para usar una imagen simple, reemplaza el div anterior por: -->
+             <img src="https://designfactory.com.mx/wp-content/uploads/2021/09/Logo-heladeria-03.jpg" alt="Banner del restaurante" class="w-full h-auto">
+        </div>
+        <!-- =========== SECCIÓN DEL BANNER - FIN =========== -->
+
+        <div class="md:grid md:grid-cols-3 md:gap-8">
+            <!-- Columna del Menú -->
+            <div class="md:col-span-2">
+                <h2 class="text-3xl font-bold mb-6 text-primary">MENÚ</h2>
+                <div id="menu-container" class="space-y-4">
+                    <!-- Categorías y productos se insertarán aquí -->
+                </div>
+            </div>
+
+            <!-- Columna del Carrito -->
+            <div class="mt-10 md:mt-0 md:col-span-1">
+                <div class="bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8">
+                    <h2 class="text-2xl font-bold border-b border-gray-700 pb-4 mb-4 text-white">🛒 Tu Pedido</h2>
+                    <div id="cart-items" class="space-y-4 max-h-96 overflow-y-auto">
+                        <p id="empty-cart-message" class="text-gray-400">El carrito está vacío.</p>
+                    </div>
+                    <div id="cart-total" class="mt-6 pt-4 border-t border-gray-700 font-bold text-xl text-right text-white">
+                        Total: $0
+                    </div>
+                    
+                    <div id="status-message" class="text-center text-sm my-4"></div>
+                    
+                    <!-- Botón con color primario -->
+                    <button id="checkout-button" class="w-full btn-primary btn-font text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed">
+                        Hacer Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Añadir Producto -->
+    <div id="add-item-modal" class="modal fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 rounded-lg shadow-2xl p-8 w-full max-w-sm transform scale-95">
+            <h3 id="modal-item-name" class="text-2xl font-bold mb-2 text-white">Nombre del Producto</h3>
+            <p id="modal-item-price" class="text-lg text-emerald-400 mb-6">Precio</p>
+            <div class="mb-4">
+                <label for="item-quantity" class="block text-sm font-medium text-gray-300 mb-2">Cantidad</label>
+                <div class="flex items-center">
+                    <button id="decrease-quantity" class="bg-gray-700 px-4 py-2 rounded-l-md hover:bg-gray-600">-</button>
+                    <input type="number" id="item-quantity" value="1" min="1" class="w-full text-center bg-gray-900 border-t border-b border-gray-600 outline-none p-2">
+                    <button id="increase-quantity" class="bg-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-600">+</button>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="item-observation" class="block text-sm font-medium text-gray-300">Observación (Opcional)</label>
+                <textarea id="item-observation" rows="3" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm p-2 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"></textarea>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancel-add-item" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500">Cancelar</button>
+                <button type="button" id="confirm-add-item" class="bg-emerald-500 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-emerald-600">Añadir</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Datos del Cliente -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-8 w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-6 text-white">Confirmar Pedido</h3>
+            <form id="customer-form">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-300">Nombre</label>
+                    <input type="text" id="name" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div class="mb-4">
+                    <label for="address" class="block text-sm font-medium text-gray-300">Dirección <span class="text-red-400">*</span></label>
+                    <input type="text" id="address" required class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-300">Número de Teléfono <span class="text-red-400">*</span></label>
+                    <input type="tel" id="phone" required class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300">Forma de Pago <span class="text-red-400">*</span></label>
+                    <div class="mt-2 space-y-2">
+                        <label class="flex items-center">
+                            <input type="radio" name="payment" value="electronico" required class="focus:ring-emerald-500 h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600">
+                            <span class="ml-2">Transferencia</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="payment" value="efectivo" required class="focus:ring-emerald-500 h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600">
+                            <span class="ml-2">Efectivo</span>
+                        </label>
+                    </div>
+                </div>
+                <div id="cash-payment-details" class="mb-6 hidden">
+                    <label for="cash-amount" class="block text-sm font-medium text-gray-300">¿Con cuánto pagas? (Opcional)</label>
+                    <input type="number" id="cash-amount" placeholder="Ej: 50000" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-button" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500">Cancelar</button>
+                    <button type="submit" class="bg-emerald-500 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-emerald-600">Confirmar y Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+// ========== CONFIGURACIÓN DESDE EJS ==========
+window.restaurantConfig = {
+    name: '<%= typeof restaurante !== "undefined" ? restaurante : "" %>',
+    menu: <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>,
+    restauranteConfig: <%- typeof restauranteConfig !== "undefined" ? JSON.stringify(restauranteConfig) : '{}' %>,
+    horario: {
+        apertura: <%= typeof config !== "undefined" ? config.horarioApertura : 16 %>,
+        cierre: <%= typeof config !== "undefined" ? config.horarioCierre : 23 %>
+    },
+    colores: <%- typeof config !== "undefined" && config.colores ? JSON.stringify(config.colores) : '{"primario":"#10B981","secundario":"#F59E0B","fondo":"#2F384C","texto":"#F3F4F6"}' %>,
+    fuente: '<%= typeof config !== "undefined" && config.fuente ? config.fuente : "font-sans" %>'
+};
+
+console.log('Configuración cargada:', window.restaurantConfig);
+</script>
+
+<script>
+/**
+ * Obtiene el tipo de variante basado en las keys del objeto
+ */
+function obtenerTipoVariante(variantes) {
+    if (!variantes || variantes.length === 0) return null;
+    
+    const primeraVariante = variantes[0];
+    const keys = Object.keys(primeraVariante);
+    
+    // Buscar la key que no sea 'price'
+    const attributeKey = keys.find(key => key !== 'price');
+    
+    if (!attributeKey) return 'opción';
+    
+    // Mapeo de keys a textos amigables
+    const keyMap = {
+        'tamaño': 'tamaño',
+        'sabor': 'sabor',
+        'color': 'color', 
+        'tipo': 'tipo',
+        'modelo': 'modelo',
+        'estilo': 'estilo',
+        'ingrediente': 'ingrediente',
+        'acompañamiento': 'acompañamiento',
+        'presentación': 'presentación',
+        'variante': 'variante'
+    };
+    
+    return keyMap[attributeKey] || attributeKey;
+}
+
+/**
+ * Obtiene el texto del label según el tipo de variante
+ */
+function obtenerLabelVariante(tipoVariante) {
+    const labels = {
+        'tamaño': 'Selecciona el tamaño:',
+        'sabor': 'Selecciona el sabor:',
+        'color': 'Selecciona el color:',
+        'tipo': 'Selecciona el tipo:',
+        'modelo': 'Selecciona el modelo:',
+        'estilo': 'Selecciona el estilo:',
+        'ingrediente': 'Selecciona el ingrediente:',
+        'acompañamiento': 'Selecciona el acompañamiento:',
+        'presentación': 'Selecciona la presentación:',
+        'variante': 'Selecciona la variante:',
+        'opción': 'Selecciona una opción:'
+    };
+    
+    return labels[tipoVariante] || 'Selecciona una opción:';
+}
+
+/**
+ * Obtiene el texto para mostrar en el menú según el tipo de variante
+ */
+function obtenerTextoVarianteMenu(tipoVariante) {
+    const textos = {
+        'tamaño': 'Varios tamaños',
+        'sabor': 'Varios sabores',
+        'color': 'Varios colores', 
+        'tipo': 'Varios tipos',
+        'modelo': 'Varios modelos',
+        'estilo': 'Varios estilos',
+        'ingrediente': 'Varios ingredientes',
+        'acompañamiento': 'Varios acompañamientos',
+        'presentación': 'Varias presentaciones',
+        'variante': 'Varias variantes',
+        'opción': 'Varias opciones'
+    };
+    
+    return textos[tipoVariante] || 'Varias opciones';
+}
+
+/**
+ * Obtiene el valor a mostrar de una variante
+ */
+function obtenerValorVariante(variante) {
+    const keys = Object.keys(variante);
+    const attributeKey = keys.find(key => key !== 'price');
+    return attributeKey ? variante[attributeKey] : null;
+}
+
+// ========== CONFIGURACIÓN Y ESTADO ==========
+let cart = [];
+let currentItem = null;
+let isRestaurantOpen = false;
+
+// ========== ELEMENTOS DEL DOM ==========
+const menuContainer = document.getElementById('menu-container');
+const cartItemsContainer = document.getElementById('cart-items');
+const cartTotalElement = document.getElementById('cart-total');
+const checkoutButton = document.getElementById('checkout-button');
+const emptyCartMessage = document.getElementById('empty-cart-message');
+const statusMessageElement = document.getElementById('status-message');
+
+// Modal de añadir item
+const addItemModal = document.getElementById('add-item-modal');
+const modalContent = addItemModal.querySelector('.modal-content');
+const modalItemName = document.getElementById('modal-item-name');
+const modalItemPrice = document.getElementById('modal-item-price');
+const quantityInput = document.getElementById('item-quantity');
+const observationInput = document.getElementById('item-observation');
+const confirmAddItemBtn = document.getElementById('confirm-add-item');
+const cancelAddItemBtn = document.getElementById('cancel-add-item');
+const decreaseQtyBtn = document.getElementById('decrease-quantity');
+const increaseQtyBtn = document.getElementById('increase-quantity');
+
+// Modal de checkout
+const checkoutModal = document.getElementById('checkout-modal');
+const customerForm = document.getElementById('customer-form');
+const cancelCheckoutBtn = document.getElementById('cancel-button');
+const paymentRadios = document.querySelectorAll('input[name="payment"]');
+const cashPaymentDetails = document.getElementById('cash-payment-details');
+
+// ========== INICIALIZACIÓN ==========
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Iniciando aplicación...');
+    console.log('Datos del restaurante:', window.restaurantConfig);
+    
+    if (!window.restaurantConfig || !window.restaurantConfig.menu) {
+        showError('No se cargó la configuración del menú');
+        return;
+    }
+    
+    initApp();
+});
+
+function initApp() {
+    renderMenu();
+    renderCart();
+    setupEventListeners();
+    checkRestaurantStatus();
+    setInterval(checkRestaurantStatus, 60000);
+    loadUserData();
+}
+
+// ========== RENDERIZADO DEL MENÚ ==========
+function renderMenu() {
+    if (!menuContainer) {
+        console.error('No se encontró el contenedor del menú');
+        return;
+    }
+    
+    const menuData = window.restaurantConfig.menu;
+    
+    if (!menuData || Object.keys(menuData).length === 0) {
+        menuContainer.innerHTML = `
+            <div class="text-center py-8 text-red-400">
+                <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
+                <p>No hay productos en el menú</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let menuHTML = '';
+    
+    Object.keys(menuData).forEach(category => {
+        menuHTML += `
+            <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <button class="w-full text-left p-5 bg-background text-text font-bold text-xl flex justify-between items-center transition-colors hover:bg-gray-700 category-header">
+                    <span>${category}</span>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div class="space-y-2 accordion-content">
+        `;
+        
+        menuData[category].forEach(item => {
+          const hasVariantes = item.variantes && item.variantes.length > 0;
+          const precioMinimo = hasVariantes ? 
+              Math.min(...item.variantes.map(v => v.price)) : 
+              item.price;
+          
+          // USAR FUNCIÓN UTilitaria
+          let tipoVariante = hasVariantes ? obtenerTipoVariante(item.variantes) : null;
+          let textoVariante = hasVariantes ? obtenerTextoVarianteMenu(tipoVariante) : '';
+          
+          menuHTML += `
+              <div class="flex justify-between items-center cursor-pointer p-3 rounded-md hover:bg-gray-700 menu-item" 
+                   data-category="${category}" 
+                   data-name="${item.name}" 
+                   data-has-variantes="${hasVariantes}"
+                   data-tipo-variante="${tipoVariante}">
+                  <div class="flex-grow">
+                      <p class="product-name font-semibold text-gray-200">${item.name}</p>
+                      ${item.description ? `<p class="text-sm text-gray-400">${item.description}</p>` : ''}
+                      ${hasVariantes ? `<p class="text-xs text-emerald-400">Desde $${precioMinimo.toLocaleString('es-CO')}</p>` : ''}
+                  </div>
+                  <div class="text-right ml-4">
+                      ${hasVariantes ? 
+                          `<p class="text-gray-400 text-sm">${textoVariante}</p>` : 
+                          `<p class="product-price text-gray-400 text-sm">$${item.price.toLocaleString('es-CO')}</p>`
+                      }
+                      <i class="fas fa-plus-circle text-emerald-400 text-2xl"></i>
+                  </div>
+              </div>
+          `;
+        });
+        
+        menuHTML += `
+                </div>
+            </div>
+        `;
+    });
+    
+    menuContainer.innerHTML = menuHTML;
+    setupMenuEventListeners();
+}
+
+function setupMenuEventListeners() {
+    // Acordeones de categorías
+    document.querySelectorAll('.category-header').forEach(header => {
+        header.addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            const icon = this.querySelector('i');
+            const isExpanded = content.style.maxHeight;
+            
+            // Cerrar todos los acordeones
+            document.querySelectorAll('.accordion-content').forEach(el => {
+                el.style.maxHeight = null;
+                el.classList.remove('p-5', 'pt-0');
+            });
+            
+            document.querySelectorAll('.fa-chevron-down').forEach(i => {
+                i.style.transform = 'rotate(0deg)';
+            });
+            
+            // Abrir este acordeón si estaba cerrado
+            if (!isExpanded) {
+                content.classList.add('p-5', 'pt-0');
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        });
+    });
+    
+    // Items del menú
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const category = this.dataset.category;
+            const name = this.dataset.name;
+            const hasVariantes = this.dataset.hasVariantes === 'true';
+            
+            // Buscar el item completo en el menú
+            const menuData = window.restaurantConfig.menu;
+            const categoryItems = menuData[category];
+            const fullItem = categoryItems.find(i => i.name === name);
+            
+            if (fullItem) {
+                openAddItemModal(category, fullItem);
+            }
+        });
+    });
+}
+
+// ========== LÓGICA DEL CARRITO ==========
+function renderCart() {
+    if (!cartItemsContainer) return;
+    
+    cartItemsContainer.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItemsContainer.appendChild(emptyCartMessage);
+        emptyCartMessage.style.display = 'block';
+    } else {
+        emptyCartMessage.style.display = 'none';
+        
+        cart.forEach((item, index) => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'flex justify-between items-start';
+            
+            const itemName = item.variante ? 
+                `${item.name} (${item.variante})` : 
+                item.name;
+                
+            itemElement.innerHTML = `
+                <div>
+                    <p class="font-semibold">${item.quantity}x ${itemName}</p>
+                    ${item.observation ? `<p class="text-sm text-gray-400 italic">"${item.observation}"</p>` : ''}
+                </div>
+                <div class="text-right flex-shrink-0 ml-4">
+                    <p class="font-semibold">$${(item.price * item.quantity).toLocaleString('es-CO')}</p>
+                    <button class="remove-from-cart text-red-500 text-sm hover:text-red-400" data-index="${index}">Quitar</button>
+                </div>
+            `;
+            
+            cartItemsContainer.appendChild(itemElement);
+        });
+        
+        // Event listeners para botones de quitar
+        document.querySelectorAll('.remove-from-cart').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                removeFromCart(index);
+            });
+        });
+    }
+    
+    updateTotal();
+    updateCheckoutButton();
+}
+
+function updateTotal() {
+    if (!cartTotalElement) return;
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    cartTotalElement.textContent = `Total: $${total.toLocaleString('es-CO')}`;
+}
+
+function updateCheckoutButton() {
+    if (!checkoutButton) return;
+    
+    checkoutButton.disabled = cart.length === 0 || !isRestaurantOpen;
+    
+    if (!isRestaurantOpen) {
+        checkoutButton.setAttribute('title', 'El restaurante está cerrado');
+    } else if (cart.length === 0) {
+        checkoutButton.setAttribute('title', 'Añade productos para continuar');
+    } else {
+        checkoutButton.removeAttribute('title');
+    }
+}
+
+function addToCart(item, quantity, observation, variante) {
+    // Crear nombre único para el item (incluyendo la variante si existe)
+    const uniqueName = variante ? `${item.name}|${variante}` : item.name;
+    
+    // Buscar si ya existe el mismo item con la misma observación y variante
+    const existingIndex = cart.findIndex(cartItem => 
+        cartItem.uniqueName === uniqueName && 
+        cartItem.observation === observation
+    );
+    
+    if (existingIndex !== -1) {
+        // Si existe, aumentar la cantidad
+        cart[existingIndex].quantity += quantity;
+    } else {
+        // Si no existe, agregar nuevo item
+        cart.push({
+            id: Date.now() + Math.random(),
+            uniqueName: uniqueName,
+            name: item.name,
+            category: item.category,
+            price: item.price,
+            quantity: quantity,
+            observation: observation,
+            variante: variante || null
+        });
+    }
+    
+    renderCart();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+}
+
+// ========== MODALES ==========
+function openAddItemModal(category, item) {
+    currentItem = { ...item, category };
+    modalItemName.textContent = `${category} - ${item.name}`;
+    
+    // Limpiar contenido previo de variantes
+    const existingVariantes = document.getElementById('variantes-container');
+    if (existingVariantes) {
+        existingVariantes.remove();
+    }
+    
+    // Mostrar selector de variantes si las tiene
+    if (item.variantes && item.variantes.length > 0) {
+        showVariantesSelector(item.variantes);
+        modalItemPrice.style.display = 'none';
+    } else {
+        modalItemPrice.textContent = `$${item.price.toLocaleString('es-CO')}`;
+        modalItemPrice.style.display = 'block';
+    }
+    
+    quantityInput.value = 1;
+    observationInput.value = '';
+    
+    addItemModal.classList.remove('hidden');
+    setTimeout(() => {
+        modalContent.classList.remove('scale-95');
+    }, 10);
+}
+
+function showVariantesSelector(variantes, tipoVariante = null) {
+    // USAR FUNCIÓN UTilitaria
+    if (!tipoVariante) {
+        tipoVariante = obtenerTipoVariante(variantes);
+    }
+    
+    const labelTexto = obtenerLabelVariante(tipoVariante);
+    
+    let variantesHTML = `
+        <div class="mb-4" id="variantes-container">
+            <label class="block text-sm font-medium text-gray-300 mb-2">${labelTexto}</label>
+            <div class="grid grid-cols-1 gap-2">
+    `;
+    
+    variantes.forEach((variante, index) => {
+        // USAR FUNCIÓN UTilitaria
+        const valorMostrar = obtenerValorVariante(variante) || `Opción ${index + 1}`;
+        
+        variantesHTML += `
+            <label class="flex items-center justify-between p-3 rounded-md bg-gray-700 hover:bg-gray-600 cursor-pointer transition-colors">
+                <div class="flex items-center">
+                    <input type="radio" name="variante" value="${index}" 
+                        ${index === 0 ? 'checked' : ''} 
+                        class="mr-3 focus:ring-emerald-500 h-4 w-4 text-emerald-600">
+                    <span class="text-gray-200">${valorMostrar}</span>
+                </div>
+                <span class="text-emerald-400 font-semibold">$${variante.price.toLocaleString('es-CO')}</span>
+            </label>
+        `;
+    });
+    
+    variantesHTML += `</div></div>`;
+    
+    modalItemName.insertAdjacentHTML('afterend', variantesHTML);
+    document.getElementById('variantes-container').dataset.tipoVariante = tipoVariante;
+    
+    document.querySelectorAll('input[name="variante"]').forEach(radio => {
+        radio.addEventListener('change', updateSelectedVariante);
+    });
+}
+
+function updateSelectedVariante() {
+    // Esta función se puede expandir si necesitas feedback visual adicional
+}
+
+function closeAddItemModal() {
+    // Limpiar variantes al cerrar
+    const variantesContainer = document.getElementById('variantes-container');
+    if (variantesContainer) {
+        variantesContainer.remove();
+    }
+    
+    modalItemPrice.style.display = 'block';
+    modalContent.classList.add('scale-95');
+    
+    setTimeout(() => {
+        addItemModal.classList.add('hidden');
+        currentItem = null;
+    }, 250);
+}
+
+function confirmAddItem() {
+    if (!currentItem) return;
+    
+    const quantity = parseInt(quantityInput.value);
+    const observation = observationInput.value.trim();
+    
+    if (quantity < 1) {
+        alert('La cantidad debe ser al menos 1');
+        return;
+    }
+    
+    let selectedVariante = null;
+    let tipoVariante = null;
+    const varianteRadio = document.querySelector('input[name="variante"]:checked');
+    
+    if (varianteRadio) {
+        const varianteIndex = parseInt(varianteRadio.value);
+        selectedVariante = currentItem.variantes[varianteIndex];
+        
+        const variantesContainer = document.getElementById('variantes-container');
+        if (variantesContainer) {
+            tipoVariante = variantesContainer.dataset.tipoVariante;
+        }
+        
+        // USAR FUNCIÓN UTilitaria
+        const valorVariante = obtenerValorVariante(selectedVariante);
+    }
+    
+    const itemToAdd = {
+        ...currentItem,
+        price: selectedVariante ? selectedVariante.price : currentItem.price,
+        variante: selectedVariante ? obtenerValorVariante(selectedVariante) : null,
+        tipoVariante: tipoVariante
+    };
+    
+    addToCart(itemToAdd, quantity, observation);
+    closeAddItemModal();
+}
+
+// ========== CHECKOUT ==========
+function openCheckoutModal() {
+    checkoutModal.classList.remove('hidden');
+}
+
+function closeCheckoutModal() {
+    checkoutModal.classList.add('hidden');
+}
+
+function handleCheckoutSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(customerForm);
+    const customerData = {
+        name: document.getElementById('name').value || 'Cliente',
+        address: document.getElementById('address').value,
+        phone: document.getElementById('phone').value,
+        paymentMethod: formData.get('payment'),
+        cashAmount: document.getElementById('cash-amount').value
+    };
+    
+    // Validar campos obligatorios
+    if (!customerData.address || !customerData.phone || !customerData.paymentMethod) {
+        alert('Por favor completa todos los campos obligatorios (*)');
+        return;
+    }
+    
+    // Guardar datos de usuario
+    saveUserData(customerData);
+    
+    // Enviar por WhatsApp
+    const message = formatOrderForWhatsApp(customerData);
+    const restaurantPhoneNumber = window.restaurantConfig.restauranteConfig.telefonoWhatsApp;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantPhoneNumber}&text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    
+    // Limpiar y cerrar
+    cart = [];
+    renderCart();
+    closeCheckoutModal();
+    customerForm.reset();
+    cashPaymentDetails.classList.add('hidden');
+    
+    alert('¡Pedido enviado por WhatsApp!');
+}
+
+function formatOrderForWhatsApp(customerData) {
+    const restaurantName = window.restaurantConfig.restauranteConfig.nombre;
+    const now = new Date();
+    
+    let message = `¡Hola! 👋\n`;
+    message += `*NUEVO PEDIDO - ${restaurantName.toUpperCase()}*\n`;
+    message += `📅 ${now.toLocaleDateString('es-ES')} ⏰ ${now.toLocaleTimeString('es-ES')}\n\n`;
+    
+    message += `*👤 CLIENTE:*\n`;
+    message += `Nombre: ${customerData.name}\n`;
+    message += `Teléfono: ${customerData.phone}\n`;
+    message += `Dirección: ${customerData.address}\n`;
+    message += `Pago: ${customerData.paymentMethod === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}\n`;
+    
+    if (customerData.paymentMethod === 'efectivo' && customerData.cashAmount) {
+        message += `Paga con: $${parseInt(customerData.cashAmount).toLocaleString('es-CO')}\n`;
+    }
+    message += `\n`;
+    
+    message += `*🛒 PEDIDO:*\n`;
+    let total = 0;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const itemName = item.variante ? 
+            `${item.name} (${item.variante})` : 
+            item.name;
+            
+        message += `${index + 1}) ${item.quantity}x ${itemName}\n`;
+        message += `   Precio: $${item.price.toLocaleString('es-CO')} c/u\n`;
+        message += `   Subtotal: $${itemTotal.toLocaleString('es-CO')}\n`;
+        
+        if (item.observation) {
+            message += `   📝 "${item.observation}"\n`;
+        }
+        message += `\n`;
+    });
+    
+    message += `*💰 TOTAL: $${total.toLocaleString('es-CO')}*\n\n`;
+    message += `¡Por favor confirmar recepción! ✅`;
+    
+    return message;
+}
+
+// ========== UTILIDADES ==========
+function checkRestaurantStatus() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const horario = window.restaurantConfig.horario;
+    
+    isRestaurantOpen = currentHour >= horario.apertura && currentHour < horario.cierre;
+    
+    if (statusMessageElement) {
+        if (isRestaurantOpen) {
+            statusMessageElement.innerHTML = `<p class="text-emerald-400 font-semibold">✅ Abierto hasta las ${horario.cierre}:00</p>`;
+        } else {
+            statusMessageElement.innerHTML = `<p class="text-red-400 font-semibold">❌ Cerrado</p><p class="text-xs text-gray-400">Horario: ${horario.apertura}:00-${horario.cierre}:00</p>`;
+        }
+    }
+    
+    updateCheckoutButton();
+}
+
+function saveUserData(customer) {
+    localStorage.setItem('customerName', customer.name);
+    localStorage.setItem('customerAddress', customer.address);
+    localStorage.setItem('customerPhone', customer.phone);
+}
+
+function loadUserData() {
+    document.getElementById('name').value = localStorage.getItem('customerName') || '';
+    document.getElementById('address').value = localStorage.getItem('customerAddress') || '';
+    document.getElementById('phone').value = localStorage.getItem('customerPhone') || '';
+}
+
+function setupEventListeners() {
+    // Modal de añadir item
+    decreaseQtyBtn.addEventListener('click', () => {
+        if (parseInt(quantityInput.value) > 1) quantityInput.value--;
+    });
+    
+    increaseQtyBtn.addEventListener('click', () => {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+    
+    confirmAddItemBtn.addEventListener('click', confirmAddItem);
+    cancelAddItemBtn.addEventListener('click', closeAddItemModal);
+    
+    // Modal de checkout
+    checkoutButton.addEventListener('click', openCheckoutModal);
+    cancelCheckoutBtn.addEventListener('click', closeCheckoutModal);
+    customerForm.addEventListener('submit', handleCheckoutSubmit);
+    
+    // Mostrar/ocultar detalles de pago en efectivo
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            cashPaymentDetails.classList.toggle('hidden', e.target.value !== 'efectivo');
+        });
+    });
+}
+
+function showError(message) {
+    if (menuContainer) {
+        menuContainer.innerHTML = `
+            <div class="text-center py-8 text-red-400">
+                <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
+                <p>${message}</p>
+            </div>
+        `;
+    }
+    console.error('Error:', message);
+}
+</script>
+
+<!-- Script de instalación PWA -->
+<script>
+// Detectar si el navegador soporta PWA
+  if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+          // Registrar Service Worker
+          navigator.serviceWorker.register('/sw.js')
+              .then((registration) => {
+                  console.log('SW registered: ', registration);
+              })
+              .catch((registrationError) => {
+                  console.log('SW registration failed: ', registrationError);
+              });
+      });
+  }
+  
+  // Manejar el prompt de instalación
+  let deferredPrompt;
+  const installButton = document.getElementById('install-button');
+  
+  window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Mostrar botón de instalación
+      if (installButton) {
+          installButton.style.display = 'block';
+          installButton.addEventListener('click', installPWA);
+      }
+  });
+  
+  function installPWA() {
+      if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                  console.log('Usuario aceptó la instalación');
+              }
+              deferredPrompt = null;
+          });
+      }
+  }
+  
+  // Verificar si la app ya está instalada
+  window.addEventListener('appinstalled', () => {
+      console.log('PWA fue instalada');
+      if (installButton) {
+          installButton.style.display = 'none';
+      }
+  });
+  
+  // Botón de instalación flotante (agrégalo al HTML)
+  function createInstallButton() {
+      const button = document.createElement('button');
+      button.id = 'install-button';
+      button.className = 'fixed bottom-4 right-4 bg-emerald-500 text-white p-3 rounded-full shadow-lg z-50 hidden';
+      button.innerHTML = '<i class="fas fa-download"></i>';
+      button.title = 'Instalar app';
+      document.body.appendChild(button);
+  }
+  
+  document.addEventListener('DOMContentLoaded', createInstallButton);
+</script>
+</body>
+</html>

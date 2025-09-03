@@ -1,0 +1,301 @@
+{
+  "config": {
+    "nombre": "Delipost",
+    "extension": "delipost",
+    "telefonoWhatsApp": "573003334444",
+    "horarioApertura": 17,
+    "horarioCierre": 23,
+    "colores": {
+      "primario": "#ec4899",
+      "secundario": "#ffffff",
+      "fondo": "#ec4899",
+      "texto": "#fdf2f8"
+    },
+    "fondo": {
+      "tipo": "color",
+      "valor": "#fcf2f9",
+      "opacidad": 1
+    },
+    "fuentes": {
+      "primaria": {
+        "familia": "'Noto Sans SC', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      }
+    },
+    "pwa": {
+      "short_name": "Delipost",
+      "name": "Delipost - Pedidos",
+      "description": "Tú heladería favorita.",
+      "theme_color": "#EC4899",
+      "background_color": "#EC4899",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/delipost-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "/assets/delipost-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["ice cream", "candi", "sweet"],
+      "lang": "es"
+    }
+  },
+  "menu": {
+    "FRESAS CON CREMA": [
+      {
+        "name": "SENCILLA",
+        "description": "",
+        "variantes": [
+          { "tamaño": "9oz", "price": 10000 },
+          { "tamaño": "16oz", "price": 14000 }
+        ]
+      },
+      {
+        "name": "BROWNIE-OREO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "9oz", "price": 11000 },
+          { "tamaño": "16oz", "price": 16500 }
+        ]
+      },
+      {
+        "name": "MEGA EXPLOSIÓN 16oz",
+        "description": "",
+        "price": 20000
+      }
+    ],
+    "FRESAS CON HELADO 16oz": [
+      {
+        "name": "SENCILLA",
+        "description": "Helado de tú elección",
+        "price": 14000
+      },
+      {
+        "name": "BROWNIE-OREO",
+        "description": "",
+        "price": 16000
+      },
+      {
+        "name": "PIAZZA Y MASMELO",
+        "description": "",
+        "price": 16000
+      }
+    ],
+    "CONOS": [
+      {
+        "name": "SENCILLO",
+        "description": "Sabor de tú elección.",
+        "price": 4000
+      },
+      {
+        "name": "DOBLE",
+        "description": "Sabor de tú elección.",
+        "price": 5000
+      },
+      {
+        "name": "TRIPLE",
+        "description": "Sabor de tú elección.",
+        "price": 6000
+      }
+    ],
+    "OBLEAS": [
+      {
+        "name": "SENCILLA",
+        "description": "Rellena de arequipe o salsa de preferencia.",
+        "price": 3000
+      },
+      {
+        "name": "DELIQUESO",
+        "description": "Rellena de arequipe y queso",
+        "price": 5000
+      },
+      {
+        "name": "DELIOBLEA",
+        "description": "Rellena de arequipe, fresa, manzana, mango, banano, queso, helado y chantilly",
+        "price": 12000
+      }
+    ],
+    "MALTEADAS": [
+      {
+        "name": "16oz",
+        "description": "Base de tu preferencia. Todas las malteadas vienen acompañadas de: Galleta, chantilly, salsa y topping.",
+        "variantes": [
+          { "sabor": "Fresa", "price": 12000 },
+          { "sabor": "Chicle", "price": 12000 },
+          { "sabor": "Vainilla", "price": 12000 },
+          { "sabor": "Chocolate", "price": 12000 },
+          { "sabor": "Vainilla Chips", "price": 12000 },
+          { "sabor": "Frutos Rojos", "price": 12000 },
+          { "sabor": "Tres Leches", "price": 12000 },
+          { "sabor": "Arequipe", "price": 12000 },
+          { "sabor": "Brownie", "price": 12000 }
+        ]
+      }
+    ],
+    "VASOS": [
+      {
+        "name": "SENCILLO",
+        "description": "Sabor de tú elección.",
+        "price": 3500
+      },
+      {
+        "name": "DOBLE",
+        "description": "Sabores de tú elección.",
+        "price": 5000
+      },
+      {
+        "name": "TRIPLE",
+        "description": "Sabores de tú elección.",
+        "price": 6000
+      },
+      {
+        "name": "CUÁDRUPLE",
+        "description": "Sabores de tú elección.",
+        "price": 8000
+      },
+      {
+        "name": "MEGA HELADO",
+        "description": "Sabores de tú elección.",
+        "price": 11000
+      }
+    ],
+    "WAFFLES": [
+      {
+        "name": "SENCILLO",
+        "description": "Helado, salsa, chantilly, cereza.",
+        "price": 12000
+      },
+      {
+        "name": "PINK SWEET",
+        "description": "Trozos de fresa, salsa de arequipe, chantilly, helado y cereza.",
+        "price": 14000
+      },
+      {
+        "name": "OREO MANIA",
+        "description": "Oreo, salsa de chocolate, chantilly, helado y cereza.",
+        "price": 14000
+      },
+      {
+        "name": "MIXFRUTAL",
+        "description": "Mango, fresa, banano, manzana, cereza, helado, chantilly y salsa.",
+        "price": 15000
+      },
+      {
+        "name": "NUTELA TENTACIÓN",
+        "description": "Nutella, banano, fresas, helado, chantilly y cereza.",
+        "price": 16000
+      },
+      {
+        "name": "TOPPING SPLOT",
+        "description": "Masmelo, oreo, cooking and cream, fresa, barquillo, helado, salsa de preferencia.",
+        "price": 16000
+      }
+    ],
+    "BROWNIES": [
+      {
+        "name": "TRADICIONAL",
+        "description": "Brownie, helado, chantilly, salsa y cereza.",
+        "price": 11000
+      },
+      {
+        "name": "OREO CHIPS",
+        "description": "Brownie, helado, minichips, oreo, barquillo, chantilly, salsa, cereza.",
+        "price": 12500
+      },
+      {
+        "name": "PINK",
+        "description": "Fresa, helado de fresa, salsa chantilly, cereza y maní.",
+        "price": 12500
+      },
+      {
+        "name": "BROWNUTELLA",
+        "description": "Brownie, 2 bolas de helado, Nutella, chocolatina jet, chokis, chantilly y salsa.",
+        "price": 14500
+      }
+    ],
+    "MILSHAKES 16oz": [
+      {
+        "name": "NUTBROWN",
+        "description": "Malteada de chocolate, Nutella, chococrispí, brownie, chantilly, chispas de chocolate, toque mágico dorado, fresa.",
+        "price": 16500
+      },
+      {
+        "name": "FRESACHIPS",
+        "description": "Malteada de fresa, salsa de frutos rojos, crema chantilly, piazza, Paleta de colores, masmelos, lluvia de colores, lluvia rosa.",
+        "price": 16500
+      },
+      {
+        "name": "HERSHEYS SPLOT",
+        "description": "Malteada de Arequipe, syrups hersheys, maní, waffle, chantilly, choquis, trozos hersheys cookies and cream.",
+        "price": 16500
+      },
+      {
+        "name": "OREO FANTASY",
+        "description": "Malteada de Oreo, lluvia de chocolate, salsa de chocolate, chantilly, oreo, barquillo, chocolatina jet, toque mágico dorado.",
+        "price": 16500
+      }
+    ],
+    "CANASTA": [
+      {
+        "name": "MINI",
+        "description": "2 bolas de helado, fresa, galleta, cereza, chantilly, salsa y topping.",
+        "price": 10000
+      },
+      {
+        "name": "SENCILLA",
+        "description": "3 bolas de helado, galleta, cereza, chantilly, salsa y topping.",
+        "price": 12000
+      },
+      {
+        "name": "FRUTAL",
+        "description": "Manzana, pera, banana, mango, fresa, cereza, galleta, chantilly, salsa y topping",
+        "price": 14000
+      }
+    ],
+    "SANDWICHES": [
+      {
+        "name": "TRADICIONAL",
+        "description": "Pan artesanal, doble queso, doble jamón, lechuga, tomate y salsas.",
+        "price": 7500
+      },
+      {
+        "name": "HAWAIANO",
+        "description": "Pan artesanal, doble queso, doble jamón, trocitos de piña, lechuga, tomate y salsas.",
+        "price": 9000
+      },
+      {
+        "name": "DELIMAR",
+        "description": "Pan artesanal 2 pisos, salsa bbq, queso mozzarella, atún y maíz.",
+        "price": 12500
+      }
+    ],
+    "MIXFRUTAL": [
+      {
+        "name": "BANANASPLIT",
+        "description": "3 bolas de helado, banana, galleta, salsa, cereza y topping.",
+        "price": 12000
+      },
+      {
+        "name": "PARFAIT 16oz",
+        "description": "Banana, manzana, pera, fresa, mango, cereza, granola, yogurt, queso, chantilly, 1 bola de helado y salsa.",
+        "price": 16500
+      },
+      {
+        "name": "ENSALADA FRUTAL PARA 2 PERSONAS",
+        "description": "Banana, manzana, pera, fresa, mango, cereza, granola, 2 galletas, queso, chantilly, 2 bolas de helado y salsa.",
+        "price": 25000
+      },
+      {
+        "name": "COPA DE FRUTAS 16oz",
+        "description": "Banana, manzana, pera, fresa, mango, cereza, chantilly, 1 bola de helado y salsa.",
+        "price": 14500
+      }
+    ]
+  }
+}

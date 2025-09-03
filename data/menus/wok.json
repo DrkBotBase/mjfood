@@ -1,0 +1,448 @@
+{
+  "config": {
+    "nombre": "Taylor Wok",
+    "extension": "taylor_wok",
+    "telefonoWhatsApp": "573052169035",
+    "horarioApertura": 10,
+    "horarioCierre": 20,
+    "colores": {
+      "primario": "#ffd25f",
+      "secundario": "#ffd25f",
+      "fondo": "#c70100",
+      "texto": "#FFFFFF"
+    },
+    "fondo": {
+      "tipo": "imagen",
+      "valor": "/assets/fondos/preview.jpg",
+      "opacidad": 0.9
+    },
+    "fuentes": {
+      "primaria": {
+        "familia": "'Noto Sans SC', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      },
+      "secundaria": {
+        "familia": "'ZCOOL XiaoWei', serif",
+        "url": "https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap"
+      }
+    },
+    "pwa": {
+      "short_name": "Taylor Wok",
+      "name": "Taylor Wok - Pedidos",
+      "description": "Restaurante de comida china.",
+      "theme_color": "#c70100",
+      "background_color": "#c70100",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/wok-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "/assets/wok-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["food", "chinese", "restaurant"],
+      "lang": "es"
+    }
+  },
+  "menu": {
+    "ARROZ FRITO / FRIED RICE": [
+      {
+        "name": "ARROZ ESPECIAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 20000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "ARROZ TAWOK",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 25000 },
+          { "tamaño": "MEDIANO", "price": 38000 },
+          { "tamaño": "GRANDE", "price": 46000 }
+        ]
+      },
+      {
+        "name": "VALENCIANA",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 18000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 38000 }
+        ]
+      },
+      {
+        "name": "ARROZ POLLO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 19000 },
+          { "tamaño": "MEDIANO", "price": 28000 },
+          { "tamaño": "GRANDE", "price": 37000 }
+        ]
+      },
+      {
+        "name": "ARROZ CERDO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 22000 },
+          { "tamaño": "MEDIANO", "price": 33000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "ARROZ CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 25000 },
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "ARROZ POLLO/CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 23000 },
+          { "tamaño": "MEDIANO", "price": 33000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "ARROZ CARNE",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 21000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "ARROZ POLLO/CARNE",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 23000 },
+          { "tamaño": "MEDIANO", "price": 34000 },
+          { "tamaño": "GRANDE", "price": 41000 }
+        ]
+      },
+      {
+        "name": "ARROZ VEGETAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 18000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 35000 }
+        ]
+      }
+    ],
+    "VERDURAS / CHOPSUEY": [
+      {
+        "name": "CHOPSUEY ESPECIAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 22000 },
+          { "tamaño": "MEDIANO", "price": 32000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY TAWOK",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 25000 },
+          { "tamaño": "MEDIANO", "price": 38000 },
+          { "tamaño": "GRANDE", "price": 46000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 25000 },
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 43000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY POLLO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 20000 },
+          { "tamaño": "MEDIANO", "price": 28000 },
+          { "tamaño": "GRANDE", "price": 37000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY POLLO/CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 23000 },
+          { "tamaño": "MEDIANO", "price": 33000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY CERDO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 22000 },
+          { "tamaño": "MEDIANO", "price": 33000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY LOMITO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 27000 },
+          { "tamaño": "MEDIANO", "price": 37000 },
+          { "tamaño": "GRANDE", "price": 45000 }
+        ]
+      },
+      {
+        "name": "CHOPSUEY VEGETAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 18000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 35000 }
+        ]
+      }
+    ],
+    "TALLARINES / LOMEIN": [
+      {
+        "name": "LOMEIN ESPECIAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 22000 },
+          { "tamaño": "MEDIANO", "price": 32000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "LOMEIN POLLO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 20000 },
+          { "tamaño": "MEDIANO", "price": 28000 },
+          { "tamaño": "GRANDE", "price": 37000 }
+        ]
+      },
+      {
+        "name": "LOMEIN LOMITO",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 27000 },
+          { "tamaño": "MEDIANO", "price": 37000 },
+          { "tamaño": "GRANDE", "price": 45000 }
+        ]
+      },
+      {
+        "name": "LOMEIN VEGETAL",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 18000 },
+          { "tamaño": "MEDIANO", "price": 30000 },
+          { "tamaño": "GRANDE", "price": 35000 }
+        ]
+      },
+      {
+        "name": "LOMEIN CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 25000 },
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 43000 }
+        ]
+      },
+      {
+        "name": "LOMEIN POLLO/CAMARÓN",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 23000 },
+          { "tamaño": "MEDIANO", "price": 33000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      }
+    ],
+    "CARNES / BEEF": [
+      {
+        "name": "CERDO AGRIDULCE",
+        "description": "",
+        "variantes": [
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "POLLO AGRIDULCE",
+        "description": "",
+        "variantes": [
+          { "tamaño": "MEDIANO", "price": 32000 },
+          { "tamaño": "GRANDE", "price": 40000 }
+        ]
+      },
+      {
+        "name": "POLLO A LA NARANJA",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 19000 },
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "POLLO CROCANTE",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 20000 },
+          { "tamaño": "MEDIANO", "price": 35000 },
+          { "tamaño": "GRANDE", "price": 42000 }
+        ]
+      },
+      {
+        "name": "LOMITO BROCOLI",
+        "description": "",
+        "variantes": [
+          { "tamaño": "PERSONAL", "price": 20000 },
+          { "tamaño": "MEDIANO", "price": 36000 },
+          { "tamaño": "GRANDE", "price": 44000 }
+        ]
+      }
+    ],
+    "LUMPIAS": [
+      {
+        "name": "ESPECIAL x2 Unidades",
+        "description": "",
+        "price": 13000
+      },
+      {
+        "name": "VEGETALES x2 Unidades",
+        "description": "",
+        "price": 11000
+      },
+      {
+        "name": "POLLO x2 Unidades",
+        "description": "",
+        "price": 12000
+      },
+      {
+        "name": "CAMARÓN x2 Unidades",
+        "description": "",
+        "price": 14000
+      }
+    ],
+    "ADICIONALES": [
+      {
+        "name": "SALSA AGRIDULCE",
+        "description": "",
+        "price": 1000
+      },
+      {
+        "name": "MIEL MOSTAZA",
+        "description": "",
+        "price": 1000
+      },
+      {
+        "name": "SOYA",
+        "description": "",
+        "price": 1000
+      },
+      {
+        "name": "CAMARÓN 150g",
+        "description": "",
+        "price": 13000
+      },
+      {
+        "name": "POLLO",
+        "description": "",
+        "price": 9000
+      },
+      {
+        "name": "CERDO",
+        "description": "",
+        "price": 9000
+      }
+    ],
+    "BEBIDAS": [
+      {
+        "name": "COCA COLA 3L",
+        "description": "",
+        "price": 15000
+      },
+      {
+        "name": "COCA COLA 2.5L",
+        "description": "",
+        "price": 12000
+      },
+      {
+        "name": "COCA COLA 1.5L",
+        "description": "",
+        "price": 8000
+      },
+      {
+        "name": "COCA COLA 400ml",
+        "description": "",
+        "price": 4000
+      },
+      {
+        "name": "COCA COLA 250ml",
+        "description": "",
+        "price": 2500
+      },
+      {
+        "name": "COCA COLA ZERO 1.5L",
+        "description": "",
+        "price": 7000
+      },
+      {
+        "name": "COCA COLA ZERO 400ml",
+        "description": "",
+        "price": 3500
+      },
+      {
+        "name": "COCA COLA ZERO 250ml",
+        "description": "",
+        "price": 2500
+      },
+      {
+        "name": "KOLA ROMAN 1.5L",
+        "description": "",
+        "price": 8000
+      },
+      {
+        "name": "KOLA ROMAN 400ml",
+        "description": "",
+        "price": 4000
+      },
+      {
+        "name": "SPRITE 1.5L",
+        "description": "",
+        "price": 8000
+      },
+      {
+        "name": "SPRITE 400ml",
+        "description": "",
+        "price": 4000
+      },
+      {
+        "name": "QUATRO 1.5L",
+        "description": "",
+        "price": 8000
+      },
+      {
+        "name": "QUATRO 400ml",
+        "description": "",
+        "price": 4000
+      }
+    ]
+  }
+}
