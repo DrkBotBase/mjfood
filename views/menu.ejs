@@ -1,7 +1,8 @@
 <%- include('layout', {
     title: name_page,
     styles: true,
-    pwaThemeColor: config.colores?.primario || '#10B981',
+    pwaIcon: `/assets/icons/${restauranteConfig.extension}`,
+    pwaThemeColor: restauranteConfig.pwa?.theme_color || '#ffffff',
     pwaDescription: restauranteConfig.pwa?.description || `Menú digital de ${restauranteConfig.nombre}`,
     pwaShortName: restauranteConfig.pwa?.short_name || restauranteConfig.nombre,
     manifestUrl: `/${restaurante}/manifest.json`
@@ -181,13 +182,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold header-title text-white">
-                <span class="text-primary"><%= restauranteConfig.nombre.toUpperCase() %></span>
+                <span class="text-primary"></span>
             </h1>
             <p class="font-subtitle text-gray-400 mt-2"></p>
         </header>
         
          <!-- =========== SECCIÓN DEL BANNER - INICIO =========== -->
-        <div class="mb-10 bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
             <!-- Opción 1: Banner con imagen de fondo y texto 
             <div class="h-48 md:h-64 bg-cover bg-center flex items-center justify-center p-4" style="background-image: url('https://placehold.co/1200x400/1f2937/34d399?text=Tu+Banner+Aqui');">
                  <div class="text-center bg-black bg-opacity-50 p-6 rounded-lg">
@@ -197,8 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             -->
             <!-- Para usar una imagen simple, reemplaza el div anterior por: -->
-             <img src="https://designfactory.com.mx/wp-content/uploads/2021/09/Logo-heladeria-03.jpg" alt="Banner del restaurante" class="w-full h-auto">
+            <img src="<%= config.logoUrl || '/assets/fondos/mjfood.png'%>" alt="Banner del restaurante" class="w-full h-auto">
         </div>
+            <p class="font-subtitle text-text mt-2 mb-10"><%= config.direccion %></p>
         <!-- =========== SECCIÓN DEL BANNER - FIN =========== -->
 
         <div class="md:grid md:grid-cols-3 md:gap-8">
@@ -299,38 +301,27 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
 <script>
-// ========== CONFIGURACIÓN DESDE EJS ==========
 window.restaurantConfig = {
     name: '<%= typeof restaurante !== "undefined" ? restaurante : "" %>',
     menu: <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>,
     restauranteConfig: <%- typeof restauranteConfig !== "undefined" ? JSON.stringify(restauranteConfig) : '{}' %>,
-    horario: {
-        apertura: <%= typeof config !== "undefined" ? config.horarioApertura : 16 %>,
-        cierre: <%= typeof config !== "undefined" ? config.horarioCierre : 23 %>
-    },
+    horario: <%- typeof horarioRestaurante !== "undefined" ? JSON.stringify(horarioRestaurante) : '{"aperturaDecimal":16,"cierreDecimal":23,"aperturaStr":"16:00","cierreStr":"23:00"}' %>,
     colores: <%- typeof config !== "undefined" && config.colores ? JSON.stringify(config.colores) : '{"primario":"#10B981","secundario":"#F59E0B","fondo":"#2F384C","texto":"#F3F4F6"}' %>,
     fuente: '<%= typeof config !== "undefined" && config.fuente ? config.fuente : "font-sans" %>'
 };
-
-console.log('Configuración cargada:', window.restaurantConfig);
 </script>
 
 <script>
-/**
- * Obtiene el tipo de variante basado en las keys del objeto
- */
 function obtenerTipoVariante(variantes) {
     if (!variantes || variantes.length === 0) return null;
     
     const primeraVariante = variantes[0];
     const keys = Object.keys(primeraVariante);
     
-    // Buscar la key que no sea 'price'
     const attributeKey = keys.find(key => key !== 'price');
     
     if (!attributeKey) return 'opción';
     
-    // Mapeo de keys a textos amigables
     const keyMap = {
         'tamaño': 'tamaño',
         'sabor': 'sabor',
@@ -347,9 +338,6 @@ function obtenerTipoVariante(variantes) {
     return keyMap[attributeKey] || attributeKey;
 }
 
-/**
- * Obtiene el texto del label según el tipo de variante
- */
 function obtenerLabelVariante(tipoVariante) {
     const labels = {
         'tamaño': 'Selecciona el tamaño:',
@@ -368,9 +356,6 @@ function obtenerLabelVariante(tipoVariante) {
     return labels[tipoVariante] || 'Selecciona una opción:';
 }
 
-/**
- * Obtiene el texto para mostrar en el menú según el tipo de variante
- */
 function obtenerTextoVarianteMenu(tipoVariante) {
     const textos = {
         'tamaño': 'Varios tamaños',
@@ -389,16 +374,12 @@ function obtenerTextoVarianteMenu(tipoVariante) {
     return textos[tipoVariante] || 'Varias opciones';
 }
 
-/**
- * Obtiene el valor a mostrar de una variante
- */
 function obtenerValorVariante(variante) {
     const keys = Object.keys(variante);
     const attributeKey = keys.find(key => key !== 'price');
     return attributeKey ? variante[attributeKey] : null;
 }
 
-// ========== CONFIGURACIÓN Y ESTADO ==========
 let cart = [];
 let currentItem = null;
 let isRestaurantOpen = false;
@@ -494,7 +475,7 @@ function renderMenu() {
           let textoVariante = hasVariantes ? obtenerTextoVarianteMenu(tipoVariante) : '';
           
           menuHTML += `
-              <div class="flex justify-between items-center cursor-pointer p-3 rounded-md hover:bg-gray-700 menu-item" 
+              <div class="flex justify-between items-center cursor-pointer p-3 rounded-lg hover:bg-gray-700 menu-item" 
                    data-category="${category}" 
                    data-name="${item.name}" 
                    data-has-variantes="${hasVariantes}"
@@ -632,10 +613,13 @@ function updateCheckoutButton() {
     
     if (!isRestaurantOpen) {
         checkoutButton.setAttribute('title', 'El restaurante está cerrado');
+        checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
     } else if (cart.length === 0) {
         checkoutButton.setAttribute('title', 'Añade productos para continuar');
+        checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
     } else {
         checkoutButton.removeAttribute('title');
+        checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 }
 
@@ -722,7 +706,7 @@ function showVariantesSelector(variantes, tipoVariante = null) {
         const valorMostrar = obtenerValorVariante(variante) || `Opción ${index + 1}`;
         
         variantesHTML += `
-            <label class="flex items-center justify-between p-3 rounded-md bg-gray-700 hover:bg-gray-600 cursor-pointer transition-colors">
+            <label class="flex items-center justify-between p-3 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition-colors">
                 <div class="flex items-center">
                     <input type="radio" name="variante" value="${index}" 
                         ${index === 0 ? 'checked' : ''} 
@@ -816,12 +800,18 @@ function handleCheckoutSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(customerForm);
+    let total = 0;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+    });
     const customerData = {
         name: document.getElementById('name').value || 'Cliente',
         address: document.getElementById('address').value,
         phone: document.getElementById('phone').value,
         paymentMethod: formData.get('payment'),
-        cashAmount: document.getElementById('cash-amount').value
+        cashAmount: total //document.getElementById('cash-amount').value
     };
     
     // Validar campos obligatorios
@@ -832,6 +822,13 @@ function handleCheckoutSubmit(event) {
     
     // Guardar datos de usuario
     saveUserData(customerData);
+    
+    // fetch puntos + cliente
+    fetch(`/api/pedido/${window.restaurantConfig.restauranteConfig.extension}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(customerData)
+    });
     
     // Enviar por WhatsApp
     const message = formatOrderForWhatsApp(customerData);
@@ -899,19 +896,36 @@ function formatOrderForWhatsApp(customerData) {
 // ========== UTILIDADES ==========
 function checkRestaurantStatus() {
     const now = new Date();
-    const currentHour = now.getHours();
+    let currentTime = now.getHours() + (now.getMinutes() / 60);
+
     const horario = window.restaurantConfig.horario;
-    
-    isRestaurantOpen = currentHour >= horario.apertura && currentHour < horario.cierre;
-    
+    const apertura = horario.aperturaDecimal;
+    const cierre = horario.cierreDecimal;
+
+    // Ajustar hora actual si el horario cruza medianoche
+    if (cierre > 24 && currentTime < apertura) {
+        currentTime += 24;
+    }
+
+    // Comparar con el rango
+    isRestaurantOpen = currentTime >= apertura && currentTime < cierre;
+
     if (statusMessageElement) {
         if (isRestaurantOpen) {
-            statusMessageElement.innerHTML = `<p class="text-emerald-400 font-semibold">✅ Abierto hasta las ${horario.cierre}:00</p>`;
+            statusMessageElement.innerHTML = `
+                <p class="text-emerald-400 font-semibold">
+                    ✅ Abierto hasta las ${horario.cierreStr}
+                </p>`;
         } else {
-            statusMessageElement.innerHTML = `<p class="text-red-400 font-semibold">❌ Cerrado</p><p class="text-xs text-gray-400">Horario: ${horario.apertura}:00-${horario.cierre}:00</p>`;
+            statusMessageElement.innerHTML = `
+                <p class="text-red-400 font-semibold">❌ Cerrado</p>
+                <p class="text-xs text-gray-400">
+                    Horario: ${horario.aperturaStr} - ${horario.cierreStr}
+                </p>`;
         }
+        statusMessageElement.classList.remove('hidden');
     }
-    
+
     updateCheckoutButton();
 }
 
@@ -966,68 +980,6 @@ function showError(message) {
 }
 </script>
 
-<!-- Script de instalación PWA -->
-<script>
-// Detectar si el navegador soporta PWA
-  if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-          // Registrar Service Worker
-          navigator.serviceWorker.register('/sw.js')
-              .then((registration) => {
-                  console.log('SW registered: ', registration);
-              })
-              .catch((registrationError) => {
-                  console.log('SW registration failed: ', registrationError);
-              });
-      });
-  }
-  
-  // Manejar el prompt de instalación
-  let deferredPrompt;
-  const installButton = document.getElementById('install-button');
-  
-  window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      
-      // Mostrar botón de instalación
-      if (installButton) {
-          installButton.style.display = 'block';
-          installButton.addEventListener('click', installPWA);
-      }
-  });
-  
-  function installPWA() {
-      if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-              if (choiceResult.outcome === 'accepted') {
-                  console.log('Usuario aceptó la instalación');
-              }
-              deferredPrompt = null;
-          });
-      }
-  }
-  
-  // Verificar si la app ya está instalada
-  window.addEventListener('appinstalled', () => {
-      console.log('PWA fue instalada');
-      if (installButton) {
-          installButton.style.display = 'none';
-      }
-  });
-  
-  // Botón de instalación flotante (agrégalo al HTML)
-  function createInstallButton() {
-      const button = document.createElement('button');
-      button.id = 'install-button';
-      button.className = 'fixed bottom-4 right-4 bg-emerald-500 text-white p-3 rounded-full shadow-lg z-50 hidden';
-      button.innerHTML = '<i class="fas fa-download"></i>';
-      button.title = 'Instalar app';
-      document.body.appendChild(button);
-  }
-  
-  document.addEventListener('DOMContentLoaded', createInstallButton);
-</script>
+ <%- include('partials/footer') %>
 </body>
 </html>

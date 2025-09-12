@@ -1,10 +1,13 @@
 {
   "config": {
+    "orden": 2,
     "nombre": "Delipost",
-    "extension": "delipost",
-    "telefonoWhatsApp": "573003334444",
-    "horarioApertura": 17,
-    "horarioCierre": 23,
+    "extension": "https://vinapp.co/delipost",
+    "telefonoWhatsApp": "3242496180",
+    "horarioApertura": "16.30",
+    "horarioCierre": "22.45",
+    "direccion": "Calle 8 # 11 - 05",
+    "logoUrl": "https://back.vinapp.co//store/1000x500259933-2025-08-06-16-48-37.webp",
     "colores": {
       "primario": "#ec4899",
       "secundario": "#ffffff",
@@ -26,18 +29,13 @@
       "short_name": "Delipost",
       "name": "Delipost - Pedidos",
       "description": "Tú heladería favorita.",
-      "theme_color": "#EC4899",
-      "background_color": "#EC4899",
+      "theme_color": "#fcf2f9",
+      "background_color": "#fcf2f9",
       "display": "standalone",
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/delipost-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "/assets/delipost-512.png",
+          "src": "/assets/icons/delipost.png",
           "sizes": "512x512",
           "type": "image/png"
         }

@@ -1,26 +1,38 @@
 <%- include('layout', {title: 'Restaurante no encontrado', styles: true}) %>
 
-<body class="bg-gray-900 text-white min-h-screen flex items-center">
-    <div class="container mx-auto px-4 text-center">
-        <div class="text-6xl mb-4">😕</div>
-        <h1 class="text-3xl font-bold text-red-400 mb-4"><%= message %></h1>
-        
-        <% if (restaurantesDisponibles && restaurantesDisponibles.length > 0) { %>
-        <div class="max-w-md mx-auto">
-            <h2 class="text-xl text-emerald-400 mb-4">Restaurantes disponibles:</h2>
-            <div class="grid grid-cols-2 gap-3">
-                <% restaurantesDisponibles.forEach(rest => { %>
-                    <a href="/<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
-                        <%= rest.nombre %>
-                    </a>
-                <% }); %>
+<body class="antialiased">
+    <main class="relative min-h-screen flex items-center justify-center text-center overflow-hidden px-6">
+        <!-- Fondo decorativo con gradiente y blur -->
+        <div class="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-orange-500/30 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+
+        <div class="relative z-10">
+            <p class="text-9xl md:text-[12rem] font-black tracking-tighter leading-none animated-gradient">404</p>
+            <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mt-4">😕</h1>
+            <p class="mt-6 text-base md:text-lg leading-7 text-slate-300 max-w-lg mx-auto">
+              <%= message %>
+            </p>
+            
+            <% if (restaurantesDisponibles && restaurantesDisponibles.length > 0) { %>
+            <div class="max-w-md mx-auto">
+                <h2 class="text-xl text-emerald-400 mb-4">Restaurantes disponibles:</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <% restaurantesDisponibles.forEach(rest => { %>
+                        <a href="/<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
+                            <%= rest.nombre %>
+                        </a>
+                    <% }); %>
+                </div>
+            </div>
+            <% } %>
+            
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+                <a href="/" class="inline-block bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-orange-500 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-600/30">
+                    Volver al inicio
+                </a>
             </div>
         </div>
-        <% } %>
-        
-        <a href="/" class="inline-block mt-8 bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-emerald-600 transition-colors">
-            ← Volver al inicio
-        </a>
-    </div>
+    </main>
+
 </body>
 </html>

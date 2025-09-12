@@ -1,179 +1,344 @@
+require('./utils/dbConnect');
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
-const fs = require('fs');
 const app = express();
 
-// Configuración
+const { info, PORT } = require('./config')
+const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Función para cargar todos los menús automáticamente
-function cargarMenusAutomaticamente() {
-  const menus = {};
-  const menusPath = path.join(__dirname, 'data', 'menus');
-  
-  console.log('Buscando menús en:', menusPath);
-  
+const RestaurantePuntos = require('./models/restaurantes_puntos');
+let menus = {};
+
+app.get('/', async (req, res) => {
   try {
-    if (!fs.existsSync(menusPath)) {
-      console.log('❌ La carpeta data/menus/ no existe');
-      fs.mkdirSync(menusPath, { recursive: true });
-      console.log('✅ Carpeta data/menus/ creada');
-      return {};
-    }
+    const { sort, filter, search, page = 1, limit = 6 } = req.query;
+    const currentPage = parseInt(page);
+    const itemsPerPage = parseInt(limit);
     
-    const archivos = fs.readdirSync(menusPath);
-    console.log('Archivos encontrados:', archivos);
+    const puntosDB = await RestaurantePuntos.find().lean();
+    const puntosMap = Object.fromEntries(puntosDB.map(r => [r.extension, r.puntos || 0]));
     
-    archivos.forEach(archivo => {
-      if (archivo.endsWith('.json')) {
-        try {
-          const filePath = path.join(menusPath, archivo);
-          const menuData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-          
-          if (menuData.config && menuData.config.extension) {
-            const extension = menuData.config.extension;
-            menus[extension] = menuData;
-            console.log(`✅ ${archivo} → ${extension}`);
-          } else {
-            console.log(`⚠️  ${archivo} - No tiene extension válida`);
-          }
-        } catch (error) {
-          console.log(`❌ Error cargando ${archivo}:`, error.message);
+    let restaurantesInfo = Object.values(menus)
+      .map(menu => {
+        const horario = procesarHorario(menu.config);
+        const ahora = new Date();
+        const horaActual = ahora.getHours() + (ahora.getMinutes() / 60);
+        
+        let estaAbierto = false;
+        if (horario.cierreDecimal < horario.aperturaDecimal) {
+          estaAbierto = horaActual >= horario.aperturaDecimal || horaActual < horario.cierreDecimal;
+        } else {
+          estaAbierto = horaActual >= horario.aperturaDecimal && horaActual < horario.cierreDecimal;
         }
-      }
-    });
+        
+        return {
+          id: menu.config.extension,
+          name: menu.config.nombre,
+          hours: horario,
+          address: menu.config.direccion || '',
+          phone: menu.config.telefonoWhatsApp,
+          logo: menu.config.logoUrl || '/assets/fondos/mjfood.png',
+          isOpen: estaAbierto,
+          popularity: puntosMap[menu.config.extension] || 0,
+          category: menu.config.category || 'general',
+          priceRange: menu.config.priceRange || 2, // Valor medio por defecto
+          services: menu.config.services || [],
+          tags: menu.config.tags || []
+        };
+      });
+
+    // filtros
+    if (filter === 'open') {
+      restaurantesInfo = restaurantesInfo.filter(r => r.isOpen);
+    } else if (filter === 'closed') {
+      restaurantesInfo = restaurantesInfo.filter(r => !r.isOpen);
+    }
+
+    // búsqueda
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      restaurantesInfo = restaurantesInfo.filter(r => 
+        r.name.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // ordenamiento
+    if (sort === 'az') {
+      restaurantesInfo.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sort === 'open') {
+      restaurantesInfo.sort((a, b) => {
+        if (a.isOpen && !b.isOpen) return -1;
+        if (!a.isOpen && b.isOpen) return 1;
+        return 0;
+      });
+    } else {
+      //restaurantesInfo.sort((a, b) => b.popularity - a.popularity);
+      restaurantesInfo.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Calcular paginación
+    const totalItems = restaurantesInfo.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+    const paginatedRestaurants = restaurantesInfo.slice(startIndex, endIndex);
     
-    return menus;
+    res.render('index', { 
+      info,
+      restaurantes: paginatedRestaurants,
+      pagination: {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        hasPrev: currentPage > 1,
+        hasNext: currentPage < totalPages,
+        prevPage: currentPage - 1,
+        nextPage: currentPage + 1
+      },
+      currentSort: sort || 'popularity',
+      currentFilter: filter || 'all',
+      searchTerm: search || '',
+      totalItems: totalItems
+    });
   } catch (error) {
-    console.log('❌ Error leyendo carpeta de menús:', error.message);
-    return {};
+    console.error('Error en la ruta principal:', error);
+    res.status(500).render('error', {
+      message: 'Error al cargar los restaurantes',
+      restaurantesDisponibles: []
+    });
   }
-}
-
-// Cargar menús al iniciar
-const menus = cargarMenusAutomaticamente();
-
-// Página de inicio con lista automática
-app.get('/', (req, res) => {
-  const restaurantesInfo = Object.keys(menus).map(key => {
-    const config = menus[key].config;
-    return {
-      id: key,
-      nombre: config.nombre,
-      horario: `${config.horarioApertura}:00 - ${config.horarioCierre}:00`,
-      telefono: config.telefonoWhatsApp
-    };
-  });
+});
+app.get('/manifest.json', (req, res) => {
+  const manifest = {
+    short_name: info.name_page,
+    name: `${info.name_page} - Directorio`,
+    description: info.desc,
+    theme_color: info.colorTheme,
+    background_color: info.colorTheme,
+    "display": "standalone",
+    "orientation": "portrait",
+    "start_url": "/",
+    "scope": "/",
+    "icons": [
+      {
+        "src": "/assets/fondos/mjfood.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "categories": ["food", "restaurant"],
+    "lang": "es"
+  };
   
-  res.render('index', {
-    name_page: 'Nuestros Restaurantes',
-    restaurantes: restaurantesInfo
-  });
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(manifest));
 });
 
 app.get('/:restaurante', (req, res) => {
-    const { restaurante } = req.params;
-    
-    if (!menus[restaurante]) {
-        return res.status(404).render('error', {
-            message: 'Restaurante no encontrado',
-            restaurantesDisponibles: Object.keys(menus).map(key => ({
-                id: key,
-                nombre: menus[key].config.nombre
-            }))
-        });
-    }
-    
-    const restauranteData = menus[restaurante];
-    
-    res.render('menu', {
-        name_page: restauranteData.config.nombre,
-        restaurante: restaurante,
-        restauranteConfig: restauranteData.config,
-        menuData: restauranteData.menu,
-        config: {
-            horarioApertura: restauranteData.config.horarioApertura,
-            horarioCierre: restauranteData.config.horarioCierre,
-            colores: restauranteData.config.colores || {
-                primario: "#10B981",
-                secundario: "#F59E0B",
-                fondo: "#2F384C",
-                texto: "#F3F4F6"
-            },
-            // NUEVO: Pasar configuración de fondo
-            fondo: restauranteData.config.fondo || {
-                tipo: "color",
-                valor: restauranteData.config.colores?.fondo || "#2F384C"
-            },
-            fuentes: restauranteData.config.fuentes
-        }
+  const restauranteData = menus[req.params.restaurante];
+ 
+  if (!restauranteData) {
+    const restaurantesDisponibles = Object.values(menus)
+      .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
+      .map(menu => ({
+        id: menu.config.extension,
+        nombre: menu.config.nombre
+      }));
+
+    return res.status(404).render('error', {
+      message: 'Restaurante no encontrado',
+      restaurantesDisponibles
     });
+  }
+
+  const horarioNormalizado = procesarHorario(restauranteData.config);
+
+  res.render('menu', {
+    name_page: restauranteData.config.nombre,
+    restaurante: req.params.restaurante,
+    restauranteConfig: restauranteData.config,
+    menuData: restauranteData.menu,
+    config: restauranteData.config,
+    horarioRestaurante: horarioNormalizado
+  });
 });
-// Agrega esta ruta después de cargar los menús
+app.get('/:restaurante/sw.js', (req, res) => {
+  const extension = req.params.restaurante;
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(`
+    // Service Worker para el restaurante ${extension}
+    const CACHE_NAME = 'restaurant-${extension}-v1';
+    const urlsToCache = [
+      '/restaurant/${extension}',
+      '/js/pwa-handler.js',
+      '/assets/icons/icon-192x192.png',
+      '/assets/icons/icon-512x512.png'
+    ];
+
+    self.addEventListener('install', event => {
+      event.waitUntil(
+        caches.open(CACHE_NAME)
+          .then(cache => cache.addAll(urlsToCache))
+      );
+    });
+
+    self.addEventListener('fetch', event => {
+      event.respondWith(
+        caches.match(event.request)
+          .then(response => response || fetch(event.request))
+      );
+    });
+    
+    // Manejar mensajes desde la app
+    self.addEventListener('message', event => {
+      if (event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+      }
+    });
+  `);
+});
 app.get('/:restaurante/manifest.json', (req, res) => {
-    const { restaurante } = req.params;
-    
-    if (!menus[restaurante]) {
-        return res.status(404).json({ error: 'Restaurante no encontrado' });
-    }
-    
-    const restauranteData = menus[restaurante];
-    const pwaConfig = restauranteData.config.pwa || {};
-    
-    const manifest = {
-        short_name: pwaConfig.short_name || restauranteData.config.nombre,
-        name: pwaConfig.name || `${restauranteData.config.nombre} - Menú Digital`,
-        description: pwaConfig.description || `App de pedidos para ${restauranteData.config.nombre}`,
-        theme_color: pwaConfig.theme_color || "#10B981",
-        background_color: pwaConfig.background_color || "#1F2937",
-        display: pwaConfig.display || "standalone",
-        orientation: pwaConfig.orientation || "portrait",
-        scope: pwaConfig.scope || `/${restaurante}/`,
-        start_url: pwaConfig.start_url || `/${restaurante}/`,
-        icons: pwaConfig.icons || [
-            {
-                "src": "/assets/icons/icon-192x192.png",
-                "sizes": "192x192",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ],
-        categories: pwaConfig.categories || ["food", "restaurant"],
-        lang: pwaConfig.lang || "es"
-    };
-    
-    res.setHeader('Content-Type', 'application/json');
-    res.json(manifest);
+  const restauranteData = menus[req.params.restaurante];
+  if (!restauranteData) {
+    return res.status(404).json({ error: 'Restaurante no encontrado' });
+  }
+
+  const pwaConfig = restauranteData.config.pwa || {};
+  const manifest = {
+    short_name: pwaConfig.short_name || restauranteData.config.nombre,
+    name: pwaConfig.name || `${restauranteData.config.nombre} - Menú Digital`,
+    description: pwaConfig.description || `App de pedidos para ${restauranteData.config.nombre}`,
+    theme_color: pwaConfig.theme_color || "#0a0a0aff",
+    background_color: pwaConfig.background_color || "#0a0a0aff",
+    display: pwaConfig.display || "standalone",
+    start_url: pwaConfig.start_url || `/${req.params.restaurante}/`,
+    scope: pwaConfig.scope || `/${req.params.restaurante}/`,
+    icons: pwaConfig.icons || [{
+      "src": `/assets/fondos/mjfood.png`,
+      "sizes": "512x512",
+      "type": "image/png"
+    }],
+    categories: pwaConfig.categories || ["food", "restaurant"],
+    lang: pwaConfig.lang || "es"
+  };
+
+  res.json(manifest);
 });
 
-// Ruta para recargar menús sin reiniciar el servidor (útil durante desarrollo)
-app.get('/admin/recargar-menus', (req, res) => {
-  const nuevosMenus = cargarMenusAutomaticamente();
-  Object.assign(menus, nuevosMenus);
+const { procesarPedido } = require('./utils/procesarPedido');
+app.post('/api/pedido/:extension', express.json(), async (req, res) => {
+  const { extension } = req.params;
+  const customer = req.body;
   
+  try {
+    await procesarPedido(extension, customer);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// admin
+app.get('/admin/recargar-menus', async (req, res) => {
+  console.log('\n🔄 Recargando menús manualmente...');
+  menus = await cargarMenusDesdeArchivos();
+
+  const ordenados = Object.values(menus)
+    .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
+    .map(menu => menu.config.extension);
+
   res.json({
     success: true,
-    message: `Menús recargados. ${Object.keys(menus).length} restaurantes cargados`,
-    restaurantes: Object.keys(menus)
+    message: `Menús recargados. ${ordenados.length} restaurantes cargados`,
+    restaurantes: ordenados
+  });
+});
+/*app.get('/admin/clientes/:extension', async (req, res) => {
+  const { extension } = req.params;
+  const registro = await RestaurantePuntos.findOne({ extension }).lean();
+
+  if (!registro) {
+    return res.json({ success: false, message: 'Restaurante no encontrado' });
+  }
+
+  const ranking = registro.clientes
+    .sort((a, b) => b.totalGastado - a.totalGastado) // por dinero gastado
+    .map(c => ({
+      phone: c.phone,
+      pedidos: c.totalPedidos,
+      gastado: c.totalGastado
+    }));
+
+  res.json({ success: true, clientes: ranking });
+});*/
+app.get('/:extension/panel', async (req, res) => {
+  const { extension } = req.params;
+  const { token } = req.query;
+
+  const registro = await RestaurantePuntos.findOne({ extension }).lean();
+
+  if (!registro) {
+    return res.status(404).send('Restaurante no encontrado');
+  }
+
+  // Validar token
+  if (!token || token !== registro.token) {
+    return res.status(403).send('Acceso denegado. Token inválido');
+  }
+
+  // Ordenar clientes por dinero gastado
+  const ranking = registro.clientes
+    .sort((a, b) => b.totalGastado - a.totalGastado)
+    .map((c, i) => ({
+      pos: i + 1,
+      phone: c.phone,
+      pedidos: c.totalPedidos,
+      gastado: c.totalGastado
+    }));
+
+  res.render('panel', {
+    restaurante: registro.extension,
+    puntos: registro.puntos,
+    orden: registro.orden,
+    clientes: ranking
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🍕 Servidor ejecutándose en http://localhost:${PORT}`);
-  console.log('📋 Restaurantes cargados automáticamente:');
-  
-  Object.keys(menus).forEach(rest => {
-    const config = menus[rest].config;
-    console.log(`   → ${config.nombre}`);
-    console.log(`     🌐 http://localhost:${PORT}/${rest}`);
-    console.log(`     📞 WhatsApp: ${config.telefonoWhatsApp}`);
-    console.log(`     ⏰ Horario: ${config.horarioApertura}:00-${config.horarioCierre}:00`);
-    console.log(`     📊 Categorías: ${Object.keys(menus[rest].menu).length}`);
-    console.log('     ──────────────────────────────');
+function parseHoraToDecimal(horaStr) {
+  let [horas, minutos] = horaStr.split('.').map(Number);
+  return horas + (minutos / 60);
+}
+function formatHora(horaDecimal) {
+  const horas = Math.floor(horaDecimal % 24);
+  const minutos = Math.round((horaDecimal - Math.floor(horaDecimal)) * 60);
+  return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+}
+function procesarHorario(config) {
+  let apertura = parseHoraToDecimal(config.horarioApertura);
+  let cierre = parseHoraToDecimal(config.horarioCierre);
+
+  // Detectar cruce de medianoche
+  if (cierre < apertura) {
+    cierre += 24;
+  }
+
+  return {
+    aperturaDecimal: apertura,
+    cierreDecimal: cierre,
+    aperturaStr: formatHora(apertura),
+    cierreStr: formatHora(cierre)
+  };
+}
+
+(async () => {
+  menus = await cargarMenusDesdeArchivos();
+  console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });
-  
-  console.log('\n🔄 Para recargar menús sin reiniciar: http://localhost:3000/admin/recargar-menus');
-});
+})();

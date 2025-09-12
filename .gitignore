@@ -1,3 +1,6 @@
 node_modules/
 
+.env
+copy.sh
+data.txt
 package-lock.json

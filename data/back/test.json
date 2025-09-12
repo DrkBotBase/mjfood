@@ -2,14 +2,32 @@
   "config": {
     "nombre": "Sushi Paradise",
     "extension": "sushi",
-    "telefonoWhatsApp": "573005678901",
-    "horarioApertura": 12,
-    "horarioCierre": 22,
+    "telefonoWhatsApp": "573046793853",
+    "horarioApertura": "11.00",
+    "horarioCierre": "1.30",
+    "direccion": "Cra 13 # 14 - 26",
+    "logoUrl": "",
+    "orden": 1,
+    "category": "asiatica",
+    "priceRange": 3,
+    "services": ["reservas", "delivery", "takeaway"],
+    "tags": ["japones", "sushi", "pescado fresco", "asia"],
     "colores": {
       "primario": "#2563EB",
       "secundario": "#EF4444",
       "fondo": "#111827",
       "texto": "#E5E7EB"
+    },
+    "fondo": {
+      "tipo": "imagen",
+      "valor": "https://ejemplo.com/fondos/sushi-bg.jpg",
+      "opacidad": 0.8
+    },
+    "fuentes": {
+      "primaria": {
+        "familia": "'Noto Sans SC', sans-serif",
+        "url": "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+      }
     },
     "pwa": {
       "short_name": "Sushi App",
@@ -32,6 +50,9 @@
   },
   "menu": {
     "ROLLOS": [
+      {
+        "name": "Edamame","price": 12000, "description": "Vainas de soja cocidas con sal marina"
+      },
       { "name": "California Roll", "price": 18000, "description": "Cangrejo, aguacate, pepino" }
     ]
   }

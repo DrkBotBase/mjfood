@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel - <%= restaurante %></title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-100 p-8">
+  <h1 class="text-3xl font-bold mb-6">📊 Panel de <%= restaurante %></h1>
+
+  <div class="mb-6">
+    <p><strong>Pedidos totales:</strong> <%= puntos %></p>
+    <p><strong>Orden actual:</strong> <%= orden %></p>
+  </div>
+
+  <h2 class="text-2xl font-semibold mb-4">👥 Clientes más activos</h2>
+  <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden">
+    <thead>
+      <tr class="bg-gray-700">
+        <th class="px-4 py-2">#</th>
+        <th class="px-4 py-2">Teléfono</th>
+        <th class="px-4 py-2">Pedidos</th>
+        <th class="px-4 py-2">Gastado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% clientes.forEach(cliente => { %>
+        <tr class="border-t border-gray-600">
+          <td class="px-4 py-2"><%= cliente.pos %></td>
+          <td class="px-4 py-2"><%= cliente.phone %></td>
+          <td class="px-4 py-2"><%= cliente.pedidos %></td>
+          <td class="px-4 py-2">$<%= cliente.gastado %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

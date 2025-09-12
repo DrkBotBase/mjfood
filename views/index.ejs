@@ -1,40 +1,226 @@
-<%- include('layout', {title: name_page, styles: true}) %>
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= info.name_page %></title>
+    
+  <meta name="description" content="<%= info.desc %>">
+  <meta name="keywords" content="">
+  <meta name="author" content="<%= info.author %>">
+  <meta name="theme-color" content="<%= info.colorTheme %>">
 
-<body class="bg-gray-900 text-white min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-emerald-400 mb-4">🍽️ Nuestros Restaurantes</h1>
-            <p class="text-gray-400">Selecciona un restaurante para ver su menú</p>
-        </header>
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="<%= info.dominio %>">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <% restaurantes.forEach(restaurante => { %>
-                <a href="/<%= restaurante.id %>" class="bg-gray-800 rounded-lg p-6 text-center hover:bg-gray-700 transition-colors shadow-lg">
-                    <div class="text-4xl mb-4">
-                        <% if (restaurante.id.includes('pizza')) { %>
-                            🍕
-                        <% } else if (restaurante.id.includes('mexicano')) { %>
-                            🌮
-                        <% } else if (restaurante.id.includes('sushi')) { %>
-                            🍣
-                        <% } else if (restaurante.id.includes('helados')) { %>
-                            🍦
-                        <% } else if (restaurante.id.includes('cafe')) { %>
-                            ☕
-                        <% } else { %>
-                            🍔
-                        <% } %>
+  <meta property="og:title" content="<%= info.name_page %>">
+  <meta property="og:description" content="<%= info.desc %>.">
+
+  <meta property="og:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta property="og:image:alt" content="<%= info.name_page %>">
+  <meta property="fb:app_id" content="<%= info.fb_app_id %>">
+  <meta property="og:url" content="<%= info.dominio %>">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="<%= info.name_page %>">
+  <meta property="og:locale" content="es_ES">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= info.name_page %>">
+  <meta name="twitter:description" content="<%= info.desc %>">
+  <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta name="twitter:image:alt" content="<%= info.name_page %>">
+  <meta name="apple-mobile-web-app-status-bar-style" content="<%= info.colorTheme %>">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="manifest" href="/manifest.json">
+  
+  <link rel="icon" href="/assets/fondos/<%= info.logo %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/fondos/<%= info.logo %>.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: <%= info.colorTheme %>;
+      color: #f5f5f5;
+    }
+    .animated-gradient {
+      background: linear-gradient(90deg, #f97316, #ec4899, #8b5cf6, #f97316);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-flow 10s ease-in-out infinite;
+    }
+      
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <div class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-16">
+    <div class="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-orange-500/30 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+    <header class="text-center z-10">
+      <a href="/" class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-4">
+        <span class="animated-gradient"><%= info.name_page %></span>
+      </a>
+      <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-8">
+        Tu portal para amantes de la buena comida.
+      </p>
+      <a href="#restaurantes" class="inline-block bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-orange-500 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-600/30">
+        Ver Restaurantes
+      </a>
+    </header>
+  </div>
+  
+  <main id="restaurantes" class="py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center mb-16">
+        <h2 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">Nuestra Selección Exclusiva</h2>
+        <p class="mt-6 text-lg leading-8 text-slate-300">
+          Desde la cocina tradicional hasta las propuestas más innovadoras, aquí tienes los lugares que no te puedes perder.
+        </p>
+      </div>
+      
+      <!-- Controles de Filtrado y Ordenamiento -->
+      <div class="mb-12 bg-slate-800/50 p-6 rounded-2xl shadow-lg">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div class="w-full md:w-auto">
+                  <h3 class="text-xl font-semibold mb-3 text-white">Ordenar por</h3>
+                  <div class="flex flex-wrap gap-2">
+                      <a href="?sort=popularity<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="sort-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentSort === 'popularity' ? 'active' : '' %>">
+                          Más populares
+                      </a>
+                      <a href="?sort=az<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="sort-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentSort === 'az' ? 'active' : '' %>">
+                          Orden A-Z
+                      </a>
+                      <a href="?sort=open<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="sort-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentSort === 'open' ? 'active' : '' %>">
+                          Abiertos primero
+                      </a>
+                  </div>
+              </div>
+              
+              <div class="w-full md:w-auto">
+                  <h3 class="text-xl font-semibold mb-3 text-white">Filtrar por</h3>
+                  <div class="flex flex-wrap gap-2">
+                      <a href="?filter=all<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="filter-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentFilter === 'all' ? 'active' : '' %>">
+                          Todos
+                      </a>
+                      <a href="?filter=open<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="filter-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentFilter === 'open' ? 'active' : '' %>">
+                          Abiertos
+                      </a>
+                      <a href="?filter=closed<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>" 
+                          class="filter-btn bg-slate-700 px-4 py-2 rounded-full hover:bg-slate-600 transition <%= currentFilter === 'closed' ? 'active' : '' %>">
+                          Cerrados
+                      </a>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="mt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div class="text-slate-300">
+                  Mostrando <span id="restaurant-count"><%= restaurantes.length %></span> 
+                  de <span id="total-restaurants"><%= totalItems %></span> restaurantes
+                  <% if (searchTerm) { %> para "<%= searchTerm %>"<% } %>
+              </div>
+              
+              <div class="w-full md:w-auto">
+                  <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                      <form action="/" method="GET" class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                          <input type="hidden" name="sort" value="<%= currentSort %>">
+                          <input type="hidden" name="filter" value="<%= currentFilter %>">
+                          
+                          <div class="relative flex-1">
+                              <input type="text" name="search" placeholder="Buscar restaurante..." value="<%= searchTerm %>"
+                                  class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                          </div>
+                          
+                          <div class="flex gap-2">
+                              <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition whitespace-nowrap">
+                                  <i class="fas fa-search"></i> Buscar
+                              </button>
+                              <% if (searchTerm) { %>
+                              <a href="?sort=<%= currentSort %>&filter=<%= currentFilter %>" class="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-600 transition whitespace-nowrap">
+                                  <i class="fas fa-times"></i> Limpiar
+                              </a>
+                              <% } %>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      <!-- Lista de Restaurantes -->
+      <div id="restaurant-list" class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <% if (restaurantes && restaurantes.length > 0) { %>
+          <% restaurantes.forEach(resto => { %>
+          <article class="restaurant-card flex max-w-xl flex-col items-start justify-between bg-slate-900/40 rounded-2xl p-6 ring-1 ring-white/10 shadow-2xl shadow-slate-900/50 hover:ring-orange-500/50 transition-all duration-300 <%= resto.isOpen ? 'open-now' : 'closed-now' %>">
+            <a href="<%= resto.id %>" class="w-full">
+              <div class="relative w-full">
+                <img src="<%= resto.logo || '/assets/fondos/mjfood.png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full rounded-xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                <div class="absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"></div>
+              </div>
+              <div class="max-w-xl w-full mt-6">
+                <div class="group relative">
+                  <h3 class="mt-3 text-2xl font-semibold leading-6 text-white group-hover:text-orange-400 transition-colors duration-300">
+                    <span class="absolute inset-0"></span>
+                    <%= resto.name %>
+                  </h3>
+                  <div class="mt-5 relative flex flex-col gap-y-4">
+                    <div class="flex items-center gap-x-3 text-sm">
+                      <svg class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="font-semibold text-white"><%= resto.address %></span>
                     </div>
-                    <h2 class="text-xl font-bold text-emerald-400"><%= restaurante.nombre %></h2>
-                    <p class="text-gray-400 text-sm mt-2"><%= restaurante.horario %></p>
-                    <p class="text-gray-500 text-xs mt-1">📞 <%= restaurante.telefono %></p>
-                </a>
-            <% }); %>
-        </div>
-
-        <footer class="text-center mt-12 text-gray-500">
-            <p>¿Eres propietario? <a href="#" class="text-emerald-400 hover:underline">Contáctanos para añadir tu restaurante</a></p>
-        </footer>
+                    <div class="flex items-center gap-x-3 text-sm">
+                      <svg class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.5A13.5 13.5 0 012 3.5z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="font-semibold text-white"><%= resto.phone.replace('57', '') %></span>
+                    </div>
+                    <div class="flex items-center gap-x-3 text-sm">
+                      <svg class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="font-semibold text-white"><%= resto.hours.aperturaStr %> - <%= resto.hours.cierreStr %></span>
+                    </div>
+                    <div class="flex items-center gap-x-3 text-sm">
+                      <svg class="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                        <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="font-semibold <%= resto.isOpen ? 'text-green-400' : 'text-red-400' %>">
+                        <%= resto.isOpen ? 'Abierto ahora' : 'Cerrado' %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            </article>
+          <% }); %>
+        <% } else { %>
+          <p class="text-slate-300 col-span-full text-center">No hay restaurantes para mostrar <%= searchTerm ? 'para "' + searchTerm + '"' : 'en este momento' %>.</p>
+        <% } %>
+      </div>
     </div>
+  </main>
+  
+  <%- include('partials/footer')%>
 </body>
 </html>

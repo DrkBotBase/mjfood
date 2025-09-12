@@ -1,10 +1,13 @@
 {
   "config": {
+    "orden": 1,
     "nombre": "Taylor Wok",
     "extension": "taylor_wok",
     "telefonoWhatsApp": "573052169035",
-    "horarioApertura": 10,
-    "horarioCierre": 20,
+    "horarioApertura": "10.00",
+    "horarioCierre": "20.00",
+    "direccion": "Cra 10 # 8 - 66",
+    "logoUrl": "/assets/fondos/taylor_wok.png",
     "colores": {
       "primario": "#ffd25f",
       "secundario": "#ffd25f",
@@ -12,9 +15,9 @@
       "texto": "#FFFFFF"
     },
     "fondo": {
-      "tipo": "imagen",
-      "valor": "/assets/fondos/preview.jpg",
-      "opacidad": 0.9
+      "tipo": "color",
+      "valor": "#ee5756",
+      "opacidad": 1
     },
     "fuentes": {
       "primaria": {
@@ -30,18 +33,13 @@
       "short_name": "Taylor Wok",
       "name": "Taylor Wok - Pedidos",
       "description": "Restaurante de comida china.",
-      "theme_color": "#c70100",
-      "background_color": "#c70100",
+      "theme_color": "#ee5756",
+      "background_color": "#ee5756",
       "display": "standalone",
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/wok-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "/assets/wok-512.png",
+          "src": "/assets/icons/taylor_wok.png",
           "sizes": "512x512",
           "type": "image/png"
         }
