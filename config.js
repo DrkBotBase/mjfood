@@ -4,7 +4,7 @@ module.exports = {
     author: 'ianvanh',
     name_page: 'MJFOOD',
     desc: 'Tu portal de restaurantes',
-    dominio: 'https://mjfood.onrender.com',
+    dominio: 'https://mjfood.top',
     colorTheme: '#0a0a0a',
     fb_app_id: '',
     logo: 'mjfood'

@@ -163,6 +163,7 @@ app.get('/:restaurante', (req, res) => {
   const horarioNormalizado = procesarHorario(restauranteData.config);
 
   res.render('menu', {
+    info,
     name_page: restauranteData.config.nombre,
     restaurante: req.params.restaurante,
     restauranteConfig: restauranteData.config,

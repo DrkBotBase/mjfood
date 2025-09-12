@@ -13,6 +13,30 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="<%= typeof pwaShortName !== 'undefined' ? pwaShortName : 'Menú' %>">
     
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="<%= info.dominio %>">
+    
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="<%= pwaDescription %>.">
+    
+    <meta property="og:image" content="<%= info.dominio %><%= config.logoUrl %>">
+    <meta property="og:image:alt" content="<%= title %>">
+    <meta property="fb:app_id" content=" ">
+    <meta property="og:url" content="<%= info.dominio %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= title %>">
+    <meta property="og:locale" content="es_ES">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:description" content="<%= pwaDescription %>">
+    <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+    <meta name="twitter:image:alt" content="<%= title %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="<%= pwaThemeColor %>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+
     <link rel="manifest" href="<%= typeof manifestUrl !== 'undefined' ? manifestUrl : '/manifest.json' %>">
     <link rel="icon" href="<%= typeof pwaIcon !== 'undefined' ? pwaIcon : '/assets/fondos/mjfood.png' %>">
     <link rel="apple-touch-icon" href="<%= typeof pwaIcon !== 'undefined' ? pwaIcon : '/assets/fondos/mjfood.png' %>">
@@ -33,7 +57,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapvis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <!-- Estilos personalizados -->
