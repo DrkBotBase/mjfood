@@ -207,12 +207,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="md:grid md:grid-cols-3 md:gap-8">
             <!-- Columna del Menú -->
-            <div class="md:col-span-2">
-                <h2 class="text-3xl font-bold mb-6 text-primary">MENÚ</h2>
-                <div id="menu-container" class="space-y-4">
-                    <!-- Categorías y productos se insertarán aquí -->
+            <div class="md:col-span-2 relative overflow-visible">
+                <h2 class="text-3xl font-bold mb-6 text-primary break-words">MENÚ</h2>
+                <div id="menu-container" class="space-y-4 overflow-visible">
+                    <!-- Contenido -->
                 </div>
             </div>
+            
 
             <!-- Columna del Carrito -->
             <div class="mt-10 md:mt-0 md:col-span-1">
@@ -476,26 +477,36 @@ function renderMenu() {
           let tipoVariante = hasVariantes ? obtenerTipoVariante(item.variantes) : null;
           let textoVariante = hasVariantes ? obtenerTextoVarianteMenu(tipoVariante) : '';
           
-          menuHTML += `
-              <div class="flex justify-between items-center cursor-pointer p-3 rounded-lg hover:bg-gray-700 menu-item" 
-                   data-category="${category}" 
-                   data-name="${item.name}" 
-                   data-has-variantes="${hasVariantes}"
-                   data-tipo-variante="${tipoVariante}">
-                  <div class="flex-grow">
-                      <p class="product-name font-semibold text-gray-200">${item.name}</p>
-                      ${item.description ? `<p class="text-sm text-gray-400">${item.description}</p>` : ''}
-                      ${hasVariantes ? `<p class="text-xs text-emerald-400">Desde $${precioMinimo.toLocaleString('es-CO')}</p>` : ''}
-                  </div>
-                  <div class="text-right ml-4">
-                      ${hasVariantes ? 
-                          `<p class="text-gray-400 text-sm">${textoVariante}</p>` : 
-                          `<p class="product-price text-gray-400 text-sm">$${item.price.toLocaleString('es-CO')}</p>`
-                      }
-                      <i class="fas fa-plus-circle text-emerald-400 text-2xl"></i>
-                  </div>
-              </div>
-          `;
+          // Dentro del forEach donde generas cada item:
+menuHTML += `
+    <div class="flex justify-between items-start cursor-pointer p-4 rounded-lg hover:bg-gray-700 menu-item bg-gray-750">
+        <div class="flex-grow min-w-0"> <!-- min-w-0 permite que el texto se ajuste -->
+            <p class="product-name font-semibold text-gray-200 break-words">${item.name || 'Nombre no disponible'}</p>
+            ${item.description ? `
+                <p class="text-sm text-gray-400 mt-1 line-clamp-2 break-words">
+                    ${item.description}
+                </p>
+            ` : ''}
+            ${hasVariantes ? `
+                <p class="text-xs text-emerald-400 mt-1">
+                    Desde $${precioMinimo.toLocaleString('es-CO')}
+                </p>
+            ` : ''}
+        </div>
+        <div class="text-right ml-3 flex items-center gap-2 flex-shrink-0">
+            ${hasVariantes ? `
+                <p class="text-gray-400 text-sm whitespace-nowrap">
+                    ${textoVariante}
+                </p>
+            ` : `
+                <p class="product-price text-gray-400 text-sm whitespace-nowrap">
+                    $${(item.price || 0).toLocaleString('es-CO')}
+                </p>
+            `}
+            <i class="fas fa-plus-circle text-emerald-400 text-xl flex-shrink-0"></i>
+        </div>
+    </div>
+`;
         });
         
         menuHTML += `
@@ -506,50 +517,58 @@ function renderMenu() {
     
     menuContainer.innerHTML = menuHTML;
     setupMenuEventListeners();
+    setupResponsiveMenu(); // ← Añadir esta línea
 }
 
 function setupMenuEventListeners() {
-    // Acordeones de categorías
-    document.querySelectorAll('.category-header').forEach(header => {
+    const categoryHeaders = document.querySelectorAll('.category-header');
+    
+    categoryHeaders.forEach(header => {
         header.addEventListener('click', function() {
             const content = this.nextElementSibling;
             const icon = this.querySelector('i');
-            const isExpanded = content.style.maxHeight;
             
-            // Cerrar todos los acordeones
-            document.querySelectorAll('.accordion-content').forEach(el => {
-                el.style.maxHeight = null;
-                el.classList.remove('p-5', 'pt-0');
-            });
+            // Calcular altura necesaria considerando contenido dinámico
+            const calculateContentHeight = () => {
+                // Forzar renderizado para obtener altura real
+                content.style.display = 'block';
+                const height = content.scrollHeight;
+                content.style.display = '';
+                return height;
+            };
             
-            document.querySelectorAll('.fa-chevron-down').forEach(i => {
-                i.style.transform = 'rotate(0deg)';
-            });
-            
-            // Abrir este acordeón si estaba cerrado
-            if (!isExpanded) {
-                content.classList.add('p-5', 'pt-0');
-                content.style.maxHeight = content.scrollHeight + "px";
-                icon.style.transform = 'rotate(180deg)';
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Usar requestAnimationFrame para asegurar cálculo correcto
+                requestAnimationFrame(() => {
+                    const neededHeight = calculateContentHeight();
+                    content.style.maxHeight = neededHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                });
             }
         });
     });
+}
+function setupResponsiveMenu() {
+    // Observar cambios en el tamaño del contenedor
+    const resizeObserver = new ResizeObserver(entries => {
+        entries.forEach(entry => {
+            const openSections = document.querySelectorAll('.accordion-content[style*="max-height"]');
+            openSections.forEach(section => {
+                section.style.maxHeight = section.scrollHeight + "px";
+            });
+        });
+    });
     
-    // Items del menú
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const category = this.dataset.category;
-            const name = this.dataset.name;
-            const hasVariantes = this.dataset.hasVariantes === 'true';
-            
-            // Buscar el item completo en el menú
-            const menuData = window.restaurantConfig.menu;
-            const categoryItems = menuData[category];
-            const fullItem = categoryItems.find(i => i.name === name);
-            
-            if (fullItem) {
-                openAddItemModal(category, fullItem);
-            }
+    resizeObserver.observe(menuContainer);
+    
+    // También observar cambios en el tamaño de la ventana
+    window.addEventListener('resize', () => {
+        const openSections = document.querySelectorAll('.accordion-content[style*="max-height"]');
+        openSections.forEach(section => {
+            section.style.maxHeight = section.scrollHeight + "px";
         });
     });
 }
