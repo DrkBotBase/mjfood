@@ -308,6 +308,16 @@ app.get('/:extension/panel', async (req, res) => {
   });
 });
 
+app.get('/ping', (req, res) => {
+  res.send('Pong');
+});
+
+setInterval(() => {
+  fetch(`${info.dominio}/ping`)
+    .then(res => console.log('Ping interno enviado:', res.status))
+    .catch(err => console.error('Error en el ping:', err.message));
+}, 14 * 60 * 1000);
+
 function parseHoraToDecimal(horaStr) {
   let [horas, minutos] = horaStr.split('.').map(Number);
   return horas + (minutos / 60);
