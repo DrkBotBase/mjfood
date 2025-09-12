@@ -896,18 +896,20 @@ function formatOrderForWhatsApp(customerData) {
 // ========== UTILIDADES ==========
 function checkRestaurantStatus() {
     const now = new Date();
-    let currentTime = now.getHours() + (now.getMinutes() / 60);
+    const horaColombia = new Date(now.toLocaleString('en-US', {
+        timeZone: 'America/Bogota'
+    }));
+    
+    let currentTime = horaColombia.getHours() + (horaColombia.getMinutes() / 60);
 
     const horario = window.restaurantConfig.horario;
     const apertura = horario.aperturaDecimal;
     const cierre = horario.cierreDecimal;
 
-    // Ajustar hora actual si el horario cruza medianoche
     if (cierre > 24 && currentTime < apertura) {
         currentTime += 24;
     }
 
-    // Comparar con el rango
     isRestaurantOpen = currentTime >= apertura && currentTime < cierre;
 
     if (statusMessageElement) {
@@ -925,7 +927,6 @@ function checkRestaurantStatus() {
         }
         statusMessageElement.classList.remove('hidden');
     }
-
     updateCheckoutButton();
 }
 

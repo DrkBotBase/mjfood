@@ -1,6 +1,7 @@
 require('./utils/dbConnect');
 const express = require('express');
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
 const path = require('path');
 const app = express();
 
@@ -26,13 +27,17 @@ app.get('/', async (req, res) => {
     let restaurantesInfo = Object.values(menus)
       .map(menu => {
         const horario = procesarHorario(menu.config);
-        const ahora = new Date();
-        const horaActual = ahora.getHours() + (ahora.getMinutes() / 60);
+        
+        // Obtener hora actual en zona horaria de Colombia
+        const ahora = moment().tz('America/Bogota');
+        const horaActual = ahora.hours() + (ahora.minutes() / 60);
         
         let estaAbierto = false;
         if (horario.cierreDecimal < horario.aperturaDecimal) {
-          estaAbierto = horaActual >= horario.aperturaDecimal || horaActual < horario.cierreDecimal;
+          // Horario que cruza medianoche (ej: 20:00 a 02:00)
+          estaAbierto = horaActual >= horario.aperturaDecimal || horaActual < (horario.cierreDecimal - 24);
         } else {
+          // Horario normal (ej: 08:00 a 22:00)
           estaAbierto = horaActual >= horario.aperturaDecimal && horaActual < horario.cierreDecimal;
         }
         
@@ -319,7 +324,7 @@ setInterval(() => {
 }, 14 * 60 * 1000);
 
 function parseHoraToDecimal(horaStr) {
-  let [horas, minutos] = horaStr.split('.').map(Number);
+  const [horas, minutos] = horaStr.replace(':', '.').split('.').map(Number);
   return horas + (minutos / 60);
 }
 function formatHora(horaDecimal) {
@@ -331,7 +336,6 @@ function procesarHorario(config) {
   let apertura = parseHoraToDecimal(config.horarioApertura);
   let cierre = parseHoraToDecimal(config.horarioCierre);
 
-  // Detectar cruce de medianoche
   if (cierre < apertura) {
     cierre += 24;
   }
