@@ -85,7 +85,7 @@
                 <h2 class="text-xl text-emerald-400 mb-4">Restaurantes disponibles:</h2>
                 <div class="grid grid-cols-2 gap-3">
                     <% restaurantesDisponibles.forEach(rest => { %>
-                        <a href="/<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
+                        <a href="<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
                             <%= rest.nombre %>
                         </a>
                     <% }); %>
