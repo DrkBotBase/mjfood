@@ -151,10 +151,7 @@
     border-radius: 8px;
   }
 </style>
-
-<!-- Script SIMPLIFICADO - solo para RGB -->
 <script>
-// Convertir colores hex a RGB para transparencias
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
@@ -164,15 +161,12 @@ function hexToRgb(hex) {
   } : { r: 0, g: 0, b: 0 };
 }
 
-// Aplicar variables RGB SOLO UNA VEZ
 document.addEventListener('DOMContentLoaded', function() {
   const styles = document.documentElement.style;
   
-  // Colores principales
   const primaryRgb = hexToRgb('<%= config.colores.primario %>');
   const backgroundRgb = hexToRgb('<%= config.colores.fondo %>');
   
-  // Aplicar variables RGB
   styles.setProperty('--color-primary-rgb', `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`);
   styles.setProperty('--color-background-rgb', `${backgroundRgb.r}, ${backgroundRgb.g}, ${backgroundRgb.b}`);
   
@@ -277,6 +271,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mb-4">
                     <label for="phone" class="block text-sm font-medium text-gray-300">Número de Teléfono <span class="text-red-400">*</span></label>
                     <input type="tel" id="phone" required class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+                <div class="mb-4">
+                    <label for="order-observation" class="block text-sm font-medium text-gray-300">Observación Adicional (Opcional)</label>
+                    <textarea id="order-observation" rows="3" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm p-2 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ej: El timbre no funciona, por favor llamar al llegar."></textarea>
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-300">Forma de Pago <span class="text-red-400">*</span></label>
@@ -444,7 +442,6 @@ function renderMenu() {
     }
     
     const menuData = window.restaurantConfig.menu;
-    
     if (!menuData || Object.keys(menuData).length === 0) {
         menuContainer.innerHTML = `
             <div class="text-center py-8 text-red-400">
@@ -456,60 +453,52 @@ function renderMenu() {
     }
     
     let menuHTML = '';
-    
     Object.keys(menuData).forEach(category => {
         menuHTML += `
-            <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden group">
                 <button class="w-full text-left p-5 bg-background text-text font-bold text-xl flex justify-between items-center transition-colors hover:bg-gray-700 category-header">
                     <span>${category}</span>
                     <i class="fas fa-chevron-down transition-transform duration-300"></i>
                 </button>
-                <div class="space-y-2 accordion-content">
+                
+                <div class="grid grid-rows-[0fr] group-[.expanded]:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-in-out">
+                    <div class="overflow-hidden">
+                        <div class="space-y-2 p-5">
         `;
         
         menuData[category].forEach(item => {
           const hasVariantes = item.variantes && item.variantes.length > 0;
           const precioMinimo = hasVariantes ? 
-              Math.min(...item.variantes.map(v => v.price)) : 
+               Math.min(...item.variantes.map(v => v.price)) : 
               item.price;
           
-          // USAR FUNCIÓN UTilitaria
           let tipoVariante = hasVariantes ? obtenerTipoVariante(item.variantes) : null;
           let textoVariante = hasVariantes ? obtenerTextoVarianteMenu(tipoVariante) : '';
-          
-          // Dentro del forEach donde generas cada item:
-menuHTML += `
-    <div class="flex justify-between items-start cursor-pointer p-4 rounded-lg hover:bg-gray-700 menu-item bg-gray-750">
-        <div class="flex-grow min-w-0"> <!-- min-w-0 permite que el texto se ajuste -->
-            <p class="product-name font-semibold text-gray-200 break-words">${item.name || 'Nombre no disponible'}</p>
-            ${item.description ? `
-                <p class="text-sm text-gray-400 mt-1 line-clamp-2 break-words">
-                    ${item.description}
-                </p>
-            ` : ''}
-            ${hasVariantes ? `
-                <p class="text-xs text-emerald-400 mt-1">
-                    Desde $${precioMinimo.toLocaleString('es-CO')}
-                </p>
-            ` : ''}
-        </div>
-        <div class="text-right ml-3 flex items-center gap-2 flex-shrink-0">
-            ${hasVariantes ? `
-                <p class="text-gray-400 text-sm whitespace-nowrap">
-                    ${textoVariante}
-                </p>
-            ` : `
-                <p class="product-price text-gray-400 text-sm whitespace-nowrap">
-                    $${(item.price || 0).toLocaleString('es-CO')}
-                </p>
-            `}
-            <i class="fas fa-plus-circle text-emerald-400 text-xl flex-shrink-0"></i>
-        </div>
-    </div>
-`;
+
+          menuHTML += `
+              <div class="flex justify-between items-center cursor-pointer rounded-lg hover:bg-gray-700 menu-item" 
+                   data-category="${category}" 
+                   data-name="${item.name}" 
+                   data-has-variantes="${hasVariantes}"
+                   data-tipo-variante="${tipoVariante}">
+                   <div class="flex-grow">
+                      <p class="product-name font-semibold text-gray-200">${item.name}</p>
+                      ${item.description ? `<p class="text-sm text-gray-400">${item.description}</p>` : ''}
+                      ${hasVariantes ? `<p class="text-xs text-emerald-400">Desde $${precioMinimo.toLocaleString('es-CO')}</p>` : ''}
+                  </div>
+                  <div class="text-right ml-4">
+                      ${hasVariantes ? `<p class="text-gray-400 text-sm">${textoVariante}</p>` : 
+                          `<p class="product-price text-gray-400 text-sm">$${item.price.toLocaleString('es-CO')}</p>`
+                      }
+                      <i class="fas fa-plus-circle text-emerald-400 text-2xl"></i>
+                  </div>
+              </div>
+          `;
         });
         
         menuHTML += `
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -517,58 +506,46 @@ menuHTML += `
     
     menuContainer.innerHTML = menuHTML;
     setupMenuEventListeners();
-    setupResponsiveMenu(); // ← Añadir esta línea
+    setupResponsiveMenu();
 }
 
 function setupMenuEventListeners() {
-    const categoryHeaders = document.querySelectorAll('.category-header');
-    
-    categoryHeaders.forEach(header => {
+    document.querySelectorAll('.category-header').forEach(header => {
         header.addEventListener('click', function() {
-            const content = this.nextElementSibling;
+            const groupContainer = this.parentElement;
             const icon = this.querySelector('i');
+            const isExpanded = groupContainer.classList.contains('expanded');
             
-            // Calcular altura necesaria considerando contenido dinámico
-            const calculateContentHeight = () => {
-                // Forzar renderizado para obtener altura real
-                content.style.display = 'block';
-                const height = content.scrollHeight;
-                content.style.display = '';
-                return height;
-            };
-            
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                // Usar requestAnimationFrame para asegurar cálculo correcto
-                requestAnimationFrame(() => {
-                    const neededHeight = calculateContentHeight();
-                    content.style.maxHeight = neededHeight + "px";
-                    icon.style.transform = 'rotate(180deg)';
-                });
-            }
+            document.querySelectorAll('.group.expanded').forEach(el => {
+                if (el !== groupContainer) {
+                    el.classList.remove('expanded');
+                    const otherIcon = el.querySelector('.category-header i');
+                    if(otherIcon) {
+                       otherIcon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+
+            groupContainer.classList.toggle('expanded');
+            icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
         });
     });
 }
+
 function setupResponsiveMenu() {
-    // Observar cambios en el tamaño del contenedor
-    const resizeObserver = new ResizeObserver(entries => {
-        entries.forEach(entry => {
-            const openSections = document.querySelectorAll('.accordion-content[style*="max-height"]');
-            openSections.forEach(section => {
-                section.style.maxHeight = section.scrollHeight + "px";
-            });
-        });
-    });
-    
-    resizeObserver.observe(menuContainer);
-    
-    // También observar cambios en el tamaño de la ventana
-    window.addEventListener('resize', () => {
-        const openSections = document.querySelectorAll('.accordion-content[style*="max-height"]');
-        openSections.forEach(section => {
-            section.style.maxHeight = section.scrollHeight + "px";
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const category = this.dataset.category;
+            const name = this.dataset.name;
+            const hasVariantes = this.dataset.hasVariantes === 'true';
+            
+            const menuData = window.restaurantConfig.menu;
+            const categoryItems = menuData[category];
+            const fullItem = categoryItems.find(i => i.name === name);
+            
+            if (fullItem) {
+                openAddItemModal(category, fullItem);
+            }
         });
     });
 }
@@ -578,21 +555,22 @@ function renderCart() {
     if (!cartItemsContainer) return;
     
     cartItemsContainer.innerHTML = '';
-    
     if (cart.length === 0) {
         cartItemsContainer.appendChild(emptyCartMessage);
         emptyCartMessage.style.display = 'block';
     } else {
         emptyCartMessage.style.display = 'none';
-        
         cart.forEach((item, index) => {
             const itemElement = document.createElement('div');
             itemElement.className = 'flex justify-between items-start';
             
+            // ===== INICIO: CAMBIO PARA NOMBRE DESCRIPTIVO =====
+            const descriptiveName = `${item.category} - ${item.name}`;
             const itemName = item.variante ? 
-                `${item.name} (${item.variante})` : 
-                item.name;
-                
+                `${descriptiveName} (${item.variante})` : 
+                descriptiveName;
+            // ===== FIN: CAMBIO PARA NOMBRE DESCRIPTIVO =====
+              
             itemElement.innerHTML = `
                 <div>
                     <p class="font-semibold">${item.quantity}x ${itemName}</p>
@@ -607,7 +585,6 @@ function renderCart() {
             cartItemsContainer.appendChild(itemElement);
         });
         
-        // Event listeners para botones de quitar
         document.querySelectorAll('.remove-from-cart').forEach(btn => {
             btn.addEventListener('click', function() {
                 const index = parseInt(this.dataset.index);
@@ -619,6 +596,7 @@ function renderCart() {
     updateTotal();
     updateCheckoutButton();
 }
+
 
 function updateTotal() {
     if (!cartTotalElement) return;
@@ -645,20 +623,16 @@ function updateCheckoutButton() {
 }
 
 function addToCart(item, quantity, observation, variante) {
-    // Crear nombre único para el item (incluyendo la variante si existe)
     const uniqueName = variante ? `${item.name}|${variante}` : item.name;
     
-    // Buscar si ya existe el mismo item con la misma observación y variante
     const existingIndex = cart.findIndex(cartItem => 
         cartItem.uniqueName === uniqueName && 
         cartItem.observation === observation
     );
     
     if (existingIndex !== -1) {
-        // Si existe, aumentar la cantidad
         cart[existingIndex].quantity += quantity;
     } else {
-        // Si no existe, agregar nuevo item
         cart.push({
             id: Date.now() + Math.random(),
             uniqueName: uniqueName,
@@ -684,13 +658,11 @@ function openAddItemModal(category, item) {
     currentItem = { ...item, category };
     modalItemName.textContent = `${category} - ${item.name}`;
     
-    // Limpiar contenido previo de variantes
     const existingVariantes = document.getElementById('variantes-container');
     if (existingVariantes) {
         existingVariantes.remove();
     }
     
-    // Mostrar selector de variantes si las tiene
     if (item.variantes && item.variantes.length > 0) {
         showVariantesSelector(item.variantes);
         modalItemPrice.style.display = 'none';
@@ -709,7 +681,6 @@ function openAddItemModal(category, item) {
 }
 
 function showVariantesSelector(variantes, tipoVariante = null) {
-    // USAR FUNCIÓN UTilitaria
     if (!tipoVariante) {
         tipoVariante = obtenerTipoVariante(variantes);
     }
@@ -723,7 +694,6 @@ function showVariantesSelector(variantes, tipoVariante = null) {
     `;
     
     variantes.forEach((variante, index) => {
-        // USAR FUNCIÓN UTilitaria
         const valorMostrar = obtenerValorVariante(variante) || `Opción ${index + 1}`;
         
         variantesHTML += `
@@ -754,7 +724,6 @@ function updateSelectedVariante() {
 }
 
 function closeAddItemModal() {
-    // Limpiar variantes al cerrar
     const variantesContainer = document.getElementById('variantes-container');
     if (variantesContainer) {
         variantesContainer.remove();
@@ -774,7 +743,6 @@ function confirmAddItem() {
     
     const quantity = parseInt(quantityInput.value);
     const observation = observationInput.value.trim();
-    
     if (quantity < 1) {
         alert('La cantidad debe ser al menos 1');
         return;
@@ -783,30 +751,30 @@ function confirmAddItem() {
     let selectedVariante = null;
     let tipoVariante = null;
     const varianteRadio = document.querySelector('input[name="variante"]:checked');
-    
     if (varianteRadio) {
         const varianteIndex = parseInt(varianteRadio.value);
         selectedVariante = currentItem.variantes[varianteIndex];
-        
         const variantesContainer = document.getElementById('variantes-container');
         if (variantesContainer) {
             tipoVariante = variantesContainer.dataset.tipoVariante;
         }
         
-        // USAR FUNCIÓN UTilitaria
         const valorVariante = obtenerValorVariante(selectedVariante);
     }
     
     const itemToAdd = {
         ...currentItem,
-        price: selectedVariante ? selectedVariante.price : currentItem.price,
-        variante: selectedVariante ? obtenerValorVariante(selectedVariante) : null,
+        price: selectedVariante ?
+            selectedVariante.price : currentItem.price,
+        variante: selectedVariante ?
+            obtenerValorVariante(selectedVariante) : null,
         tipoVariante: tipoVariante
     };
     
-    addToCart(itemToAdd, quantity, observation);
+    addToCart(itemToAdd, quantity, observation, itemToAdd.variante); // <-- LÍNEA CORREGIDA
     closeAddItemModal();
 }
+
 
 // ========== CHECKOUT ==========
 function openCheckoutModal() {
@@ -830,35 +798,31 @@ function handleCheckoutSubmit(event) {
     const customerData = {
         name: document.getElementById('name').value || 'Cliente',
         address: document.getElementById('address').value,
+        observation: document.getElementById('order-observation').value.trim(),
         phone: document.getElementById('phone').value,
         paymentMethod: formData.get('payment'),
-        cashAmount: total //document.getElementById('cash-amount').value
+        cashAmount: document.getElementById('cash-amount').value,
+        total
     };
     
-    // Validar campos obligatorios
     if (!customerData.address || !customerData.phone || !customerData.paymentMethod) {
         alert('Por favor completa todos los campos obligatorios (*)');
         return;
     }
     
-    // Guardar datos de usuario
     saveUserData(customerData);
-    
-    // fetch puntos + cliente
     fetch(`/api/pedido/${window.restaurantConfig.restauranteConfig.extension}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(customerData)
     });
     
-    // Enviar por WhatsApp
     const message = formatOrderForWhatsApp(customerData);
     const restaurantPhoneNumber = window.restaurantConfig.restauranteConfig.telefonoWhatsApp;
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantPhoneNumber}&text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
     
-    // Limpiar y cerrar
     cart = [];
     renderCart();
     closeCheckoutModal();
@@ -877,42 +841,44 @@ function formatOrderForWhatsApp(customerData) {
     message += `📅 ${now.toLocaleDateString('es-ES')} ⏰ ${now.toLocaleTimeString('es-ES')}\n\n`;
     
     message += `*👤 CLIENTE:*\n`;
-    message += `Nombre: ${customerData.name}\n`;
-    message += `Teléfono: ${customerData.phone}\n`;
-    message += `Dirección: ${customerData.address}\n`;
-    message += `Pago: ${customerData.paymentMethod === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}\n`;
-    
-    if (customerData.paymentMethod === 'efectivo' && customerData.cashAmount) {
-        message += `Paga con: $${parseInt(customerData.cashAmount).toLocaleString('es-CO')}\n`;
+    message += `*Nombre:* ${customerData.name}\n`;
+    message += `*Teléfono:* ${customerData.phone}\n`;
+    message += `*Dirección:* ${customerData.address}\n`;
+    message += `*Pago:* ${customerData.paymentMethod === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}\n`;
+    if (customerData.paymentMethod === 'efectivo' && customerData.total) {
+        message += `*Paga con:* $ ${parseInt(customerData.cashAmount).toLocaleString('es-CO')}\n`;
     }
-    message += `\n`;
     
-    message += `*🛒 PEDIDO:*\n`;
+    message += `\n*🛒 PEDIDO:*\n`;
     let total = 0;
-    
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
         
+        const descriptiveName = `${item.category} - ${item.name}`;
         const itemName = item.variante ? 
-            `${item.name} (${item.variante})` : 
-            item.name;
+            `${descriptiveName} (${item.variante})` : 
+            descriptiveName;
             
         message += `${index + 1}) ${item.quantity}x ${itemName}\n`;
         message += `   Precio: $${item.price.toLocaleString('es-CO')} c/u\n`;
         message += `   Subtotal: $${itemTotal.toLocaleString('es-CO')}\n`;
-        
         if (item.observation) {
-            message += `   📝 "${item.observation}"\n`;
+            message += `*Observación:*\n${item.observation}\n`;
         }
         message += `\n`;
     });
     
-    message += `*💰 TOTAL: $${total.toLocaleString('es-CO')}*\n\n`;
+    if (customerData.observation) {
+        message += `\n*📝 OBSERVACIÓN GENERAL:*\n"${customerData.observation}"\n\n`;
+    }
+    
+    message += `*💰 TOTAL: $${total.toLocaleString('es-CO')}*\n`;
     message += `¡Por favor confirmar recepción! ✅`;
     
     return message;
 }
+
 
 // ========== UTILIDADES ==========
 function checkRestaurantStatus() {
@@ -964,7 +930,6 @@ function loadUserData() {
 }
 
 function setupEventListeners() {
-    // Modal de añadir item
     decreaseQtyBtn.addEventListener('click', () => {
         if (parseInt(quantityInput.value) > 1) quantityInput.value--;
     });
@@ -981,7 +946,6 @@ function setupEventListeners() {
     cancelCheckoutBtn.addEventListener('click', closeCheckoutModal);
     customerForm.addEventListener('submit', handleCheckoutSubmit);
     
-    // Mostrar/ocultar detalles de pago en efectivo
     paymentRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             cashPaymentDetails.classList.toggle('hidden', e.target.value !== 'efectivo');

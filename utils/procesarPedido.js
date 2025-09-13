@@ -26,11 +26,11 @@ async function procesarPedido(extension, customer) {
       registro.clientes.push({
         phone: customer.phone,
         totalPedidos: 1,
-        totalGastado: Number(customer.cashAmount) || 0
+        totalGastado: Number(customer.total) || 0
       });
     } else {
       cliente.totalPedidos += 1;
-      cliente.totalGastado += Number(customer.cashAmount) || 0;
+      cliente.totalGastado += Number(customer.total) || 0;
     }
 
     // Cada 10 pedidos: ajustar orden y actualizar JSON

@@ -112,6 +112,8 @@ app.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error en la ruta principal:', error);
     res.status(500).render('error', {
+      info,
+      name_page: 'server error',
       message: 'Error al cargar los restaurantes',
       restaurantesDisponibles: []
     });
@@ -155,6 +157,8 @@ app.get('/:restaurante', (req, res) => {
       }));
 
     return res.status(404).render('error', {
+      info,
+      name_page: 'error 404',
       message: 'Restaurante no encontrado',
       restaurantesDisponibles
     });

@@ -1,4 +1,71 @@
-<%- include('layout', {title: 'Restaurante no encontrado', styles: true}) %>
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= name_page %></title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="<%= message %>">
+    <meta name="theme-color" content="#ffffff">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="<%= name_page %>">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="<%= info.dominio %>">
+    
+    <meta property="og:title" content="<%= name_page %>">
+    <meta property="og:description" content="<%= message %>.">
+    
+    <meta property="og:image" content="<%= info.dominio %>/assets/fondos/mjfood.png">
+    <meta property="og:image:alt" content="<%= name_page %>">
+    <meta property="fb:app_id" content=" ">
+    <meta property="og:url" content="<%= info.dominio %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= name_page %>">
+    <meta property="og:locale" content="es_ES">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= name_page %>">
+    <meta name="twitter:description" content="<%= message %>">
+    <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/mjfood.png">
+    <meta name="twitter:image:alt" content="<%= name_page %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapvis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0a0a0a;
+        color: #f5f5f5;
+      }
+      .animated-gradient {
+        background: linear-gradient(90deg, #f97316, #ec4899, #8b5cf6, #f97316);
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient-flow 10s ease-in-out infinite;
+      }
+      
+      @keyframes gradient-flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    </style>
+</head>
 
 <body class="antialiased">
     <main class="relative min-h-screen flex items-center justify-center text-center overflow-hidden px-6">
@@ -33,6 +100,5 @@
             </div>
         </div>
     </main>
-
 </body>
 </html>
