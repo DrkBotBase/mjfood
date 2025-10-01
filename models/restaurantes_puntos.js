@@ -1,4 +1,5 @@
 const mongoose = require('../utils/dbConnect');
+const moment = require('moment-timezone');
 
 const ClienteSchema = new mongoose.Schema({
   phone: { type: String, required: true },
@@ -10,7 +11,10 @@ const RestaurantePuntosSchema = new mongoose.Schema({
   extension: { type: String, required: true, unique: true }, // ID restaurante
   puntos: { type: Number, default: 0 }, // contador global de pedidos
   orden: { type: Number, default: 999 }, // ranking de restaurantes
-  ultimaActualizacion: { type: Date, default: Date.now },
+  ultimaActualizacion: { 
+    type: Date,
+    default: () => moment().tz('America/Bogota').toDate()
+  },
   token: { type: String },
   clientes: [ClienteSchema] // lista de clientes únicos
 });

@@ -1,20 +1,56 @@
 require('./utils/dbConnect');
 const express = require('express');
-const mongoose = require('mongoose');
+const http = require('http');
+const { Server } = require('socket.io');
 const moment = require('moment-timezone');
 const path = require('path');
-const app = express();
+const mongoose = require('mongoose');
 
-const { info, PORT } = require('./config')
-const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const RestaurantePuntos = require('./models/restaurantes_puntos');
-let menus = {};
+io.on('connection', (socket) => {
+  console.log('🟢 Nuevo cliente conectado');
 
+  socket.on('joinRestaurante', (extension) => {
+    socket.join(extension);
+    console.log(`📡 Socket unido a sala restaurante: ${extension}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔴 Cliente desconectado');
+  });
+});
+
+const { info, PORT } = require('./config')
+const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
+const RestauranteEstadisticas = require('./models/restaurante_estadisticas');
+const Pedido = require('./models/pedido');
+const ProcesarPedidoService = require('./services/procesarPedidoService');
+const RestaurantePuntos = require('./models/restaurantes_puntos');
+
+
+//const estadisticas = require('./routes/estadisticas');
+const pedidosRouter = require('./routes/pedidos');
+const jornadaRouter = require('./routes/jornada');
+//app.use('/estadisticas', pedidosRouter);
+app.use('/api/pedidos', pedidosRouter);
+app.use('/api/jornada', jornadaRouter);
+
+let menus = {};
 app.get('/', async (req, res) => {
   try {
     const { sort, filter, search, page = 1, limit = 6 } = req.query;
@@ -239,82 +275,274 @@ app.get('/:restaurante/manifest.json', (req, res) => {
   res.json(manifest);
 });
 
-const { procesarPedido } = require('./utils/procesarPedido');
-app.post('/api/pedido/:extension', express.json(), async (req, res) => {
+app.post('/api/pedido/:extension', async (req, res) => {
   const { extension } = req.params;
   const customer = req.body;
   
   try {
-    await procesarPedido(extension, customer);
-    res.json({ success: true });
+    await ProcesarPedidoService.procesarPedido(extension, customer, req.io);
+    res.json({ success: true, message: 'Pedido procesado correctamente' });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.error('Error procesando pedido:', err);
+    res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 });
 
-// admin
-app.get('/admin/recargar-menus', async (req, res) => {
-  console.log('\n🔄 Recargando menús manualmente...');
-  menus = await cargarMenusDesdeArchivos();
+app.get('/api/panel/:extension/estadisticas', async (req, res) => {
+  const { extension } = req.params;
+  const { token } = req.query;
 
+  try {
+    const restaurante = await RestauranteEstadisticas.findOne({ extension });
+    if (!restaurante || !token || token !== restaurante.token) {
+      return res.status(403).json({ error: 'Acceso no autorizado' });
+    }
+
+    const estadisticas = {
+      totalPedidos: restaurante.totalPedidos,
+      totalGastado: restaurante.totalGastado,
+      totalClientes: restaurante.clientes.length,
+      ultimaActualizacion: restaurante.ultimaActualizacion
+    };
+
+    res.json(estadisticas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get('/api/panel/:extension/ranking-clientes', async (req, res) => {
+  const { extension } = req.params;
+  const { token } = req.query;
+
+  try {
+    const restaurante = await RestauranteEstadisticas.findOne({ extension });
+    if (!restaurante || !token || token !== restaurante.token) {
+      return res.status(403).json({ error: 'Acceso no autorizado' });
+    }
+    const ranking = restaurante.clientes
+      .sort((a, b) => b.totalGastado - a.totalGastado)
+      .map((cliente, index) => ({
+        posicion: index + 1,
+        telefono: cliente.phone,
+        totalPedidos: cliente.totalPedidos,
+        totalGastado: cliente.totalGastado,
+        ultimoPedido: cliente.ultimoPedido
+      }));
+
+    res.json(ranking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get('/api/panel/:extension/estadisticas-periodo', async (req, res) => {
+    const { extension } = req.params;
+    const { token, periodo } = req.query;
+    try {
+        const restaurante = await RestauranteEstadisticas.findOne({ extension });
+        if (!restaurante || !token || token !== restaurante.token) {
+            return res.status(403).json({ error: 'Acceso no autorizado' });
+        }
+
+        let datos;
+        const now = moment().tz('America/Bogota');
+        
+        switch (periodo) {
+            case 'hoy':
+                const hoy = now.format('YYYY-MM-DD');
+                const estadisticaHoy = restaurante.estadisticasDiarias.find(d => d.dia === hoy) || {
+                    totalPedidos: 0,
+                    totalGastado: 0,
+                    efectivo: 0,
+                    transferencia: 0
+                };
+                datos = estadisticaHoy;
+                break;
+
+            case 'semana':
+                const semana = now.format('YYYY-WW');
+                const estadisticaSemana = restaurante.estadisticasSemanales.find(s => s.semana === semana) || {
+                    semana,
+                    totalPedidos: 0,
+                    totalGastado: 0,
+                    efectivo: 0,
+                    transferencia: 0
+                };
+                datos = estadisticaSemana;
+                break;
+
+            case 'mes':
+                const mes = now.format('YYYY-MM');
+                const estadisticaMes = restaurante.estadisticasMensuales.find(m => m.mes === mes) || {
+                    mes,
+                    totalPedidos: 0,
+                    totalGastado: 0,
+                    efectivo: 0,
+                    transferencia: 0
+                };
+                datos = estadisticaMes;
+                break;
+
+            default:
+                return res.status(400).json({ error: 'Período no válido' });
+        }
+
+        res.json(datos);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+app.get('/api/panel/:extension/historial-pedidos', async (req, res) => {
+  const { extension } = req.params;
+  const { token, page = 1, limit = 20, desde, hasta } = req.query;
+  try {
+    const restaurante = await RestauranteEstadisticas.findOne({ extension });
+    if (!restaurante || !token || token !== restaurante.token) {
+      return res.status(403).json({ error: 'Acceso no autorizado' });
+    }
+
+    const skip = (page - 1) * limit;
+    let filtro = { extension };
+
+    if (desde && hasta) {
+      filtro.fechaPedido = {
+        $gte: new Date(desde),
+        $lte: new Date(hasta)
+      };
+    }
+
+    const pedidos = await Pedido.find(filtro)
+      .sort({ fechaPedido: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const total = await Pedido.countDocuments(filtro);
+
+    res.json({
+      pedidos,
+      paginacion: {
+        pagina: parseInt(page),
+        limite: parseInt(limit),
+        total,
+        totalPaginas: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get('/:extension/panel', async (req, res) => {
+  const { extension } = req.params;
+  const { token } = req.query;
+  try {
+    let restaurante = await RestauranteEstadisticas.findOne({ extension });
+    
+    if (!restaurante) {
+      const nuevoToken = require('crypto').randomBytes(20).toString('hex');
+      
+      restaurante = new RestauranteEstadisticas({
+        extension: extension,
+        nombre: `Restaurante ${extension}`,
+        token: nuevoToken,
+        totalPedidos: 0,
+        totalGastado: 0,
+        clientes: [],
+        estadisticasDiarias: [],
+        estadisticasSemanales: [],
+        estadisticasMensuales: [],
+        ultimaActualizacion: moment().tz('America/Bogota').toDate()
+      });
+      
+      await restaurante.save();
+      console.log(`🆕 Restaurante auto-creado: ${extension}`);
+      
+      return res.render('panel-login', {
+        extension: extension,
+        token: nuevoToken,
+        message: 'Restaurante creado automáticamente. Usa este token para acceder:'
+      });
+    }
+
+    // Si existe, validar token
+    if (!token || token !== restaurante.token) {
+      return res.render('panel-login', {
+        extension: extension,
+        //token: restaurante.token,
+        error: token ? 'Token inválido' : 'Token requerido'
+      });
+    }
+
+    // Obtener estadísticas del día actual
+    const hoy = moment().tz('America/Bogota').format('YYYY-MM-DD');
+    const estadisticasHoy = restaurante.estadisticasDiarias.find(d => d.dia === hoy) || {
+      totalPedidos: 0,
+      totalGastado: 0
+    };
+
+    // Obtener estadísticas de la semana actual
+    const semanaActual = moment().tz('America/Bogota').format('YYYY-WW');
+    const estadisticasSemana = restaurante.estadisticasSemanales.find(s => s.semana === semanaActual) || {
+      totalPedidos: 0,
+      totalGastado: 0
+    };
+
+    // Obtener estadísticas del mes actual
+    const mesActual = moment().tz('America/Bogota').format('YYYY-MM');
+    const estadisticasMes = restaurante.estadisticasMensuales.find(m => m.mes === mesActual) || {
+      totalPedidos: 0,
+      totalGastado: 0
+    };
+
+    // Top 10 clientes
+    const topClientes = restaurante.clientes
+      .sort((a, b) => b.totalGastado - a.totalGastado)
+      .slice(0, 10)
+      .map((cliente, index) => ({
+        posicion: index + 1,
+        telefono: cliente.phone,
+        totalPedidos: cliente.totalPedidos,
+        totalGastado: cliente.totalGastado
+      }));
+
+    res.render('panel', {
+      restaurante: extension,
+      token: token,
+      estadisticas: {
+        generales: {
+          totalPedidos: restaurante.totalPedidos,
+          totalGastado: restaurante.totalGastado,
+          totalClientes: restaurante.clientes.length
+        },
+        hoy: estadisticasHoy,
+        semana: estadisticasSemana,
+        mes: estadisticasMes
+      },
+      topClientes: topClientes,
+      // Mantener compatibilidad con tu vista actual
+      puntos: restaurante.totalPedidos, // equivalente a puntos
+      orden: 999, // puedes mantener esto o actualizar según tu lógica
+      clientes: topClientes
+    });
+
+  } catch (error) {
+    console.error('Error cargando panel:', error);
+    res.status(500).render('error', { 
+      info,
+      name_page: 'error 404',
+      message: 'Error interno del servidor',
+      restaurantesDisponibles: []
+    });
+  }
+});
+
+app.get('/admin/recargar-menus', async (req, res) => {
+  menus = await cargarMenusDesdeArchivos();
   const ordenados = Object.values(menus)
     .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
     .map(menu => menu.config.extension);
-
   res.json({
     success: true,
     message: `Menús recargados. ${ordenados.length} restaurantes cargados`,
     restaurantes: ordenados
-  });
-});
-/*app.get('/admin/clientes/:extension', async (req, res) => {
-  const { extension } = req.params;
-  const registro = await RestaurantePuntos.findOne({ extension }).lean();
-
-  if (!registro) {
-    return res.json({ success: false, message: 'Restaurante no encontrado' });
-  }
-
-  const ranking = registro.clientes
-    .sort((a, b) => b.totalGastado - a.totalGastado) // por dinero gastado
-    .map(c => ({
-      phone: c.phone,
-      pedidos: c.totalPedidos,
-      gastado: c.totalGastado
-    }));
-
-  res.json({ success: true, clientes: ranking });
-});*/
-app.get('/:extension/panel', async (req, res) => {
-  const { extension } = req.params;
-  const { token } = req.query;
-
-  const registro = await RestaurantePuntos.findOne({ extension }).lean();
-
-  if (!registro) {
-    return res.status(404).send('Restaurante no encontrado');
-  }
-
-  // Validar token
-  if (!token || token !== registro.token) {
-    return res.status(403).send('Acceso denegado. Token inválido');
-  }
-
-  // Ordenar clientes por dinero gastado
-  const ranking = registro.clientes
-    .sort((a, b) => b.totalGastado - a.totalGastado)
-    .map((c, i) => ({
-      pos: i + 1,
-      phone: c.phone,
-      pedidos: c.totalPedidos,
-      gastado: c.totalGastado
-    }));
-
-  res.render('panel', {
-    restaurante: registro.extension,
-    puntos: registro.puntos,
-    orden: registro.orden,
-    clientes: ranking
   });
 });
 

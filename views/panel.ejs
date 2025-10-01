@@ -1,38 +1,1470 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Panel - <%= restaurante %></title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - <%= restaurante %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .historial-table {
+            min-width: 600px;
+        }
+        @media (max-width: 768px) {
+            .historial-table {
+                min-width: 100%;
+            }
+        }
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10B981',
+                        secondary: '#3B82F6',
+                        accent: '#F59E0B',
+                        dark: '#1F2937'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-900 text-gray-100 p-8">
-  <h1 class="text-3xl font-bold mb-6">📊 Panel de <%= restaurante %></h1>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">🍔 Panel de Control</h1>
+                    <p class="text-gray-600">Restaurante: <span class="font-semibold"><%= restaurante %></span></p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="bg-primary text-white px-3 py-1 rounded-full text-sm">
+                        <i class="fas fa-store mr-1"></i> Activo
+                    </span>
+                    <button onclick="actualizarDatos()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
+                        <i class="fas fa-sync-alt mr-2"></i> Actualizar
+                    </button>
+                </div>
+                <div class="flex space-x-4 mb-4">
+                  <button id="btnIniciarJornada" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Iniciar Jornada
+                  </button>
+                  <button id="btnCerrarJornada" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Cerrar Jornada
+                  </button>
+                  <span id="confirmarCierre" class="hidden text-sm text-gray-600 ml-2">
+                    Clic nuevamente en <span id="contadorCierre">10</span>s para confirmar
+                  </span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navegación de pestañas -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1">
+                <button onclick="cambiarPestaña('estadisticas')" id="tab-estadisticas" class="px-4 py-3 font-medium border-b-2 border-blue-500 text-blue-600">
+                    <i class="fas fa-chart-bar mr-2"></i>Estadísticas
+                </button>
+                <button onclick="cambiarPestaña('pendientes')" id="tab-pendientes" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                    <i class="fas fa-clock mr-2"></i>Pedidos Pendientes
+                    <span id="badge-pendientes" class="ml-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs hidden">0</span>
+                </button>
+                <button onclick="cambiarPestaña('historial')" id="tab-historial" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                    <i class="fas fa-history mr-2"></i>Historial
+                </button>
+            </div>
+        </div>
+    </div>
 
-  <div class="mb-6">
-    <p><strong>Pedidos totales:</strong> <%= puntos %></p>
-    <p><strong>Orden actual:</strong> <%= orden %></p>
-  </div>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl flex items-center">
+            <i class="fas fa-spinner fa-spin text-2xl text-blue-500 mr-3"></i>
+            <p class="text-gray-700">Cargando datos...</p>
+        </div>
+    </div>
 
-  <h2 class="text-2xl font-semibold mb-4">👥 Clientes más activos</h2>
-  <table class="min-w-full bg-gray-800 rounded-lg overflow-hidden">
-    <thead>
-      <tr class="bg-gray-700">
-        <th class="px-4 py-2">#</th>
-        <th class="px-4 py-2">Teléfono</th>
-        <th class="px-4 py-2">Pedidos</th>
-        <th class="px-4 py-2">Gastado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% clientes.forEach(cliente => { %>
-        <tr class="border-t border-gray-600">
-          <td class="px-4 py-2"><%= cliente.pos %></td>
-          <td class="px-4 py-2"><%= cliente.phone %></td>
-          <td class="px-4 py-2"><%= cliente.pedidos %></td>
-          <td class="px-4 py-2">$<%= cliente.gastado %></td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Estadísticas Principales -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Tarjeta Total Pedidos -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-600 text-sm font-semibold">TOTAL PEDIDOS</h3>
+                        <p class="text-3xl font-bold text-gray-800" id="total-pedidos">0</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-shopping-bag text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-green-600 text-sm mt-2">
+                    <i class="fas fa-arrow-up"></i> <span id="pedidos-tendencia">0</span> este mes
+                </p>
+            </div>
+
+            <!-- Tarjeta Total Gastado -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-600 text-sm font-semibold">TOTAL GASTADO</h3>
+                        <p class="text-3xl font-bold text-gray-800" id="total-gastado">$0</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-green-600 text-sm mt-2">
+                    <i class="fas fa-arrow-up"></i> <span id="gastado-tendencia">$0</span> este mes
+                </p>
+            </div>
+
+            <!-- Tarjeta Clientes Únicos -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-600 text-sm font-semibold">CLIENTES ÚNICOS</h3>
+                        <p class="text-3xl font-bold text-gray-800" id="total-clientes">0</p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-green-600 text-sm mt-2">
+                    <i class="fas fa-arrow-up"></i> <span id="clientes-tendencia">0</span> nuevos este mes
+                </p>
+            </div>
+
+            <!-- Tarjeta Pedidos Hoy -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-600 text-sm font-semibold">PEDIDOS HOY</h3>
+                        <p class="text-3xl font-bold text-gray-800" id="pedidos-hoy">0</p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-day text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm mt-2">
+                    <span id="gastado-hoy">$0</span> en ventas hoy
+                </p>
+            </div>
+        </div>
+
+        <!-- Filtros y Períodos -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex flex-wrap gap-4 items-center">
+                <h3 class="text-lg font-semibold text-gray-800">Filtrar por período:</h3>
+                <select id="filtro-periodo" class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="hoy">Hoy</option>
+                    <option value="semana">Esta Semana</option>
+                    <option value="mes" selected>Este Mes</option>
+                    <option value="personalizado">Personalizado</option>
+                </select>
+                
+                <div id="rango-fechas" class="hidden flex-wrap gap-2 items-center">
+                    <input type="date" id="fecha-desde" class="border rounded-lg px-3 py-2 text-sm">
+                    <span class="text-gray-600 text-sm">hasta</span>
+                    <input type="date" id="fecha-hasta" class="border rounded-lg px-3 py-2 text-sm">
+                    <button onclick="aplicarFiltroPersonalizado()" class="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 text-sm">
+                        Aplicar
+                    </button>
+                </div>
+                
+                <button onclick="exportarDatos()" class="ml-auto bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+                    <i class="fas fa-download mr-2"></i> Exportar CSV
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Estadísticas del Período -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Estadísticas del Período</h3>
+                <div id="estadisticas-periodo" class="space-y-4">
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-600">Total Pedidos:</span>
+                        <span class="font-semibold" id="periodo-pedidos">0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-600">Total Gastado:</span>
+                        <span class="font-semibold" id="periodo-gastado">$0</span>
+                    </div>
+                    <!-- En panel.ejs - Agregar estos elementos en estadísticas del período -->
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span class="text-gray-600">Efectivo:</span>
+                      <span class="font-semibold text-green-600" id="periodo-efectivo">$0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span class="text-gray-600">Transferencia:</span>
+                      <span class="font-semibold text-blue-600" id="periodo-transferencia">$0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-600">Promedio por Pedido:</span>
+                        <span class="font-semibold" id="periodo-promedio">$0</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-600">Período:</span>
+                        <span class="font-semibold text-sm" id="periodo-fechas">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ranking de Clientes -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Top 10 Clientes</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2 text-sm">#</th>
+                                <th class="text-left py-2 text-sm">Teléfono</th>
+                                <th class="text-right py-2 text-sm">Pedidos</th>
+                                <th class="text-right py-2 text-sm">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ranking-clientes">
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-gray-500">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>Cargando...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+         <!-- Pedidos Pendientes -->
+        <div id="content-pendientes" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-clock mr-2 text-orange-500"></i>
+                        Pedidos Pendientes
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="cargarPedidosPendientes()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                            <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div id="sin-pedidos-pendientes" class="text-center py-8 text-gray-500 hidden">
+                    <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
+                    <p class="text-lg">No hay pedidos pendientes</p>
+                    <p class="text-sm">Todos los pedidos están gestionados</p>
+                </div>
+
+                <div id="lista-pedidos-pendientes" class="space-y-4">
+                    <!-- Los pedidos pendientes se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de Pedidos -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
+                <h3 class="text-lg font-semibold text-gray-800">Historial de Pedidos Recientes</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <input type="text" id="buscar-pedido" placeholder="Buscar teléfono..." 
+                           class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-40">
+                    <select id="filtro-tiempo" class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="all">Todos</option>
+                        <option value="7">Últimos 7 días</option>
+                        <option value="30">Últimos 30 días</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="w-full historial-table">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-2 text-sm">Fecha/Hora</th>
+                            <th class="text-left py-2 text-sm">Teléfono/Cliente</th>
+                            <th class="text-right py-2 text-sm">Valor</th>
+                            <th class="text-center py-2 text-sm">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historial-pedidos">
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">
+                                <i class="fas fa-spinner fa-spin mr-2"></i>Cargando historial...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center mt-4 flex-wrap gap-4">
+                <span class="text-gray-600 text-sm" id="info-paginacion">Mostrando 0 de 0 pedidos</span>
+                <div class="flex gap-2">
+                    <button onclick="cambiarPagina('anterior')" class="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300 text-sm disabled:opacity-50" id="btn-anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm" id="pagina-actual">1</span>
+                    <button onclick="cambiarPagina('siguiente')" class="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300 text-sm disabled:opacity-50" id="btn-siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para detalles del pedido -->
+    <div id="modal-detalles" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Detalles Completos del Pedido</h3>
+                <button onclick="cerrarModal()" class="text-gray-500 hover:text-gray-700 text-lg">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-contenido" class="space-y-4">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button onclick="cerrarModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para rechazar pedido -->
+    <div id="modal-rechazar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Rechazar Pedido</h3>
+                <button onclick="cerrarModalRechazar()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Motivo del rechazo:</label>
+                <textarea id="motivo-rechazo" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" rows="4" placeholder="¿Por qué se rechaza este pedido?"></textarea>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button onclick="cerrarModalRechazar()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                    Cancelar
+                </button>
+                <button onclick="confirmarRechazo()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                    <i class="fas fa-times mr-2"></i>Rechazar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-lg mt-8">
+        <div class="container mx-auto px-4 py-4 text-center text-gray-600">
+            <p>© 2024 Sistema de Gestión de Pedidos. Todos los derechos reservados.</p>
+            <p class="text-sm mt-1">Última actualización: <span id="ultima-actualizacion"><%= new Date().toLocaleString() %></span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Variables globales
+        const token = '<%= token %>';
+        const extension = '<%= restaurante %>';
+        let paginaActual = 1;
+        const limitePorPagina = 10;
+        let filtroActual = 'mes';
+        let totalPedidos = 0;
+        let todosLosPedidos = [];
+        let socket = null;
+
+        // Inicializar Socket.io
+        function inicializarSocket() {
+            socket = io();
+            
+            socket.emit('join-restaurant', extension);
+            
+            socket.on('nuevo-pedido', (pedido) => {
+                mostrarMensaje('¡Nuevo pedido recibido!', 'info');
+                actualizarBadgePendientes();
+                if (document.getElementById('content-pendientes').classList.contains('active')) {
+                    cargarPedidosPendientes();
+                }
+            });
+            
+            socket.on('pedido-aceptado', (pedido) => {
+                mostrarMensaje('Pedido aceptado', 'success');
+                if (document.getElementById('content-pendientes').classList.contains('active')) {
+                    cargarPedidosPendientes();
+                }
+            });
+            
+            socket.on('pedido-rechazado', (pedido) => {
+                mostrarMensaje('Pedido rechazado', 'error');
+                if (document.getElementById('content-pendientes').classList.contains('active')) {
+                    cargarPedidosPendientes();
+                }
+            });
+        }
+
+        // Cambiar entre pestañas
+        function cambiarPestaña(pestaña) {
+            // Desactivar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('button[id^="tab-"]').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-600');
+            });
+            
+            // Activar pestaña seleccionada
+            document.getElementById(`content-${pestaña}`).classList.add('active');
+            document.getElementById(`tab-${pestaña}`).classList.add('border-blue-500', 'text-blue-600');
+            document.getElementById(`tab-${pestaña}`).classList.remove('border-transparent', 'text-gray-600');
+            
+            // Cargar datos si es necesario
+            if (pestaña === 'pendientes') {
+                cargarPedidosPendientes();
+            } else if (pestaña === 'historial') {
+                cargarHistorialPedidos();
+            }
+        }
+
+        // Cargar pedidos pendientes
+        async function cargarPedidosPendientes() {
+            mostrarLoading(true);
+            try {
+                const response = await fetch(`/api/pedidos/${extension}/pendientes?token=${token}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const pedidos = await response.json();
+                
+                if (pedidos.error) {
+                    throw new Error(pedidos.error);
+                }
+                
+                mostrarPedidosPendientes(pedidos);
+                actualizarBadgePendientes(pedidos.length);
+                
+            } catch (error) {
+                console.error('Error cargando pedidos pendientes:', error);
+                
+                if (error.message.includes('403')) {
+                    mostrarError('Acceso no autorizado. Verifica el token.');
+                } else if (error.message.includes('404')) {
+                    mostrarError('No se encontraron pedidos pendientes.');
+                } else if (error.message.includes('500')) {
+                    mostrarError('Error interno del servidor.');
+                } else {
+                    mostrarError(error.message || 'Error al cargar pedidos pendientes');
+                }
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+        
+        // Mostrar pedidos pendientes en la lista
+        function mostrarPedidosPendientes(pedidos) {
+            const contenedor = document.getElementById('lista-pedidos-pendientes');
+            const sinPedidos = document.getElementById('sin-pedidos-pendientes');
+            
+            if (pedidos.length === 0) {
+                contenedor.innerHTML = '';
+                sinPedidos.classList.remove('hidden');
+                return;
+            }
+            
+            sinPedidos.classList.add('hidden');
+            contenedor.innerHTML = '';
+            
+            pedidos.forEach(pedido => {
+                const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
+                const pedidoHTML = `
+                    <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-semibold text-orange-800">Pedido #${pedido._id.toString().substring(18, 24)}</h3>
+                                <p class="text-sm text-gray-600">${fecha}</p>
+                            </div>
+                            <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">
+                                Pendiente
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                            <div>
+                                <p class="text-sm"><span class="font-medium">Cliente:</span> ${pedido.nombreCliente || 'No especificado'}</p>
+                                <p class="text-sm"><span class="font-medium">Teléfono:</span> ${pedido.phone}</p>
+                                <p class="text-sm"><span class="font-medium">Dirección:</span> ${pedido.direccion || 'No especificada'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm"><span class="font-medium">Total:</span> <span class="font-bold text-green-600">$${pedido.valorPedido.toLocaleString()}</span></p>
+                                <p class="text-sm"><span class="font-medium">Pago:</span> ${pedido.metodoPago === 'efectivo' ? 'Efectivo' : 'Transferencia'}</p>
+                                ${pedido.observacionGeneral ? `<p class="text-sm"><span class="font-medium">Observación:</span> "${pedido.observacionGeneral}"</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded border mb-3">
+                            <h4 class="font-medium mb-2">Productos:</h4>
+                            ${pedido.items.map(item => `
+                                <div class="flex justify-between text-sm py-1 border-b last:border-b-0">
+                                    <span>${item.cantidad}x ${item.nombre}${item.variante ? ` (${item.variante})` : ''}</span>
+                                    <span>$${item.subtotal.toLocaleString()}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="flex justify-end space-x-2">
+                            <button onclick="verDetallesPedidoCompleto(${JSON.stringify(pedido).replace(/"/g, '&quot;')})" 
+                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                                <i class="fas fa-eye mr-1"></i> Ver Detalles
+                            </button>
+                        </div>
+                    </div>
+                `;
+                contenedor.innerHTML += pedidoHTML;
+            });
+        }
+        
+        // Actualizar badge de pedidos pendientes
+        function actualizarBadgePendientes(cantidad) {
+            const badge = document.getElementById('badge-pendientes');
+            if (cantidad !== undefined) {
+                if (cantidad > 0) {
+                    badge.textContent = cantidad;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+        // Aceptar pedido
+        async function aceptarPedido(pedidoId) {
+            if (!confirm('¿Estás seguro de aceptar este pedido?')) return;
+            
+            // Validación MANUAL del domicilio
+            const inputDomicilio = document.getElementById('input-domicilio');
+            const valor = inputDomicilio.value.trim();
+            
+            // Validar que no esté vacío (incluyendo el caso del valor 0)
+            if (valor === '') {
+                mostrarError('❌ El valor del domicilio es obligatorio');
+                inputDomicilio.focus();
+                inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+                return;
+            }
+            
+            // Convertir a número y validar
+            const valorDomicilio = parseFloat(valor);
+            if (isNaN(valorDomicilio) || valorDomicilio < 0) {
+                mostrarError('❌ Ingrese un valor válido para el domicilio');
+                inputDomicilio.focus();
+                inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+                return;
+            }
+            
+            mostrarLoading(true);
+            try {
+                const response = await fetch(`/api/pedidos/${pedidoId}/aceptar?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valorDomicilio })
+                });
+        
+                if (response.ok) {
+                    mostrarMensaje('Pedido aceptado correctamente', 'success');
+                    cerrarModal();
+                    cargarDatosIniciales();
+                } else {
+                    const data = await response.json();
+                    if (data.error && data.error.includes('No hay jornada iniciada')) {
+                        mostrarError('⚠️ No hay jornada iniciada. Inicie jornada para aceptar pedidos.');
+                    } else {
+                        mostrarError('Error al aceptar el pedido');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error al aceptar el pedido');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+        // Rechazar pedido
+        function rechazarPedido(pedidoId) {
+            pedidoSeleccionado = pedidoId;
+            document.getElementById('motivo-rechazo').value = '';
+            document.getElementById('modal-rechazar').classList.remove('hidden');
+        }
+
+        // Confirmar rechazo
+        async function confirmarRechazo() {
+            const motivo = document.getElementById('motivo-rechazo').value.trim();
+            if (!motivo) {
+                mostrarError('Por favor ingresa un motivo para rechazar el pedido');
+                return;
+            }
+            
+            mostrarLoading(true);
+            try {
+                const response = await fetch(`/api/pedidos/${pedidoSeleccionado}/rechazar?token=${token}&motivo=${encodeURIComponent(motivo)}`, {
+                    method: 'PUT'
+                });
+                
+                if (response.ok) {
+                    mostrarMensaje('Pedido rechazado correctamente', 'success');
+                    cerrarModalRechazar();
+                    cargarDatosIniciales();
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al rechazar pedido');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError(error.message || 'Error al rechazar el pedido');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        // Cerrar modal de rechazo
+        function cerrarModalRechazar() {
+            document.getElementById('modal-rechazar').classList.add('hidden');
+            pedidoSeleccionado = null;
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fechas por defecto
+            const hoy = new Date();
+            const hace7Dias = new Date();
+            hace7Dias.setDate(hace7Dias.getDate() - 7);
+            
+            document.getElementById('fecha-desde').value = hace7Dias.toISOString().split('T')[0];
+            document.getElementById('fecha-hasta').value = hoy.toISOString().split('T')[0];
+            
+            cargarDatosIniciales();
+            configurarEventListeners();
+        });
+        
+        document.getElementById('btnIniciarJornada').addEventListener('click', async () => {
+          const res = await fetch('/api/jornada/iniciar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ extension }) // extensión del restaurante
+          });
+          const data = await res.json();
+          if (data.ok) {
+            alert('✅ Jornada iniciada');
+          } else {
+            alert('⚠️ ' + data.message);
+          }
+        });
+
+      let confirmando = false;
+      let contador = 10;
+      let interval;
+      document.getElementById('btnCerrarJornada').addEventListener('click', async () => {
+        if (!confirmando) {
+          // Primer click: activar confirmación
+          confirmando = true;
+          contador = 10;
+          document.getElementById('confirmarCierre').classList.remove('hidden');
+          document.getElementById('contadorCierre').textContent = contador;
+      
+          interval = setInterval(() => {
+            contador--;
+            if (contador <= 0) {
+              // Tiempo agotado, cancelar
+              clearInterval(interval);
+              confirmando = false;
+              document.getElementById('confirmarCierre').classList.add('hidden');
+            } else {
+              document.getElementById('contadorCierre').textContent = contador;
+            }
+          }, 1000);
+        } else {
+          // Segundo click dentro de 10s: cerrar jornada
+          clearInterval(interval);
+          confirmando = false;
+          document.getElementById('confirmarCierre').classList.add('hidden');
+      
+          const res = await fetch('/api/jornada/cerrar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ extension })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            alert('✅ Jornada cerrada');
+          } else {
+            alert('⚠️ ' + (data.message || 'Error al cerrar jornada'));
+          }
+        }
+      });
+
+        // Configurar event listeners
+        function configurarEventListeners() {
+            document.getElementById('filtro-periodo').addEventListener('change', function(e) {
+                if (e.target.value === 'personalizado') {
+                    document.getElementById('rango-fechas').classList.remove('hidden');
+                } else {
+                    document.getElementById('rango-fechas').classList.add('hidden');
+                    filtroActual = e.target.value;
+                    cargarEstadisticasPeriodo();
+                }
+            });
+
+            document.getElementById('buscar-pedido').addEventListener('input', function(e) {
+                filtrarPedidos(e.target.value);
+            });
+
+            document.getElementById('filtro-tiempo').addEventListener('change', function(e) {
+                aplicarFiltroTiempo(e.target.value);
+            });
+        }
+
+        // Mostrar/ocultar loading
+        function mostrarLoading(mostrar) {
+            document.getElementById('loading-overlay').classList.toggle('hidden', !mostrar);
+        }
+
+        // Cargar datos iniciales
+        async function cargarDatosIniciales() {
+            mostrarLoading(true);
+            try {
+                await Promise.all([
+                    cargarEstadisticasGenerales(),
+                    cargarEstadisticasPeriodo(),
+                    cargarRankingClientes(),
+                    cargarPedidosPendientes(),
+                    cargarHistorialPedidos(),
+                    cargarEstadisticasHoy()
+                ]);
+                
+                document.getElementById('ultima-actualizacion').textContent = new Date().toLocaleString();
+                mostrarMensaje('Datos cargados correctamente', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error al cargar datos iniciales');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        // Cargar estadísticas generales
+        async function cargarEstadisticasGenerales() {
+            try {
+                const response = await fetch(`/api/panel/${extension}/estadisticas?token=${token}`);
+                if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                
+                const data = await response.json();
+                
+                document.getElementById('total-pedidos').textContent = data.totalPedidos.toLocaleString();
+                document.getElementById('total-gastado').textContent = `$${data.totalGastado.toLocaleString()}`;
+                document.getElementById('total-clientes').textContent = data.totalClientes.toLocaleString();
+                
+                // ✅ Nuevo: Métodos de pago en estadísticas generales (si los agregas al schema)
+                if (data.efectivo !== undefined) {
+                    document.getElementById('total-efectivo').textContent = `$${data.totalEfectivo.toLocaleString()}`;
+                    document.getElementById('total-transferencia').textContent = `$${data.totalTransferencia.toLocaleString()}`;
+                }
+        
+            } catch (error) {
+                console.error('Error cargando estadísticas generales:', error);
+                mostrarError('Error al cargar estadísticas');
+            }
+        }
+
+        // Cargar estadísticas de hoy
+        async function cargarEstadisticasHoy() {
+            try {
+                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=hoy`);
+                if (!response.ok) throw new Error('Error en la respuesta');
+                
+                const data = await response.json();
+                document.getElementById('pedidos-hoy').textContent = data.totalPedidos || 0;
+                document.getElementById('gastado-hoy').textContent = `$${(data.totalGastado || 0).toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Error cargando estadísticas de hoy:', error);
+                document.getElementById('pedidos-hoy').textContent = '0';
+                document.getElementById('gastado-hoy').textContent = '$0';
+            }
+        }
+
+        // Cargar estadísticas del período
+        async function cargarEstadisticasPeriodo() {
+            try {
+                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=${filtroActual}`);
+                if (!response.ok) throw new Error('Error en la respuesta');
+                
+                const data = await response.json();
+                
+                document.getElementById('periodo-pedidos').textContent = data.totalPedidos.toLocaleString();
+                document.getElementById('periodo-gastado').textContent = `$${data.totalGastado.toLocaleString()}`;
+                
+                const promedio = data.totalPedidos > 0 ? (data.totalGastado / data.totalPedidos).toFixed(2) : 0;
+                document.getElementById('periodo-promedio').textContent = `$${promedio}`;
+                
+                document.getElementById('periodo-efectivo').textContent = `$${(data.totalEfectivo || 0).toLocaleString()}`;
+                document.getElementById('periodo-transferencia').textContent = `$${(data.totalTransferencia || 0).toLocaleString()}`;
+              
+                
+                // Actualizar texto del período
+                let fechaTexto = '';
+                if (filtroActual === 'hoy') {
+                    fechaTexto = 'Hoy';
+                } else if (filtroActual === 'semana') {
+                    fechaTexto = `Esta semana (${data.semana})`;
+                } else if (filtroActual === 'mes') {
+                    fechaTexto = `Mes ${data.mes}`;
+                }
+                document.getElementById('periodo-fechas').textContent = fechaTexto;
+                
+            } catch (error) {
+                console.error('Error cargando estadísticas del período:', error);
+                mostrarError('Error al cargar estadísticas del período');
+            }
+        }
+
+        // Cargar ranking de clientes
+        async function cargarRankingClientes() {
+            try {
+                const response = await fetch(`/api/panel/${extension}/ranking-clientes?token=${token}`);
+                if (!response.ok) throw new Error('Error en la respuesta');
+                
+                const data = await response.json();
+                const tbody = document.getElementById('ranking-clientes');
+                tbody.innerHTML = '';
+                
+                if (data.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">
+                                No hay clientes registrados
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                data.slice(0, 10).forEach((cliente, index) => {
+                    const row = `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 text-sm">${index + 1}</td>
+                            <td class="py-3 text-sm">${cliente.telefono || cliente.phone}</td>
+                            <td class="py-3 text-sm text-right">${cliente.totalPedidos}</td>
+                            <td class="py-3 text-sm text-right font-semibold">$${cliente.totalGastado.toLocaleString()}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+                
+            } catch (error) {
+                console.error('Error cargando ranking de clientes:', error);
+                mostrarError('Error al cargar ranking');
+            }
+        }
+
+        // Cargar historial de pedidos
+        async function cargarHistorialPedidos() {
+            try {
+                const response = await fetch(`/api/panel/${extension}/historial-pedidos?token=${token}&page=${paginaActual}&limit=${limitePorPagina}`);
+                if (!response.ok) throw new Error('Error en la respuesta');
+                
+                const data = await response.json();
+                totalPedidos = data.paginacion.total;
+                todosLosPedidos = data.pedidos;
+                
+                mostrarPedidosEnTabla(data.pedidos);
+                actualizarPaginacion(data.paginacion);
+                
+            } catch (error) {
+                console.error('Error cargando historial de pedidos:', error);
+                mostrarError('Error al cargar historial');
+            }
+        }
+
+        // Mostrar pedidos en la tabla
+        function mostrarPedidosEnTabla(pedidos) {
+            const tbody = document.getElementById('historial-pedidos');
+            tbody.innerHTML = '';
+            
+            pedidos.forEach((pedido, index) => {
+                const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const valorPedido = pedido.valorPedido || 0;
+                const valorDomicilio = pedido.valorDomicilio || 0;
+                const valorTotal = valorPedido + valorDomicilio;
+                
+                // Determinar clase CSS según el estado
+                const rowClass = pedido.estado === 'rechazado' 
+                    ? 'bg-red-50 hover:bg-red-100 border-l-4 border-red-500' 
+                    : 'hover:bg-gray-50';
+                
+                const estadoBadge = pedido.estado === 'rechazado' 
+                    ? '<span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">Rechazado</span>'
+                    : (pedido.estado === 'aceptado' 
+                        ? '<span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Aceptado</span>'
+                        : '<span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">Pendiente</span>');
+                
+                const row = `
+                    <tr class="border-b ${rowClass}">
+                        <td class="py-3 text-sm">${fecha}</td>
+                        <td class="py-3 text-sm">
+                            <div class="font-medium">${pedido.phone}</div>
+                            ${pedido.nombreCliente ? `<div class="text-xs text-gray-600">${pedido.nombreCliente}</div>` : ''}
+                            <div class="mt-1">${estadoBadge}</div>
+                        </td>
+                        <td class="py-3 text-sm text-right font-semibold">$${valorTotal.toLocaleString()}</td>
+                        <td class="py-3 text-sm text-center">
+                            <span class="inline-block px-2 py-1 rounded text-xs ${
+                                pedido.metodoPago === 'efectivo' 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : 'bg-blue-100 text-blue-800'
+                            }">
+                                ${pedido.metodoPago === 'efectivo' ? 'Efectivo' : 'Transferencia'}
+                            </span>
+                        </td>
+                        <td class="py-3 text-sm text-center">
+                            <button onclick="verDetallesPorIndice(${index})" 
+                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                                <i class="fas fa-eye mr-1"></i> Ver
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        // Actualizar controles de paginación
+        function actualizarPaginacion(paginacion) {
+            document.getElementById('info-paginacion').textContent = 
+                `Mostrando ${paginacion.total > 0 ? ((paginaActual - 1) * limitePorPagina) + 1 : 0} - ${Math.min(paginaActual * limitePorPagina, paginacion.total)} de ${paginacion.total} pedidos`;
+            
+            document.getElementById('pagina-actual').textContent = paginaActual;
+            
+            // Habilitar/deshabilitar botones
+            document.getElementById('btn-anterior').disabled = paginaActual === 1;
+            document.getElementById('btn-siguiente').disabled = paginaActual >= paginacion.paginas;
+        }
+
+        // Cambiar página
+        function cambiarPagina(direccion) {
+            if (direccion === 'siguiente') {
+                paginaActual++;
+            } else if (direccion === 'anterior' && paginaActual > 1) {
+                paginaActual--;
+            }
+            cargarHistorialPedidos();
+        }
+
+        // Aplicar filtro personalizado
+        function aplicarFiltroPersonalizado() {
+            const desde = document.getElementById('fecha-desde').value;
+            const hasta = document.getElementById('fecha-hasta').value;
+            
+            if (!desde || !hasta) {
+                mostrarError('Por favor selecciona ambas fechas');
+                return;
+            }
+            
+            mostrarMensaje('Filtro aplicado para fechas personalizadas', 'info');
+            // Aquí implementarías la lógica específica para filtrar por fechas
+        }
+
+        // Filtrar pedidos por término de búsqueda
+        function filtrarPedidos(termino) {
+            if (!termino) {
+                mostrarPedidosEnTabla(todosLosPedidos);
+                return;
+            }
+            
+            const pedidosFiltrados = todosLosPedidos.filter(pedido => 
+                pedido.phone.includes(termino) ||
+                (pedido.nombreCliente && pedido.nombreCliente.toLowerCase().includes(termino.toLowerCase()))
+            );
+            mostrarPedidosEnTabla(pedidosFiltrados);
+        }
+
+        // Aplicar filtro por tiempo
+        function aplicarFiltroTiempo(dias) {
+            if (dias === 'all') {
+                mostrarPedidosEnTabla(todosLosPedidos);
+                return;
+            }
+            
+            const limiteFecha = new Date();
+            limiteFecha.setDate(limiteFecha.getDate() - parseInt(dias));
+            
+            const pedidosFiltrados = todosLosPedidos.filter(pedido => 
+                new Date(pedido.fechaPedido) >= limiteFecha
+            );
+            mostrarPedidosEnTabla(pedidosFiltrados);
+        }
+
+        // Ver detalles del pedido
+        /*function verDetallesPedido(phone, valor, fecha) {
+            // Buscar el pedido completo
+            const pedidoCompleto = todosLosPedidos.find(p => 
+                p.phone === phone && 
+                p.valorPedido === valor && 
+                new Date(p.fechaPedido).getTime() === new Date(fecha).getTime()
+            );
+            
+            if (pedidoCompleto) {
+                mostrarDetallesPedidoModal(pedidoCompleto);
+            } else {
+                mostrarError('No se encontraron los detalles completos del pedido');
+            }
+        }*/
+        
+        function verDetallesPorIndice(index) {
+          const pedido = todosLosPedidos[index];
+          if (!pedido) return;
+          verDetallesPedido(pedido);
+        }
+
+        function verDetallesPedidoCompleto(pedido) {
+            // Convertir de string a objeto si es necesario
+            const pedidoObj = typeof pedido === 'string' ? JSON.parse(pedido) : pedido;
+            //mostrarDetallesPedidoModal(pedidoObj);
+            verDetallesPedido(pedidoObj);
+        }
+        
+        // Mostrar modal con detalles del pedido
+        function mostrarDetallesPedidoModal(pedido) {
+            const modal = document.getElementById('modal-detalles');
+            const contenido = document.getElementById('modal-contenido');
+            
+            console.log('Mostrando detalles del pedido:', pedido);
+            
+            const fechaFormateada = new Date(pedido.fechaPedido).toLocaleString('es-CO', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        
+            // Generar HTML para los items del pedido
+            let itemsHTML = '';
+            if (pedido.items && pedido.items.length > 0) {
+                itemsHTML = `
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-3">📦 Productos del Pedido</h4>
+                        <div class="space-y-3">
+                `;
+                
+                pedido.items.forEach((item, index) => {
+                    itemsHTML += `
+                        <div class="border-b pb-3 last:border-b-0">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <p class="font-medium">${item.cantidad}x ${item.nombre}</p>
+                                    ${item.variante ? `<p class="text-sm text-gray-600">Variante: ${item.variante}</p>` : ''}
+                                    ${item.observacion ? `<p class="text-sm text-gray-600 mt-1">Observación: <span class="italic">"${item.observacion}"</span></p>` : ''}
+                                    <p class="text-sm text-gray-500">${item.categoria}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm">$${item.precio.toLocaleString()} c/u</p>
+                                    <p class="font-semibold text-green-600">$${item.subtotal.toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                itemsHTML += `
+                        </div>
+                    </div>
+                `;
+            } else {
+                itemsHTML = `
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <p class="text-yellow-700">No hay detalles de productos disponibles para este pedido.</p>
+                    </div>
+                `;
+            }
+        
+            contenido.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold">Detalles del Pedido</h4>
+                        <span class="px-3 py-1 rounded-full text-sm font-medium ${
+                            pedido.estado === 'aceptado' ? 'bg-green-100 text-green-800' :
+                            pedido.estado === 'rechazado' ? 'bg-red-100 text-red-800' :
+                            'bg-yellow-100 text-yellow-800'
+                        }">
+                            ${pedido.estado?.toUpperCase() || 'PENDIENTE'}
+                        </span>
+                    </div>
+                    
+                    ${pedido.estado === 'rechazado' && pedido.motivoRechazo ? `
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-red-800 mb-2">❌ Motivo de Rechazo</h4>
+                        <p class="text-red-700">"${pedido.motivoRechazo}"</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 mb-3">👤 Información del Cliente</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Nombre:</span>
+                                <p class="font-medium">${pedido.nombreCliente || 'No especificado'}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Teléfono:</span>
+                                <p class="font-medium">${pedido.phone}</p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <span class="text-gray-600">Dirección:</span>
+                                <p class="font-medium">${pedido.direccion || 'No especificada'}</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    ${itemsHTML}
+        
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-800 mb-3">💰 Información de Pago</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Método:</span>
+                                <p class="font-medium">${pedido.metodoPago === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}</p>
+                            </div>
+                            ${pedido.metodoPago === 'efectivo' && pedido.pagaCon ? `
+                            <div>
+                                <span class="text-gray-600">Paga con:</span>
+                                <p class="font-medium">$${pedido.pagaCon.toLocaleString()}</p>
+                            </div>
+                            ` : ''}
+                            <div class="col-span-2">
+                                <span class="text-gray-600">Total del pedido:</span>
+                                <p class="text-xl font-bold text-green-600">$${pedido.valorPedido.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    ${pedido.observacionGeneral ? `
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-yellow-800 mb-2">📝 Observación General</h4>
+                        <p class="text-gray-700 italic">"${pedido.observacionGeneral}"</p>
+                    </div>
+                    ` : ''}
+        
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">📋 Información del Pedido</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Fecha y hora:</span>
+                                <p class="font-medium">${fechaFormateada}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Restaurante:</span>
+                                <p class="font-medium">${extension}</p>
+                            </div>
+                            ${pedido._id ? `
+                            <div>
+                                <span class="text-gray-600">ID del pedido:</span>
+                                <p class="font-medium">${pedido._id.toString().substring(18, 24)}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+        
+        // Cerrar modal
+        function cerrarModal() {
+          document.getElementById('modal-detalles').classList.add('hidden');
+        }
+
+        // Exportar datos a CSV
+        function exportarDatos() {
+            if (todosLosPedidos.length === 0) {
+                mostrarError('No hay datos para exportar');
+                return;
+            }
+            
+            mostrarLoading(true);
+            
+            try {
+                // Crear contenido CSV
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Fecha,Teléfono,Valor\n";
+                
+                todosLosPedidos.forEach(pedido => {
+                    const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
+                    csvContent += `"${fecha}","${pedido.phone}","${pedido.valorPedido}"\n`;
+                });
+                
+                // Crear enlace de descarga
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `pedidos_${extension}_${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                
+                // Descargar archivo
+                link.click();
+                document.body.removeChild(link);
+                
+                mostrarMensaje('Datos exportados correctamente', 'success');
+            } catch (error) {
+                console.error('Error exportando datos:', error);
+                mostrarError('Error al exportar datos');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        // Ver detalles del pedido
+        function verDetallesPedido(pedido) {
+            const modal = document.getElementById('modal-detalles');
+            const contenido = document.getElementById('modal-contenido');
+        
+            const fechaFormateada = new Date(pedido.fechaPedido).toLocaleString('es-CO', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        
+            let itemsHTML = '';
+            if (pedido.items && pedido.items.length > 0) {
+                itemsHTML = `
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-3">Detalles del Pedido</h4>
+                        <div class="space-y-3">
+                `;
+        
+                pedido.items.forEach((item) => {
+                    itemsHTML += `
+                        <div class="border-b pb-2 last:border-b-0">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <p class="font-medium">${item.cantidad}x ${item.nombre}</p>
+                                    ${item.variante ? `<p class="text-sm text-gray-600">Variante: ${item.variante}</p>` : ''}
+                                    ${item.observacion ? `<p class="text-sm text-gray-600">Observación: ${item.observacion}</p>` : ''}
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm">$${item.precio.toLocaleString()} c/u</p>
+                                    <p class="font-semibold">$${item.subtotal.toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+        
+                itemsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+        
+            // Calcular valores
+            const valorPedido = pedido.valorPedido || 0;
+            const valorDomicilio = pedido.valorDomicilio || 0;
+            const valorTotal = valorPedido + valorDomicilio;
+        
+            // Si el pedido NO está aceptado, mostrar input para domicilio + botón aceptar
+            const controlsHTML = pedido.estado === 'pendiente' ? `
+                <div class="bg-purple-50 p-4 rounded-lg space-y-3">
+                    <h4 class="font-semibold text-purple-800 mb-2">Acciones</h4>
+                    <label class="text-sm text-gray-600">Valor Domicilio:</label>
+                    <input 
+                      type="number" 
+                      id="input-domicilio" 
+                      placeholder="Ingrese valor domicilio (0 si es gratis)" 
+                      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-200"
+                      min="0"
+                      step="0.01"
+                      oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')"
+                    />
+                    <button onclick="aceptarPedido('${pedido._id}')" 
+                      class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                      <i class="fas fa-check mr-1"></i> Aceptar
+                    </button>
+                    <button onclick="rechazarPedido('${pedido._id}')" 
+                      class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+                      <i class="fas fa-times mr-1"></i> Rechazar
+                    </button>
+                </div>
+            ` : '';
+        
+            contenido.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 mb-3">Información del Cliente</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Nombre:</span>
+                                <p class="font-medium">${pedido.nombreCliente || 'No especificado'}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Teléfono:</span>
+                                <p class="font-medium">${pedido.phone}</p>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="text-gray-600">Dirección:</span>
+                                <p class="font-medium">${pedido.direccion || 'No especificada'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    ${itemsHTML}
+        
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-800 mb-3">Información de Pago</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Método:</span>
+                                <p class="font-medium">${pedido.metodoPago === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}</p>
+                            </div>
+                            ${pedido.metodoPago === 'efectivo' && pedido.pagaCon ? `
+                            <div>
+                                <span class="text-gray-600">Paga con:</span>
+                                <p class="font-medium">$${pedido.pagaCon.toLocaleString()}</p>
+                            </div>
+                            ` : ''}
+                            <div class="col-span-2">
+                                <span class="text-gray-600">Subtotal Pedido:</span>
+                                <p class="font-medium">$${valorPedido.toLocaleString()}</p>
+                            </div>
+                            ${valorDomicilio > 0 ? `
+                            <div class="col-span-2">
+                                <span class="text-gray-600">Valor Domicilio:</span>
+                                <p class="font-medium">$${valorDomicilio.toLocaleString()}</p>
+                            </div>
+                            ` : ''}
+                            <div class="col-span-2">
+                                <span class="text-gray-600">Total:</span>
+                                <p class="text-lg font-bold text-green-600">$${valorTotal.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    ${pedido.observacionGeneral ? `
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-yellow-800 mb-2">Observación General</h4>
+                        <p class="text-sm text-gray-700">"${pedido.observacionGeneral || ''}"</p>
+                    </div>
+                    ` : ''}
+        
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-600">Fecha:</span>
+                                <p class="font-medium">${fechaFormateada}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Restaurante:</span>
+                                <p class="font-medium">${pedido.extension || 'No especificado'}</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    ${controlsHTML}
+                </div>
+            `;
+        
+            modal.classList.remove('hidden');
+        }
+        
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modal-detalles').classList.add('hidden');
+        }
+
+        // Actualizar todos los datos
+        function actualizarDatos() {
+            const boton = event.target;
+            const originalText = boton.innerHTML;
+            
+            boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+            boton.disabled = true;
+            
+            cargarDatosIniciales().finally(() => {
+                boton.innerHTML = originalText;
+                boton.disabled = false;
+            });
+        }
+
+        // Mostrar mensaje flotante
+        function mostrarMensaje(mensaje, tipo = 'info') {
+            // Crear elemento de notificación
+            const notificacion = document.createElement('div');
+            notificacion.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition-transform transform translate-x-0 ${
+                tipo === 'error' ? 'bg-red-500' : 
+                tipo === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            }`;
+            notificacion.textContent = mensaje;
+            notificacion.style.transform = 'translateX(100%)';
+            
+            document.body.appendChild(notificacion);
+            
+            // Animación de entrada
+            setTimeout(() => {
+                notificacion.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notificacion.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    notificacion.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Mostrar error
+        function mostrarError(mensaje) {
+            console.error(mensaje);
+            mostrarMensaje(mensaje, 'error');
+        }
+    </script>
 </body>
 </html>

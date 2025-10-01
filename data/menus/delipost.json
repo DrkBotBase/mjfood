@@ -2,10 +2,10 @@
   "config": {
     "orden": 2,
     "nombre": "Delipost",
-    "extension": "https://vinapp.co/delipost",
-    "telefonoWhatsApp": "573242496180",
-    "horarioApertura": "16.30",
-    "horarioCierre": "22.45",
+    "extension": "delipost",
+    "telefonoWhatsApp": "573046793853",
+    "horarioApertura": "7.30",
+    "horarioCierre": "23.45",
     "direccion": "Calle 8 # 11 - 05",
     "logoUrl": "https://back.vinapp.co//store/1000x500259933-2025-08-06-16-48-37.webp",
     "colores": {

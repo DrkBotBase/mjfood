@@ -1,66 +1,50 @@
-const RestaurantePuntos = require('../models/restaurantes_puntos');
+// procesarPedido.js (actualizado)
+const ProcesarPedidoService = require('./services/procesarPedidoService');
 const fs = require('fs').promises;
 const path = require('path');
 const { cargarMenusDesdeArchivos } = require('./recargarMenus');
 
 async function procesarPedido(extension, customer) {
   try {
-    let registro = await RestaurantePuntos.findOne({ extension: extension });
-
-    if (!registro) {
-      // Primer pedido: crear registro en MongoDB
-      registro = new RestaurantePuntos({
-        extension: extension,
-        puntos: 1,
-        orden: 999,
-        clientes: []
-      });
-      console.log(`🆕 Creado registro para restaurante ${extension}`);
-    } else {
-      registro.puntos += 1;
-    }
+    // Procesar el pedido con el nuevo servicio
+    const resultado = await ProcesarPedidoService.procesarPedido(extension, customer);
     
-    // Actualizar cliente
-    let cliente = registro.clientes.find(c => c.phone === customer.phone);
-    if (!cliente) {
-      registro.clientes.push({
-        phone: customer.phone,
-        totalPedidos: 1,
-        totalGastado: Number(customer.total) || 0
-      });
-    } else {
-      cliente.totalPedidos += 1;
-      cliente.totalGastado += Number(customer.total) || 0;
+    // Mantener la lógica original de actualización cada 10 pedidos
+    const estadisticas = await RestauranteEstadisticas.findOne({ extension });
+    
+    if (estadisticas && estadisticas.totalPedidos % 10 === 0) {
+      // Tu lógica existente para actualizar el orden
+      await actualizarOrdenRestaurante(extension, estadisticas);
     }
 
-    // Cada 10 pedidos: ajustar orden y actualizar JSON
-    if (registro.puntos % 10 === 0) {
-      registro.orden = Math.max(1, registro.orden - 1); // Mejora la posición (sube en la lista)
-      console.log(`🎯 Restaurante ${extension} alcanzó ${registro.puntos} pedidos. Subiendo a orden ${registro.orden}`);
+    return resultado;
 
-      // Actualizar JSON correspondiente
-      const filePath = path.join(__dirname, '..', 'data', 'menus', `${extension}.json`);
-      try {
-        const contenido = await fs.readFile(filePath, 'utf8');
-        const menuData = JSON.parse(contenido);
-        menuData.config.orden = registro.orden;
-        await fs.writeFile(filePath, JSON.stringify(menuData, null, 2), 'utf8');
-        console.log(`📂 JSON de ${extension} actualizado con orden ${registro.orden}`);
-      } catch (err) {
-        console.error(`⚠️ No se pudo actualizar el JSON de ${extension}:`, err.message);
-      }
-
-      // Recargar menús en memoria
-      if (typeof cargarMenusDesdeArchivos === 'function') {
-        global.menus = await cargarMenusDesdeArchivos();
-        console.log('🔄 Menús recargados automáticamente');
-      }
-    }
-
-    await registro.save();
   } catch (err) {
-    console.error('❌ Error procesando puntos del restaurante:', err.message);
+    console.error('❌ Error procesando pedido:', err.message);
+    throw err;
   }
+}
+
+async function actualizarOrdenRestaurante(extension, estadisticas) {
+  // Mantener tu lógica original de actualización
+  estadisticas.orden = Math.max(1, estadisticas.orden - 1);
+  
+  const filePath = path.join(__dirname, '..', 'data', 'menus', `${extension}.json`);
+  try {
+    const contenido = await fs.readFile(filePath, 'utf8');
+    const menuData = JSON.parse(contenido);
+    menuData.config.orden = estadisticas.orden;
+    await fs.writeFile(filePath, JSON.stringify(menuData, null, 2), 'utf8');
+    
+    // Recargar menús
+    if (typeof cargarMenusDesdeArchivos === 'function') {
+      global.menus = await cargarMenusDesdeArchivos();
+    }
+  } catch (err) {
+    console.error(`⚠️ Error actualizando JSON:`, err.message);
+  }
+  
+  await estadisticas.save();
 }
 
 module.exports = { procesarPedido };
