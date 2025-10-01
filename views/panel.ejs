@@ -226,10 +226,10 @@
                       <span class="text-gray-600">Transferencia:</span>
                       <span class="font-semibold text-blue-600" id="periodo-transferencia">$0</span>
                     </div>
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <!-- <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <span class="text-gray-600">Promedio por Pedido:</span>
                         <span class="font-semibold" id="periodo-promedio">$0</span>
-                    </div>
+                    </div> -->
                     <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <span class="text-gray-600">Período:</span>
                         <span class="font-semibold text-sm" id="periodo-fechas">Cargando...</span>
@@ -537,7 +537,7 @@
                             <h4 class="font-medium mb-2">Productos:</h4>
                             ${pedido.items.map(item => `
                                 <div class="flex justify-between text-sm py-1 border-b last:border-b-0">
-                                    <span>${item.cantidad}x ${item.nombre}${item.variante ? ` (${item.variante})` : ''}</span>
+                                    <span>${item.cantidad}x ${item.categoria} ${item.nombre}${item.variante ? ` (${item.variante})` : ''}</span>
                                     <span>$${item.subtotal.toLocaleString()}</span>
                                 </div>
                             `).join('')}
@@ -833,10 +833,10 @@
                 
                 document.getElementById('periodo-pedidos').textContent = data.totalPedidos.toLocaleString();
                 document.getElementById('periodo-gastado').textContent = `$${data.totalGastado.toLocaleString()}`;
-                
+                /*
                 const promedio = data.totalPedidos > 0 ? (data.totalGastado / data.totalPedidos).toFixed(2) : 0;
                 document.getElementById('periodo-promedio').textContent = `$${promedio}`;
-                
+                */
                 document.getElementById('periodo-efectivo').textContent = `$${(data.totalEfectivo || 0).toLocaleString()}`;
                 document.getElementById('periodo-transferencia').textContent = `$${(data.totalTransferencia || 0).toLocaleString()}`;
               
@@ -1099,7 +1099,7 @@
                         <div class="border-b pb-3 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
-                                    <p class="font-medium">${item.cantidad}x ${item.nombre}</p>
+                                    <p class="font-medium">${item.cantidad}x ${item.categoria} ${item.nombre}</p>
                                     ${item.variante ? `<p class="text-sm text-gray-600">Variante: ${item.variante}</p>` : ''}
                                     ${item.observacion ? `<p class="text-sm text-gray-600 mt-1">Observación: <span class="italic">"${item.observacion}"</span></p>` : ''}
                                     <p class="text-sm text-gray-500">${item.categoria}</p>
@@ -1287,7 +1287,7 @@
                         <div class="border-b pb-2 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
-                                    <p class="font-medium">${item.cantidad}x ${item.nombre}</p>
+                                    <p class="font-medium">${item.cantidad}x ${item.categoria} ${item.nombre}</p>
                                     ${item.variante ? `<p class="text-sm text-gray-600">Variante: ${item.variante}</p>` : ''}
                                     ${item.observacion ? `<p class="text-sm text-gray-600">Observación: ${item.observacion}</p>` : ''}
                                 </div>
@@ -1406,12 +1406,15 @@
                             </div>
                         </div>
                     </div>
-        
                     ${controlsHTML}
                 </div>
             `;
         
             modal.classList.remove('hidden');
+        }
+        
+        function imprimirTicket(pedidoId) {
+          window.open(`/facturas/${pedidoId}/ticket`, '_blank');
         }
         
         // Cerrar modal

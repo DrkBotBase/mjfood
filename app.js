@@ -44,11 +44,13 @@ const RestaurantePuntos = require('./models/restaurantes_puntos');
 
 
 //const estadisticas = require('./routes/estadisticas');
-const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
+const pedidosRouter = require('./routes/pedidos');
+const ticketRoutes = require('./routes/tickets');
 //app.use('/estadisticas', pedidosRouter);
-app.use('/api/pedidos', pedidosRouter);
 app.use('/api/jornada', jornadaRouter);
+app.use('/api/pedidos', pedidosRouter);
+app.use('/facturas', ticketRoutes);
 
 let menus = {};
 app.get('/', async (req, res) => {
@@ -584,7 +586,7 @@ function procesarHorario(config) {
 (async () => {
   menus = await cargarMenusDesdeArchivos();
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
-
+  let IP = '192.168.1.31';
   app.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });
