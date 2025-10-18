@@ -208,8 +208,8 @@ app.get('/lista/manifest.json', (req, res) => {
     background_color: info.colorTheme,
     "display": "standalone",
     "orientation": "portrait",
-    "start_url": "/",
-    "scope": "/",
+    "start_url": "/lista",
+    "scope": "/lista",
     "icons": [
       {
         "src": "/assets/fondos/mjfood.png",

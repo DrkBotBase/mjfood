@@ -111,11 +111,15 @@
     }
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        <% if (typeof restaurantes !== 'undefined') { %>
-          navigator.serviceWorker.register('/<%= restaurantes.id %>/sw.js')
-        <% } else { %>
-          navigator.serviceWorker.register('/lista/sw.js')
-        <% } %>
+        const swPath = (typeof window.config !== 'undefined' && window.config.extension) 
+          ? `/${window.config.extension}/sw.js`
+          : '/lista/sw.js';
+        
+        const scope = (typeof window.config !== 'undefined' && window.config.extension)
+          ? `/${window.config.extension}/`
+          : '/lista/';
+        
+        navigator.serviceWorker.register(swPath, { scope })
           .then((registration) => {
             console.log('SW registered: ', registration);
             
@@ -127,7 +131,9 @@
                 if (newWorker.state === 'installed') {
                   if (navigator.serviceWorker.controller) {
                     console.log('Nuevo contenido disponible; por favor actualice.');
-                    showUpdateBanner(newWorker);
+                    if (typeof showUpdateBanner === 'function') {
+                      showUpdateBanner(newWorker);
+                    }
                   }
                 }
               });
