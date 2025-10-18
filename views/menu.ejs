@@ -1,972 +1,658 @@
-<%- include('layout', {
-    info,
-    config,
-    title: name_page,
-    styles: true,
-    pwaIcon: `/assets/icons/${restauranteConfig.extension}`,
-    pwaThemeColor: restauranteConfig.pwa?.theme_color || '#ffffff',
-    pwaDescription: restauranteConfig.pwa?.description || `Menú digital de ${restauranteConfig.nombre}`,
-    pwaShortName: restauranteConfig.pwa?.short_name || restauranteConfig.nombre,
-    manifestUrl: `/${restaurante}/manifest.json`
-}) %>
-
-<style>
-  :root {
-    --color-primary: <%= config.colores.primario %>;
-    --color-secondary: <%= config.colores.secundario %>;
-    --color-background: <%= config.colores.fondo %>;
-    --color-text: <%= config.colores.texto %>;
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><%= typeof config.nombre !== 'undefined' ? config.nombre : 'MJFOOD - Menú Interactivo' %></title>
     
-    --font-primary: '<%= config.fuentes && config.fuentes.primaria ? config.fuentes.primaria.familia : 'system-ui, -apple-system, sans-serif' %>';
-    --font-secondary: '<%= config.fuentes && config.fuentes.secundaria ? config.fuentes.secundaria.familia : 'Georgia, serif' %>';
-  }
-  
-  body {
-    color: var(--color-text);
-    <%- config.fuente ? `font-family: ${config.fuente.replace('font-', '')};` : '' %>
-    min-height: 100vh;
-    padding: 20px 0;
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="<%= pwa.description %>">
+    <meta name="theme-color" content="<%= pwa.themeColor %>">
     
-    /* FONDO FIJO - SIN JavaScript */
-    <% if (config.fondo.tipo === 'imagen') { %>
-      background: <%= config.fondo.degradado || 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6))' %>, 
-                  url('<%= config.fondo.valor %>');
-      background-position: <%= config.fondo.posicion || 'center' %>;
-      background-size: <%= config.fondo.tamaño || 'cover' %>;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-color: #1a0000; /* Color de fallback */
-    <% } else { %>
-      background-color: <%= config.fondo.valor %>;
-    <% } %>
-  }
-  
-  /* ========== APLICACIÓN DE FUENTES ========== */
-  
-  /* Fuente para títulos principales */
-  .font-title {
-    font-family: var(--font-secondary, 'Georgia, serif') !important;
-    font-weight: 600;
-  }
-  
-  /* Fuente para subtítulos */
-  .font-subtitle {
-    font-family: var(--font-secondary, 'Georgia, serif') !important;
-    font-weight: 500;
-  }
-  
-  /* Fuente para textos especiales */
-  .font-special {
-    font-family: var(--font-primary) !important;
-    font-weight: 500;
-  }
-  
-  /* Fuente para precios y números */
-  .font-numbers {
-    font-family: 'Courier New', monospace !important;
-    font-weight: 600;
-  }
-  
-  /* ========== CLASES ESPECÍFICAS ========== */
-  
-  /* Header principal */
-  .header-title {
-    font-family: var(--font-secondary) !important;
-    font-weight: 700;
-    font-size: 2.5rem;
-  }
-  
-  /* Nombres de productos */
-  .product-name {
-    font-family: var(--font-primary, 'system-ui, sans-serif') !important;
-    font-weight: 500;
-  }
-  
-  /* Precios */
-  .product-price {
-    font-family: 'Courier New', monospace !important;
-    font-weight: 600;
-  }
-  
-  /* Botones */
-  .btn-font {
-    font-family: var(--font-primary) !important;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-  
-  /* ========== CONTENEDOR PRINCIPAL TRANSPARENTE ========== */
-  .container {
-    background-color: transparent !important;
-    margin: 0 auto;
-  }
-  
-  /* ========== ELEMENTOS CON FONDO SEMI-TRANSPARENTE ========== */
-  .bg-background {
-    background-color: rgba(var(--color-background-rgb), 0.9) !important;
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .menu-item.bg-background {
-    background-color: rgba(var(--color-background-rgb), 0.8) !important;
-    backdrop-filter: blur(8px);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
-  }
-  
-  .menu-item.bg-background:hover {
-    background-color: rgba(var(--color-primary-rgb), 0.2) !important;
-    border-color: rgba(var(--color-primary-rgb), 0.3);
-  }
-  
-  /* Carrito */
-  .cart-container .bg-background {
-    background-color: rgba(var(--color-background-rgb), 0.9) !important;
-    backdrop-filter: blur(12px);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  /* ========== TEXTO ========== */
-  .text-text {
-    color: var(--color-text) !important;
-  }
-  
-  .text-text\/70 {
-    color: color-mix(in srgb, var(--color-text) 70%, transparent) !important;
-  }
-  
-  .text-primary {
-    color: var(--color-primary) !important;
-  }
-  
-  /* ========== BOTONES ========== */
-  .btn-primary {
-    background-color: var(--color-primary) !important;
-    color: white !important;
-    border: none;
-    border-radius: 8px;
-  }
-</style>
-<script>
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : { r: 0, g: 0, b: 0 };
-}
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="<%= pwa.shortName %>">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="<%= info.dominio %>">
+    
+    <meta property="og:title" content="<%= config.nombre %>">
+    <meta property="og:description" content="<%= pwa.description %>.">
+    
+    <meta property="og:image" content="<%= info.dominio %><%= config.logoUrl %>">
+    <meta property="og:image:alt" content="<%= config.nombre %>">
+    <meta property="fb:app_id" content=" ">
+    <meta property="og:url" content="<%= info.dominio %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= config.nombre %>">
+    <meta property="og:locale" content="es_ES">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= config.nombre %>">
+    <meta name="twitter:description" content="<%= pwa.description %>">
+    <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+    <meta name="twitter:image:alt" content="<%= config.nombre %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="<%= pwa.themeColor %>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-document.addEventListener('DOMContentLoaded', function() {
-  const styles = document.documentElement.style;
-  
-  const primaryRgb = hexToRgb('<%= config.colores.primario %>');
-  const backgroundRgb = hexToRgb('<%= config.colores.fondo %>');
-  
-  styles.setProperty('--color-primary-rgb', `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`);
-  styles.setProperty('--color-background-rgb', `${backgroundRgb.r}, ${backgroundRgb.g}, ${backgroundRgb.b}`);
-  
-  console.log('Colores aplicados correctamente');
-});
-</script>
-  
-<body class="<%= config.fuente || 'font-sans' %>">
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold header-title text-white">
-                <span class="text-primary"></span>
-            </h1>
-            <p class="font-subtitle text-gray-400 mt-2"></p>
-        </header>
-        
-         <!-- =========== SECCIÓN DEL BANNER - INICIO =========== -->
-        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <!-- Opción 1: Banner con imagen de fondo y texto 
-            <div class="h-48 md:h-64 bg-cover bg-center flex items-center justify-center p-4" style="background-image: url('https://placehold.co/1200x400/1f2937/34d399?text=Tu+Banner+Aqui');">
-                 <div class="text-center bg-black bg-opacity-50 p-6 rounded-lg">
-                    <h2 class="text-white text-3xl md:text-4xl font-bold">¡Promo del Día!</h2>
-                    <p class="text-gray-200 mt-2">Salchipapa Especial + Gaseosa por solo $22.000</p>
-                </div>
-            </div>
-            -->
-            <!-- Para usar una imagen simple, reemplaza el div anterior por: -->
-            <img src="<%= config.logoUrl || '/assets/fondos/mjfood.png'%>" alt="Banner del restaurante" class="w-full h-auto">
-        </div>
-            <p class="font-subtitle text-text mt-2 mb-10"><%= config.direccion %></p>
-        <!-- =========== SECCIÓN DEL BANNER - FIN =========== -->
-
-        <div class="md:grid md:grid-cols-3 md:gap-8">
-            <!-- Columna del Menú -->
-            <div class="md:col-span-2 relative overflow-visible">
-                <h2 class="text-3xl font-bold mb-6 text-primary break-words">MENÚ</h2>
-                <div id="menu-container" class="space-y-4 overflow-visible">
-                    <!-- Contenido -->
-                </div>
-            </div>
-            
-
-            <!-- Columna del Carrito -->
-            <div class="mt-10 md:mt-0 md:col-span-1">
-                <div class="bg-gray-800 rounded-lg shadow-lg p-6 sticky top-8">
-                    <h2 class="text-2xl font-bold border-b border-gray-700 pb-4 mb-4 text-white">🛒 Tu Pedido</h2>
-                    <div id="cart-items" class="space-y-4 max-h-96 overflow-y-auto">
-                        <p id="empty-cart-message" class="text-gray-400">El carrito está vacío.</p>
-                    </div>
-                    <div id="cart-total" class="mt-6 pt-4 border-t border-gray-700 font-bold text-xl text-right text-white">
-                        Total: $0
-                    </div>
-                    
-                    <div id="status-message" class="text-center text-sm my-4"></div>
-                    
-                    <!-- Botón con color primario -->
-                    <button id="checkout-button" class="w-full btn-primary btn-font text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed">
-                        Hacer Pedido
-                    </button>
-                </div>
-            </div>
-        </div>
+    <link rel="manifest" href="<%= typeof manifestUrl !== 'undefined' ? manifestUrl : '/manifest.json' %>">
+    <link rel="icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/fondos/mjfood.png' %>">
+    <link rel="apple-touch-icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/fondos/mjfood.png' %>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+          --text-color: <%= color.text || info.colorBase.text%>;
+          --primary-color: <%= color.primary || info.colorBase.primary %>;
+          --bg-color: <%= color.bg || info.colorBase.bg %>;
+          --light-shadow: <%= color.light || info.colorBase.light %>;
+          --dark-shadow: <%= color.dark || info.colorBase.dark %>;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .text-color {
+          color: var(--text-color);
+        }
+        .neumorphic-flat {
+            background: var(--bg-color);
+            box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+        }
+        .neumorphic-pressed {
+            background: var(--bg-color);
+            box-shadow: inset 7px 7px 15px var(--dark-shadow), inset -7px -7px 15px var(--light-shadow);
+        }
+        .neumorphic-input {
+            background: var(--bg-color);
+            box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+            border: none;
+            outline: none;
+        }
+        .neumorphic-button {
+            background: var(--bg-color);
+            box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+            transition: all 0.2s ease-in-out;
+        }
+        .neumorphic-button:hover:not(:disabled) {
+            box-shadow: 3px 3px 7px var(--dark-shadow), -3px -3px 7px var(--light-shadow);
+        }
+        .neumorphic-button:active:not(:disabled) {
+            box-shadow: inset 3px 3px 7px var(--dark-shadow), inset -3px -3px 7px var(--light-shadow);
+        }
+        .neumorphic-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .accent-text { color: var(--primary-color); }
+        .error-text { color: var(--primary-color); }
+        .cart-badge {
+            position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%;
+            background-color: var(--primary-color); color: white; display: flex; align-items: center;
+            justify-content: center; font-size: 0.8rem; font-weight: bold;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); z-index: 101;
+            max-height: 90vh; overflow-y: auto; opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; pointer-events: none;
+        }
+        .modal-content.active { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+        .payment-details { display: none; }
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+        .category-accordion.active .category-content {
+            max-height: 5000px;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+        .category-accordion .chevron-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .category-accordion.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+        .status-indicator {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .status-open {
+            background-color: #39FF14;
+            color: #12350c;
+            box-shadow: 0 0 5px #39FF14, 0 0 10px #39FF14, 0 0 15px #39FF14;
+        }
+        .status-closed {
+            background-color: #FF3131;
+            color: #3e1010;
+            box-shadow: 0 0 5px #FF3131, 0 0 10px #FF3131, 0 0 15px #FF3131;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="fixed top-4 right-4 z-50">
+        <button id="cart-button" class="neumorphic-button p-3 rounded-full relative">
+            <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            <span id="cart-badge" class="cart-badge hidden">0</span>
+        </button>
     </div>
 
-    <!-- Modal para Añadir Producto -->
-    <div id="add-item-modal" class="modal fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4">
-        <div class="modal-content bg-gray-800 rounded-lg shadow-2xl p-8 w-full max-w-sm transform scale-95">
-            <h3 id="modal-item-name" class="text-2xl font-bold mb-2 text-white">Nombre del Producto</h3>
-            <p id="modal-item-price" class="text-lg text-emerald-400 mb-6">Precio</p>
-            <div class="mb-4">
-                <label for="item-quantity" class="block text-sm font-medium text-gray-300 mb-2">Cantidad</label>
-                <div class="flex items-center">
-                    <button id="decrease-quantity" class="bg-gray-700 px-4 py-2 rounded-l-md hover:bg-gray-600">-</button>
-                    <input type="number" id="item-quantity" value="1" min="1" class="w-full text-center bg-gray-900 border-t border-b border-gray-600 outline-none p-2">
-                    <button id="increase-quantity" class="bg-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-600">+</button>
-                </div>
-            </div>
-            <div class="mb-6">
-                <label for="item-observation" class="block text-sm font-medium text-gray-300">Observación (Opcional)</label>
-                <textarea id="item-observation" rows="3" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm p-2 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"></textarea>
-            </div>
-            <div class="flex justify-end space-x-4">
-                <button type="button" id="cancel-add-item" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500">Cancelar</button>
-                <button type="button" id="confirm-add-item" class="bg-emerald-500 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-emerald-600">Añadir</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal para Datos del Cliente -->
-    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-lg shadow-2xl p-8 w-full max-w-md">
-            <h3 class="text-2xl font-bold mb-6 text-white">Confirmar Pedido</h3>
-            <form id="customer-form">
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-300">Nombre</label>
-                    <input type="text" id="name" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <div class="mb-4">
-                    <label for="address" class="block text-sm font-medium text-gray-300">Dirección <span class="text-red-400">*</span></label>
-                    <input type="text" id="address" required class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <div class="mb-4">
-                    <label for="phone" class="block text-sm font-medium text-gray-300">Número de Teléfono <span class="text-red-400">*</span></label>
-                    <input type="tel" id="phone" required class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <div class="mb-4">
-                    <label for="order-observation" class="block text-sm font-medium text-gray-300">Observación Adicional (Opcional)</label>
-                    <textarea id="order-observation" rows="3" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm p-2 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ej: El timbre no funciona, por favor llamar al llegar."></textarea>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-300">Forma de Pago <span class="text-red-400">*</span></label>
-                    <div class="mt-2 space-y-2">
-                        <label class="flex items-center">
-                            <input type="radio" name="payment" value="transferencia" required class="focus:ring-emerald-500 h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600">
-                            <span class="ml-2">Transferencia</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="payment" value="efectivo" required class="focus:ring-emerald-500 h-4 w-4 text-emerald-600 bg-gray-700 border-gray-600">
-                            <span class="ml-2">Efectivo</span>
-                        </label>
-                    </div>
-                </div>
-                <div id="cash-payment-details" class="mb-6 hidden">
-                    <label for="cash-amount" class="block text-sm font-medium text-gray-300">¿Con cuánto pagas? (Opcional)</label>
-                    <input type="number" id="cash-amount" placeholder="Ej: 50000" class="mt-1 block w-full bg-gray-900 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" id="cancel-button" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500">Cancelar</button>
-                    <button type="submit" class="bg-emerald-500 text-gray-900 font-bold py-2 px-6 rounded-lg hover:bg-emerald-600">Confirmar y Enviar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-<script>
-window.restaurantConfig = {
-    name: '<%= typeof restaurante !== "undefined" ? restaurante : "" %>',
-    menu: <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>,
-    restauranteConfig: <%- typeof restauranteConfig !== "undefined" ? JSON.stringify(restauranteConfig) : '{}' %>,
-    horario: <%- typeof horarioRestaurante !== "undefined" ? JSON.stringify(horarioRestaurante) : '{"aperturaDecimal":16,"cierreDecimal":23,"aperturaStr":"16:00","cierreStr":"23:00"}' %>,
-    colores: <%- typeof config !== "undefined" && config.colores ? JSON.stringify(config.colores) : '{"primario":"#10B981","secundario":"#F59E0B","fondo":"#2F384C","texto":"#F3F4F6"}' %>,
-    fuente: '<%= typeof config !== "undefined" && config.fuente ? config.fuente : "font-sans" %>'
-};
-</script>
-
-<script>
-function obtenerTipoVariante(variantes) {
-    if (!variantes || variantes.length === 0) return null;
-    
-    const primeraVariante = variantes[0];
-    const keys = Object.keys(primeraVariante);
-    
-    const attributeKey = keys.find(key => key !== 'price');
-    
-    if (!attributeKey) return 'opción';
-    
-    const keyMap = {
-        'tamaño': 'tamaño',
-        'sabor': 'sabor',
-        'color': 'color', 
-        'tipo': 'tipo',
-        'modelo': 'modelo',
-        'estilo': 'estilo',
-        'ingrediente': 'ingrediente',
-        'acompañamiento': 'acompañamiento',
-        'presentación': 'presentación',
-        'variante': 'variante'
-    };
-    
-    return keyMap[attributeKey] || attributeKey;
-}
-
-function obtenerLabelVariante(tipoVariante) {
-    const labels = {
-        'tamaño': 'Selecciona el tamaño:',
-        'sabor': 'Selecciona el sabor:',
-        'color': 'Selecciona el color:',
-        'tipo': 'Selecciona el tipo:',
-        'modelo': 'Selecciona el modelo:',
-        'estilo': 'Selecciona el estilo:',
-        'ingrediente': 'Selecciona el ingrediente:',
-        'acompañamiento': 'Selecciona el acompañamiento:',
-        'presentación': 'Selecciona la presentación:',
-        'variante': 'Selecciona la variante:',
-        'opción': 'Selecciona una opción:'
-    };
-    
-    return labels[tipoVariante] || 'Selecciona una opción:';
-}
-
-function obtenerTextoVarianteMenu(tipoVariante) {
-    const textos = {
-        'tamaño': 'Varios tamaños',
-        'sabor': 'Varios sabores',
-        'color': 'Varios colores', 
-        'tipo': 'Varios tipos',
-        'modelo': 'Varios modelos',
-        'estilo': 'Varios estilos',
-        'ingrediente': 'Varios ingredientes',
-        'acompañamiento': 'Varios acompañamientos',
-        'presentación': 'Varias presentaciones',
-        'variante': 'Varias variantes',
-        'opción': 'Varias opciones'
-    };
-    
-    return textos[tipoVariante] || 'Varias opciones';
-}
-
-function obtenerValorVariante(variante) {
-    const keys = Object.keys(variante);
-    const attributeKey = keys.find(key => key !== 'price');
-    return attributeKey ? variante[attributeKey] : null;
-}
-
-let cart = [];
-let currentItem = null;
-let isRestaurantOpen = false;
-
-// ========== ELEMENTOS DEL DOM ==========
-const menuContainer = document.getElementById('menu-container');
-const cartItemsContainer = document.getElementById('cart-items');
-const cartTotalElement = document.getElementById('cart-total');
-const checkoutButton = document.getElementById('checkout-button');
-const emptyCartMessage = document.getElementById('empty-cart-message');
-const statusMessageElement = document.getElementById('status-message');
-
-// Modal de añadir item
-const addItemModal = document.getElementById('add-item-modal');
-const modalContent = addItemModal.querySelector('.modal-content');
-const modalItemName = document.getElementById('modal-item-name');
-const modalItemPrice = document.getElementById('modal-item-price');
-const quantityInput = document.getElementById('item-quantity');
-const observationInput = document.getElementById('item-observation');
-const confirmAddItemBtn = document.getElementById('confirm-add-item');
-const cancelAddItemBtn = document.getElementById('cancel-add-item');
-const decreaseQtyBtn = document.getElementById('decrease-quantity');
-const increaseQtyBtn = document.getElementById('increase-quantity');
-
-// Modal de checkout
-const checkoutModal = document.getElementById('checkout-modal');
-const customerForm = document.getElementById('customer-form');
-const cancelCheckoutBtn = document.getElementById('cancel-button');
-const paymentRadios = document.querySelectorAll('input[name="payment"]');
-const cashPaymentDetails = document.getElementById('cash-payment-details');
-
-// ========== INICIALIZACIÓN ==========
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Iniciando aplicación...');
-    console.log('Datos del restaurante:', window.restaurantConfig);
-    
-    if (!window.restaurantConfig || !window.restaurantConfig.menu) {
-        showError('No se cargó la configuración del menú');
-        return;
-    }
-    
-    initApp();
-});
-
-function initApp() {
-    renderMenu();
-    renderCart();
-    setupEventListeners();
-    checkRestaurantStatus();
-    setInterval(checkRestaurantStatus, 60000);
-    loadUserData();
-}
-
-// ========== RENDERIZADO DEL MENÚ ==========
-function renderMenu() {
-    if (!menuContainer) {
-        console.error('No se encontró el contenedor del menú');
-        return;
-    }
-    
-    const menuData = window.restaurantConfig.menu;
-    if (!menuData || Object.keys(menuData).length === 0) {
-        menuContainer.innerHTML = `
-            <div class="text-center py-8 text-red-400">
-                <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
-                <p>No hay productos en el menú</p>
-            </div>
-        `;
-        return;
-    }
-    
-    let menuHTML = '';
-    Object.keys(menuData).forEach(category => {
-        menuHTML += `
-            <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden group">
-                <button class="w-full text-left p-5 bg-background text-text font-bold text-xl flex justify-between items-center transition-colors hover:bg-gray-700 category-header">
-                    <span>${category}</span>
-                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
-                </button>
-                
-                <div class="grid grid-rows-[0fr] group-[.expanded]:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-in-out">
-                    <div class="overflow-hidden">
-                        <div class="space-y-2 p-5">
-        `;
-        
-        menuData[category].forEach(item => {
-          const hasVariantes = item.variantes && item.variantes.length > 0;
-          const precioMinimo = hasVariantes ? 
-               Math.min(...item.variantes.map(v => v.price)) : 
-              item.price;
-          
-          let tipoVariante = hasVariantes ? obtenerTipoVariante(item.variantes) : null;
-          let textoVariante = hasVariantes ? obtenerTextoVarianteMenu(tipoVariante) : '';
-
-          menuHTML += `
-              <div class="flex justify-between items-center cursor-pointer rounded-lg hover:bg-gray-700 menu-item" 
-                   data-category="${category}" 
-                   data-name="${item.name}" 
-                   data-has-variantes="${hasVariantes}"
-                   data-tipo-variante="${tipoVariante}">
-                   <div class="flex-grow">
-                      <p class="product-name font-semibold text-gray-200">${item.name}</p>
-                      ${item.description ? `<p class="text-sm text-gray-400">${item.description}</p>` : ''}
-                      ${hasVariantes ? `<p class="text-xs text-emerald-400">Desde $${precioMinimo.toLocaleString('es-CO')}</p>` : ''}
-                  </div>
-                  <div class="text-right ml-4">
-                      ${hasVariantes ? `<p class="text-gray-400 text-sm">${textoVariante}</p>` : 
-                          `<p class="product-price text-gray-400 text-sm">$${item.price.toLocaleString('es-CO')}</p>`
-                      }
-                      <i class="fas fa-plus-circle text-emerald-400 text-2xl"></i>
-                  </div>
-              </div>
-          `;
-        });
-        
-        menuHTML += `
+    <section class="container mx-auto p-4">
+        <div class="neumorphic-flat rounded-2xl overflow-hidden">
+            <img id="restaurant-banner" src="" alt="" class="w-full h-48 object-cover">
+            <div class="p-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div class="mb-4">
+                        <!-- <h1 id="restaurant-name" class="text-4xl font-bold tracking-tighter"></h1> -->
+                        <div class="flex items-center gap-2 mt-1">
+                            <p id="restaurant-address" class="text-color"></p>
+                            <!-- Pin -->
                         </div>
                     </div>
+                    <div id="status-indicator" class="status-indicator mt-4 sm:mt-0">Cargando...</div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-[var(--dark-shadow)] flex flex-col sm:flex-row justify-between items-center text-sm">
+                    <div id="current-date" class="font-semibold"></div>
+                    <button id="hours-button" class="underline mt-2 sm:mt-0">Ver Horarios</button>
                 </div>
             </div>
-        `;
-    });
-    
-    menuContainer.innerHTML = menuHTML;
-    setupMenuEventListeners();
-    setupResponsiveMenu();
-}
+        </div>
+    </section>
 
-function setupMenuEventListeners() {
-    document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', function() {
-            const groupContainer = this.parentElement;
-            const icon = this.querySelector('i');
-            const isExpanded = groupContainer.classList.contains('expanded');
+    <main class="container mx-auto p-4">
+        <div id="menu-container" class="space-y-6"></div>
+    </main>
+    
+    <footer id="contact" class="pt-10 pb-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mt-12 border-t border-[var(--dark-shadow)] pt-8 text-color">
+                <p>&copy; 2025 <%= info.name_page %>. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Modales -->
+    <div id="item-modal-overlay" class="modal-overlay"></div>
+    <div id="item-modal" class="modal-content neumorphic-flat rounded-2xl w-11/12 max-w-md">
+        <div class="p-6 border-b border-[var(--dark-shadow)] flex justify-between items-center">
+            <h3 id="item-modal-title" class="text-2xl font-bold"></h3>
+            <button id="close-item-modal-btn" class="neumorphic-button p-2 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <div class="p-6">
+            <p id="item-modal-desc" class="text-color mb-4"></p>
+            <div id="item-modal-variants"></div>
+            <div class="mt-4">
+                <label class="font-semibold mb-2 block">Instrucciones Especiales (opcional)</label>
+                <textarea id="item-modal-instructions" class="w-full neumorphic-input rounded-lg p-3 h-20"></textarea>
+            </div>
+            <div class="flex items-center justify-between mt-6">
+                <div class="flex items-center gap-2">
+                    <button id="item-decrease-qty" class="neumorphic-button w-10 h-10 rounded-lg font-bold text-xl">-</button>
+                    <span id="item-modal-qty" class="font-bold text-xl w-12 text-center">1</span>
+                    <button id="item-increase-qty" class="neumorphic-button w-10 h-10 rounded-lg font-bold text-xl">+</button>
+                </div>
+                <button id="add-item-to-cart-btn" class="neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">
+                    Añadir por <span id="item-modal-price">$0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="cart-modal-overlay" class="modal-overlay"></div>
+    <div id="cart-modal" class="modal-content neumorphic-flat rounded-2xl w-11/12 md:max-w-2xl">
+        <div class="p-6 border-b border-[var(--dark-shadow)] flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Tu Pedido</h3>
+            <button id="close-cart-btn" class="neumorphic-button p-2 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <div id="cart-items" class="p-6 space-y-4"><p id="empty-cart-msg" class="text-center text-color">Tu carrito está vacío.</p></div>
+        <div id="cart-form-section" class="p-6 border-t border-[var(--dark-shadow)] hidden">
+            <h4 class="text-xl font-bold mb-4">Completa tus datos</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="client-name" placeholder="Nombre completo *" class="neumorphic-input p-3 rounded-lg">
+                <input type="tel" id="client-phone" placeholder="Teléfono *" class="neumorphic-input p-3 rounded-lg">
+                <input type="text" id="client-address" placeholder="Dirección de entrega *" class="neumorphic-input p-3 rounded-lg md:col-span-2">
+                <select id="shipping-zone" class="neumorphic-input p-3 rounded-lg md:col-span-2"></select>
+                <div class="md:col-span-2"><h5 class="font-semibold mb-2">Forma de Pago *</h5><div class="flex gap-4"><label><input type="radio" name="payment" value="efectivo" class="mr-1"> Efectivo</label><label><input type="radio" name="payment" value="transferencia" class="mr-1"> Transferencia</label></div></div>
+                <div id="efectivo-details" class="payment-details md:col-span-2"><input type="number" id="payment-cash-amount" placeholder="¿Con cuánto pagas? (opcional)" class="w-full neumorphic-input p-3 rounded-lg"></div>
+                <div id="transferencia-details" class="payment-details md:col-span-2 neumorphic-pressed p-4 rounded-lg"></div>
+                <textarea id="order-comments" class="md:col-span-2 neumorphic-input rounded-lg p-3 h-20" placeholder="Comentarios del pedido..."></textarea>
+            </div>
+            <div id="form-error-msg" class="error-text text-sm mt-4 text-center"></div>
+        </div>
+        <div id="cart-summary" class="p-6 border-t border-[var(--dark-shadow)] space-y-2 hidden">
+            <div class="flex justify-between font-semibold"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
+            <div class="flex justify-between text-color"><span>Envío</span><span id="cart-shipping">$0</span></div>
+            <div class="flex justify-between text-xl font-bold"><span>Total</span><span id="cart-total">$0</span></div>
+            <button id="confirm-order-btn" class="w-full mt-4 neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">Enviar Pedido por WhatsApp</button>
+        </div>
+    </div>
+    <div id="success-modal-overlay" class="modal-overlay"></div>
+    <div id="success-modal" class="modal-content neumorphic-flat rounded-2xl w-11/12 max-w-sm p-8 text-center">
+        <div class="flex justify-center mb-4"><div class="neumorphic-pressed w-20 h-20 rounded-full flex items-center justify-center"><i data-lucide="check-circle" class="w-12 h-12 accent-text"></i></div></div>
+        <h3 class="text-2xl font-bold mb-2">¡Pedido Listo!</h3>
+        <p class="text-color mb-6">Tu pedido ha sido preparado para enviar por WhatsApp. Serás redirigido.</p>
+        <button id="close-success-btn" class="w-full neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">Cerrar</button>
+    </div>
+    <div id="hours-modal-overlay" class="modal-overlay"></div>
+    <div id="hours-modal" class="modal-content neumorphic-flat rounded-2xl w-11/12 max-w-sm">
+        <div class="p-6 border-b border-[var(--dark-shadow)] flex justify-between items-center"><h3 class="text-2xl font-bold">Nuestros Horarios</h3><button id="close-hours-btn" class="neumorphic-button p-2 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button></div>
+        <div id="hours-list" class="p-6 space-y-2"></div>
+    </div>
+
+    <script>
+        window.restaurantData = <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>;
+        
+        let cart = [];
+        let currentItem = null;
+        let isOpen = false;
+
+        const menuContainer = document.getElementById('menu-container');
+        const modals = { item: { overlay: document.getElementById('item-modal-overlay'), content: document.getElementById('item-modal') }, cart: { overlay: document.getElementById('cart-modal-overlay'), content: document.getElementById('cart-modal') }, success: { overlay: document.getElementById('success-modal-overlay'), content: document.getElementById('success-modal') }, hours: { overlay: document.getElementById('hours-modal-overlay'), content: document.getElementById('hours-modal') } };
+        const itemModal = { title: document.getElementById('item-modal-title'), desc: document.getElementById('item-modal-desc'), variants: document.getElementById('item-modal-variants'), instructions: document.getElementById('item-modal-instructions'), qty: document.getElementById('item-modal-qty'), price: document.getElementById('item-modal-price'), addBtn: document.getElementById('add-item-to-cart-btn') };
+        const cartModal = { itemsContainer: document.getElementById('cart-items'), summary: document.getElementById('cart-summary'), form: document.getElementById('cart-form-section'), badge: document.getElementById('cart-badge'), subtotal: document.getElementById('cart-subtotal'), shipping: document.getElementById('cart-shipping'), total: document.getElementById('cart-total'), formError: document.getElementById('form-error-msg'), shippingZoneSelect: document.getElementById('shipping-zone'), confirmBtn: document.getElementById('confirm-order-btn') };
+        
+        function initializeApp(data) {
+            document.title = `${data.config.nombre}`;
+           // document.getElementById('restaurant-name').textContent = data.config.nombre;
             
-            document.querySelectorAll('.group.expanded').forEach(el => {
-                if (el !== groupContainer) {
-                    el.classList.remove('expanded');
-                    const otherIcon = el.querySelector('.category-header i');
-                    if(otherIcon) {
-                       otherIcon.style.transform = 'rotate(0deg)';
-                    }
+            const addressElement = document.getElementById('restaurant-address');
+            addressElement.textContent = data.config.direccion;
+            
+            const encodedAddress = encodeURIComponent(data.config.direccion);
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+            
+            const mapLink = document.createElement('a');
+            mapLink.href = mapsUrl;
+            mapLink.target = '_blank';
+            mapLink.rel = 'noopener noreferrer';
+            mapLink.className = 'text-blue-600 hover:text-blue-800 transition-colors ml-2';
+            mapLink.innerHTML = '<i data-lucide="map-pin" class="w-4 h-4 text-color"></i>';
+            
+            addressElement.parentNode.appendChild(mapLink);
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        
+            const banner = document.getElementById('restaurant-banner');
+            banner.src = data.config.logoUrl;
+            banner.alt = `${data.config.nombre}`;
+            
+            const transferDetails = document.getElementById('transferencia-details');
+            const p = data.paymentInfo.transfer;
+            transferDetails.innerHTML = `<p class="font-semibold">Datos para la transferencia:</p><p>Banco: ${p.bankName} | ${p.accountType}</p><p>Número: ${p.accountNumber}</p><p>Titular: ${p.accountHolder}</p>`;
+            
+            checkRestaurantStatus();
+            displayCurrentDate();
+            renderMenu();
+            populateShippingZones();
+            populateHoursModal();
+            loadClientData();
+            setInterval(checkRestaurantStatus, 60000);
+        }
+
+        function checkRestaurantStatus() {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+            const currentTime = now.getHours() * 100 + now.getMinutes();
+            const todaysSchedule = window.restaurantData.schedule.find(s => s.day === dayOfWeek);
+            let checkIsOpen = false;
+
+            if (todaysSchedule && todaysSchedule.open !== 'closed') {
+                const openTime = parseInt(todaysSchedule.open.replace(':', ''));
+                const closeTime = parseInt(todaysSchedule.close.replace(':', ''));
+                if (closeTime < openTime) {
+                    if (currentTime >= openTime || currentTime < closeTime) checkIsOpen = true;
+                } else {
+                    if (currentTime >= openTime && currentTime < closeTime) checkIsOpen = true;
+                }
+            }
+            
+            const yesterday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+            const yesterdaySchedule = window.restaurantData.schedule.find(s => s.day === yesterday);
+            if (yesterdaySchedule && yesterdaySchedule.open !== 'closed') {
+                const openTime = parseInt(yesterdaySchedule.open.replace(':', ''));
+                const closeTime = parseInt(yesterdaySchedule.close.replace(':', ''));
+                 if (closeTime < openTime && currentTime < closeTime) checkIsOpen = true;
+            }
+            
+            isOpen = checkIsOpen;
+            updateStatusUI();
+        }
+        function updateStatusUI() {
+            const statusDiv = document.getElementById('status-indicator');
+            if (isOpen) {
+                statusDiv.textContent = 'Abierto'; statusDiv.className = 'status-indicator status-open';
+                cartModal.confirmBtn.disabled = false; cartModal.confirmBtn.textContent = 'Enviar Pedido por WhatsApp';
+            } else {
+                statusDiv.textContent = 'Cerrado'; statusDiv.className = 'status-indicator status-closed';
+                cartModal.confirmBtn.disabled = true; cartModal.confirmBtn.textContent = 'Restaurante Cerrado';
+            }
+            document.querySelectorAll('.select-item-btn').forEach(btn => { btn.style.display = isOpen ? 'block' : 'none'; });
+        }
+        function displayCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+        }
+        function populateHoursModal() {
+            const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const hoursList = document.getElementById('hours-list'); hoursList.innerHTML = '';
+            days.forEach((day, index) => {
+                const schedule = window.restaurantData.schedule.find(s => s.day === index);
+                const hoursText = (schedule && schedule.open !== 'closed') ? `${schedule.open} - ${schedule.close}` : 'Cerrado';
+                const dayEl = document.createElement('div'); dayEl.className = 'flex justify-between items-center';
+                dayEl.innerHTML = `<span class="font-semibold">${day}</span><span>${hoursText}</span>`;
+                hoursList.appendChild(dayEl);
+            });
+        }
+        function toggleModal(modalKey, forceOpen = null) {
+            const modal = modals[modalKey]; if (!modal) return;
+            const action = forceOpen === null ? !modal.content.classList.contains('active') : forceOpen;
+            modal.content.classList.toggle('active', action);
+            modal.overlay.classList.toggle('active', action);
+        }
+        function calculateItemPrice() {
+            if (!currentItem) return 0;
+            let total = currentItem.basePrice;
+            itemModal.variants.querySelectorAll('input:checked').forEach(input => total += parseFloat(input.dataset.price || 0));
+            const quantity = parseInt(itemModal.qty.textContent);
+            itemModal.price.textContent = `$${Math.round(total * quantity)}`;
+            return total;
+        }
+        function openItemModal(item) {
+            currentItem = item; itemModal.title.textContent = item.name;
+            itemModal.desc.textContent = item.description; itemModal.instructions.placeholder = item.placeholder || "Instrucciones especiales...";
+            itemModal.variants.innerHTML = '';
+            item.variants.forEach((variant, v_index) => {
+                const variantHTML = `<h4 class="font-semibold mb-2 mt-3">${variant.name}</h4>` + variant.options.map((opt, o_index) => `<label class="flex items-center"><input type="${variant.type}" name="variant_${v_index}" data-price="${opt.price}" data-label="${opt.label}" ${variant.type === 'radio' && o_index === 0 ? 'checked' : ''} class="mr-2">${opt.label} ${opt.price > 0 ? `(+$${opt.price})` : ''}</label>`).join('');
+                itemModal.variants.innerHTML += variantHTML;
+            });
+            itemModal.instructions.value = ''; itemModal.qty.textContent = '1';
+            calculateItemPrice();
+            itemModal.variants.querySelectorAll('input').forEach(input => input.addEventListener('change', calculateItemPrice));
+            toggleModal('item', true);
+        }
+        function addToCart() {
+            if (!currentItem) return;
+            
+            const price = calculateItemPrice();
+            const quantity = parseInt(itemModal.qty.textContent);
+            const instructions = itemModal.instructions.value.trim();
+            const selectedVariants = Array.from(itemModal.variants.querySelectorAll('input:checked')).map(input => input.dataset.label);
+            
+            const existingItem = cart.find(item =>
+                item.id === currentItem.id &&
+                JSON.stringify(item.variants) === JSON.stringify(selectedVariants) &&
+                item.instructions === instructions
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: currentItem.id,
+                    cartId: Date.now(),
+                    name: currentItem.name,
+                    price: price,
+                    quantity: quantity,
+                    instructions: instructions,
+                    variants: selectedVariants
+                });
+            }
+            
+            renderCart();
+            toggleModal('item', false);
+        }
+        function renderCart() {
+            const formatCOP = value => `$${Intl.NumberFormat('es-CO').format(Math.round(value))}`;
+        
+            cartModal.itemsContainer.innerHTML = '';
+            if (cart.length === 0) {
+                cartModal.itemsContainer.innerHTML = '<p id="empty-cart-msg" class="text-center text-color">Tu carrito está vacío.</p>';
+                cartModal.summary.classList.add('hidden');
+                cartModal.form.classList.add('hidden');
+                cartModal.badge.classList.add('hidden');
+                return;
+            }
+        
+            cartModal.summary.classList.remove('hidden');
+            cartModal.form.classList.remove('hidden');
+        
+            cart.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex justify-between items-center';
+        
+                const totalItem = item.price * item.quantity;
+        
+                itemEl.innerHTML = `
+                    <div>
+                        <p class="font-bold">${item.quantity} x ${item.name}</p>
+                        ${item.variants.length > 0 ? `<p class="text-xs text-color">${item.variants.join(', ')}</p>` : ''}
+                        ${item.instructions ? `<p class="text-xs text-gray-500 italic">"${item.instructions}"</p>` : ''}
+                        <p class="text-sm font-semibold accent-text">${formatCOP(totalItem)}</p>
+                    </div>
+                    <button class="remove-btn neumorphic-button p-2 rounded-lg" data-cart-id="${item.cartId}">
+                        <i data-lucide="trash-2" class="w-4 h-4 text-color pointer-events-none"></i>
+                    </button>
+                `;
+                cartModal.itemsContainer.appendChild(itemEl);
+            });
+        
+            lucide.createIcons();
+            updateCartSummary();
+        }
+        function updateCartSummary() {
+            const formatCOP = value => `$${Intl.NumberFormat('es-CO').format(Math.round(value))}`;
+        
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shippingCost = parseFloat(cartModal.shippingZoneSelect.value) || 0;
+            const total = subtotal + shippingCost;
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+            cartModal.subtotal.textContent = formatCOP(subtotal);
+            cartModal.shipping.textContent = formatCOP(shippingCost);
+            cartModal.total.textContent = formatCOP(total);
+            cartModal.badge.textContent = totalItems;
+            cartModal.badge.classList.toggle('hidden', totalItems === 0);
+        }
+        function validateCartForm() {
+            const name = document.getElementById('client-name').value.trim();
+            const address = document.getElementById('client-address').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const paymentMethod = document.querySelector('input[name="payment"]:checked');
+            const shippingZone = cartModal.shippingZoneSelect.value;
+            cartModal.formError.textContent = '';
+            if (!name || !address || !phone || !paymentMethod || shippingZone === "") {
+                cartModal.formError.textContent = 'Por favor, completa todos los campos obligatorios (*).'; return false;
+            } return true;
+        }
+        function renderMenu() {
+            menuContainer.innerHTML = '';
+            window.restaurantData.menu.forEach(cat => {
+                const accordion = document.createElement('div');
+                accordion.className = 'category-accordion neumorphic-flat rounded-2xl';
+                accordion.innerHTML = `
+                    <button class="category-header w-full p-6 flex justify-between items-center text-left">
+                        <h2 class="text-3xl font-bold tracking-tight">${cat.category}</h2>
+                        <i data-lucide="chevron-down" class="chevron-icon w-8 h-8"></i>
+                    </button>
+                    <div class="category-content">
+                        <div class="space-y-4">
+                        ${cat.items.map(item => `
+                            <div class="neumorphic-pressed rounded-2xl p-4 flex items-center gap-4">
+                                <img src="${item.image || window.restaurantData.config.logoUrl}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
+                                <div class="flex-grow">
+                                    <h3 class="text-lg md:text-xl font-bold">${item.name}</h3>
+                                    <p class="text-sm text-color my-1 hidden sm:block">${item.description}</p>
+                                    <p class="text-md md:text-lg font-semibold accent-text"></p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <button class="select-item-btn mt-auto neumorphic-button text-white font-bold py-2 px-4 rounded-xl text-sm" style="background-color: var(--primary-color);" data-id="${item.id}">
+                                        <i data-lucide="circle-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                        </div>
+                    </div>
+                `;
+                menuContainer.appendChild(accordion);
+            });
+            lucide.createIcons();
+            updateStatusUI();
+        }
+        function populateShippingZones() {
+            cartModal.shippingZoneSelect.innerHTML = `<option value="" disabled selected>Seleccionar zona de envío *</option>`;
+            window.restaurantData.shippingZones.forEach(zone => {
+                const option = document.createElement('option');
+                option.value = zone.price; option.textContent = `${zone.name}${zone.price > 0 ? ` (+$${zone.price})` : ''}`;
+                option.dataset.name = zone.name;
+                cartModal.shippingZoneSelect.appendChild(option);
+            });
+        }
+        function loadClientData() {
+            const savedData = localStorage.getItem('clientInfo');
+            if(savedData) {
+                const client = JSON.parse(savedData);
+                document.getElementById('client-name').value = client.name || '';
+                document.getElementById('client-phone').value = client.phone || '';
+                document.getElementById('client-address').value = client.address || '';
+            }
+        }
+        function saveClientData() {
+            const clientInfo = { name: document.getElementById('client-name').value.trim(), phone: document.getElementById('client-phone').value.trim(), address: document.getElementById('client-address').value.trim() };
+            localStorage.setItem('clientInfo', JSON.stringify(clientInfo));
+        }
+        function sendOrderViaWhatsApp() {
+            const clientName = document.getElementById('client-name').value.trim();
+            const clientPhone = document.getElementById('client-phone').value.trim();
+            const clientAddress = document.getElementById('client-address').value.trim();
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            const cashAmount = document.getElementById('payment-cash-amount').value.trim();
+            const selectedZoneOption = cartModal.shippingZoneSelect.options[cartModal.shippingZoneSelect.selectedIndex];
+            const shippingZoneName = selectedZoneOption.dataset.name;
+            const comments = document.getElementById('order-comments').value.trim();
+        
+            const formatCOP = value => `$${Intl.NumberFormat('es-CO').format(Math.round(value))}`;
+        
+            const groupedCart = [];
+            cart.forEach(item => {
+                const existing = groupedCart.find(g =>
+                    g.id === item.id &&
+                    JSON.stringify(g.variants) === JSON.stringify(item.variants) &&
+                    g.instructions === item.instructions
+                );
+                if (existing) {
+                    existing.quantity += item.quantity;
+                } else {
+                    groupedCart.push({ ...item });
                 }
             });
-
-            groupContainer.classList.toggle('expanded');
-            icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
-    });
-}
-
-function setupResponsiveMenu() {
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const category = this.dataset.category;
-            const name = this.dataset.name;
-            const hasVariantes = this.dataset.hasVariantes === 'true';
-            
-            const menuData = window.restaurantConfig.menu;
-            const categoryItems = menuData[category];
-            const fullItem = categoryItems.find(i => i.name === name);
-            
-            if (fullItem) {
-                openAddItemModal(category, fullItem);
-            }
-        });
-    });
-}
-
-// ========== LÓGICA DEL CARRITO ==========
-function renderCart() {
-    if (!cartItemsContainer) return;
-    
-    cartItemsContainer.innerHTML = '';
-    if (cart.length === 0) {
-        cartItemsContainer.appendChild(emptyCartMessage);
-        emptyCartMessage.style.display = 'block';
-    } else {
-        emptyCartMessage.style.display = 'none';
-        cart.forEach((item, index) => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'flex justify-between items-start';
-            
-            // ===== INICIO: CAMBIO PARA NOMBRE DESCRIPTIVO =====
-            const descriptiveName = `${item.category} - ${item.name}`;
-            const itemName = item.variante ? 
-                `${descriptiveName} (${item.variante})` : 
-                descriptiveName;
-            // ===== FIN: CAMBIO PARA NOMBRE DESCRIPTIVO =====
-              
-            itemElement.innerHTML = `
-                <div>
-                    <p class="font-semibold">${item.quantity}x ${itemName}</p>
-                    ${item.observation ? `<p class="text-sm text-gray-400 italic">"${item.observation}"</p>` : ''}
-                </div>
-                <div class="text-right flex-shrink-0 ml-4">
-                    <p class="font-semibold">$${(item.price * item.quantity).toLocaleString('es-CO')}</p>
-                    <button class="remove-from-cart text-red-500 text-sm hover:text-red-400" data-index="${index}">Quitar</button>
-                </div>
-            `;
-            
-            cartItemsContainer.appendChild(itemElement);
-        });
         
-        document.querySelectorAll('.remove-from-cart').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                removeFromCart(index);
+            let message = `*Nueva Orden - ${window.restaurantData.config.nombre}*\n\n`;
+            message += `*CLIENTE:* ${clientName}\n`;
+            message += `*TELÉFONO:* ${clientPhone}\n`;
+            message += `*DIRECCIÓN:* ${clientAddress}\n\n`;
+            message += `------------------------------\n\n`;
+            message += `*DETALLES DEL PEDIDO:*\n`;
+        
+            groupedCart.forEach(item => {
+                const totalItem = item.price * item.quantity;
+                message += `*${item.quantity}x ${item.name}* - ${formatCOP(totalItem)}\n`;
+                if (item.variants.length > 0)
+                    message += `  - _${item.variants.join(', ')}_\n`;
+                if (item.instructions)
+                    message += `  - _${item.instructions}_\n`;
+            });
+        
+            message += `\n------------------------------\n\n`;
+            message += `*Subtotal:* ${formatCOP(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0))}\n`;
+            message += `*Envío (${shippingZoneName}):* ${cartModal.shipping.textContent}\n`;
+        
+            const totalValue = parseInt(cartModal.total.textContent.replace(/\D/g, ''));
+            message += `*TOTAL A PAGAR:* ${formatCOP(totalValue)}\n\n`;
+        
+            message += `*MÉTODO DE PAGO:* ${paymentMethod === 'efectivo' ? 'Efectivo' : 'Transferencia'}\n`;
+            if (paymentMethod === 'efectivo' && cashAmount)
+                message += `  - _Paga con: ${formatCOP(cashAmount)}_\n`;
+        
+            if (comments)
+                message += `\n*COMENTARIOS ADICIONALES:*\n${comments}\n`;
+        
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${window.restaurantData.config.telefonoWhatsApp}&text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp(restaurantData);
+
+            menuContainer.addEventListener('click', e => {
+                const header = e.target.closest('.category-header');
+                if (header) {
+                    const clickedAccordion = header.parentElement; const wasActive = clickedAccordion.classList.contains('active');
+                    document.querySelectorAll('.category-accordion').forEach(acc => acc.classList.remove('active'));
+                    if (!wasActive) clickedAccordion.classList.add('active');
+                }
+                const selectBtn = e.target.closest('.select-item-btn');
+                if (selectBtn) {
+                    const itemId = parseInt(selectBtn.dataset.id);
+                    const item = window.restaurantData.menu.flatMap(cat => cat.items).find(i => i.id === itemId);
+                    if (item) openItemModal(item);
+                }
+            });
+            cartModal.confirmBtn.addEventListener('click', () => {
+                if (validateCartForm()) {
+                    saveClientData();
+                    sendOrderViaWhatsApp();
+                    toggleModal('cart', false); toggleModal('success', true); cart = []; renderCart();
+                    document.getElementById('order-comments').value = ''; document.getElementById('payment-cash-amount').value = '';
+                    const checkedPayment = document.querySelector('input[name="payment"]:checked'); if(checkedPayment) checkedPayment.checked = false;
+                    document.getElementById('efectivo-details').style.display = 'none'; document.getElementById('transferencia-details').style.display = 'none';
+                    cartModal.shippingZoneSelect.value = "";
+                }
+            });
+            cartModal.shippingZoneSelect.addEventListener('change', updateCartSummary);
+            document.getElementById('hours-button').addEventListener('click', () => toggleModal('hours', true));
+            document.getElementById('close-hours-btn').addEventListener('click', () => toggleModal('hours', false));
+            modals.hours.overlay.addEventListener('click', () => toggleModal('hours', false));
+            document.getElementById('cart-button').addEventListener('click', () => toggleModal('cart', true));
+            modals.item.overlay.addEventListener('click', () => toggleModal('item', false));
+            document.getElementById('close-item-modal-btn').addEventListener('click', () => toggleModal('item', false));
+            modals.cart.overlay.addEventListener('click', () => toggleModal('cart', false));
+            document.getElementById('close-cart-btn').addEventListener('click', () => toggleModal('cart', false));
+            modals.success.overlay.addEventListener('click', () => toggleModal('success', false));
+            document.getElementById('close-success-btn').addEventListener('click', () => toggleModal('success', false));
+            document.getElementById('item-decrease-qty').addEventListener('click', () => { let qty = parseInt(itemModal.qty.textContent); if (qty > 1) { itemModal.qty.textContent = qty - 1; calculateItemPrice(); } });
+            document.getElementById('item-increase-qty').addEventListener('click', () => { let qty = parseInt(itemModal.qty.textContent); itemModal.qty.textContent = qty + 1; calculateItemPrice(); });
+            itemModal.addBtn.addEventListener('click', addToCart);
+            cartModal.itemsContainer.addEventListener('click', e => { const removeBtn = e.target.closest('.remove-btn'); if (removeBtn) { const cartId = parseInt(removeBtn.dataset.cartId); cart = cart.filter(item => item.cartId !== cartId); renderCart(); } });
+            document.querySelectorAll('input[name="payment"]').forEach(radio => {
+                radio.addEventListener('change', e => {
+                    document.getElementById('efectivo-details').style.display = e.target.value === 'efectivo' ? 'block' : 'none';
+                    document.getElementById('transferencia-details').style.display = e.target.value === 'transferencia' ? 'block' : 'none';
+                });
             });
         });
-    }
+    </script>
     
-    updateTotal();
-    updateCheckoutButton();
-}
-
-
-function updateTotal() {
-    if (!cartTotalElement) return;
-    
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    cartTotalElement.textContent = `Total: $${total.toLocaleString('es-CO')}`;
-}
-
-function updateCheckoutButton() {
-    if (!checkoutButton) return;
-    
-    checkoutButton.disabled = cart.length === 0 || !isRestaurantOpen;
-    
-    if (!isRestaurantOpen) {
-        checkoutButton.setAttribute('title', 'El restaurante está cerrado');
-        checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
-    } else if (cart.length === 0) {
-        checkoutButton.setAttribute('title', 'Añade productos para continuar');
-        checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
-    } else {
-        checkoutButton.removeAttribute('title');
-        checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-}
-
-function addToCart(item, quantity, observation, variante) {
-    const uniqueName = variante ? `${item.name}|${variante}` : item.name;
-    
-    const existingIndex = cart.findIndex(cartItem => 
-        cartItem.uniqueName === uniqueName && 
-        cartItem.observation === observation
-    );
-    
-    if (existingIndex !== -1) {
-        cart[existingIndex].quantity += quantity;
-    } else {
-        cart.push({
-            id: Date.now() + Math.random(),
-            uniqueName: uniqueName,
-            name: item.name,
-            category: item.category,
-            price: item.price,
-            quantity: quantity,
-            observation: observation,
-            variante: variante || null
-        });
-    }
-    
-    renderCart();
-}
-
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    renderCart();
-}
-
-// ========== MODALES ==========
-function openAddItemModal(category, item) {
-    currentItem = { ...item, category };
-    modalItemName.textContent = `${category} - ${item.name}`;
-    
-    const existingVariantes = document.getElementById('variantes-container');
-    if (existingVariantes) {
-        existingVariantes.remove();
-    }
-    
-    if (item.variantes && item.variantes.length > 0) {
-        showVariantesSelector(item.variantes);
-        modalItemPrice.style.display = 'none';
-    } else {
-        modalItemPrice.textContent = `$${item.price.toLocaleString('es-CO')}`;
-        modalItemPrice.style.display = 'block';
-    }
-    
-    quantityInput.value = 1;
-    observationInput.value = '';
-    
-    addItemModal.classList.remove('hidden');
-    setTimeout(() => {
-        modalContent.classList.remove('scale-95');
-    }, 10);
-}
-
-function showVariantesSelector(variantes, tipoVariante = null) {
-    if (!tipoVariante) {
-        tipoVariante = obtenerTipoVariante(variantes);
-    }
-    
-    const labelTexto = obtenerLabelVariante(tipoVariante);
-    
-    let variantesHTML = `
-        <div class="mb-4" id="variantes-container">
-            <label class="block text-sm font-medium text-gray-300 mb-2">${labelTexto}</label>
-            <div class="grid grid-cols-1 gap-2">
-    `;
-    
-    variantes.forEach((variante, index) => {
-        const valorMostrar = obtenerValorVariante(variante) || `Opción ${index + 1}`;
-        
-        variantesHTML += `
-            <label class="flex items-center justify-between p-3 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer transition-colors">
-                <div class="flex items-center">
-                    <input type="radio" name="variante" value="${index}" 
-                        ${index === 0 ? 'checked' : ''} 
-                        class="mr-3 focus:ring-emerald-500 h-4 w-4 text-emerald-600">
-                    <span class="text-gray-200">${valorMostrar}</span>
-                </div>
-                <span class="text-emerald-400 font-semibold">$${variante.price.toLocaleString('es-CO')}</span>
-            </label>
-        `;
-    });
-    
-    variantesHTML += `</div></div>`;
-    
-    modalItemName.insertAdjacentHTML('afterend', variantesHTML);
-    document.getElementById('variantes-container').dataset.tipoVariante = tipoVariante;
-    
-    document.querySelectorAll('input[name="variante"]').forEach(radio => {
-        radio.addEventListener('change', updateSelectedVariante);
-    });
-}
-
-function updateSelectedVariante() {
-    // Esta función se puede expandir si necesitas feedback visual adicional
-}
-
-function closeAddItemModal() {
-    const variantesContainer = document.getElementById('variantes-container');
-    if (variantesContainer) {
-        variantesContainer.remove();
-    }
-    
-    modalItemPrice.style.display = 'block';
-    modalContent.classList.add('scale-95');
-    
-    setTimeout(() => {
-        addItemModal.classList.add('hidden');
-        currentItem = null;
-    }, 250);
-}
-
-function confirmAddItem() {
-    if (!currentItem) return;
-    
-    const quantity = parseInt(quantityInput.value);
-    const observation = observationInput.value.trim();
-    if (quantity < 1) {
-        alert('La cantidad debe ser al menos 1');
-        return;
-    }
-    
-    let selectedVariante = null;
-    let tipoVariante = null;
-    const varianteRadio = document.querySelector('input[name="variante"]:checked');
-    if (varianteRadio) {
-        const varianteIndex = parseInt(varianteRadio.value);
-        selectedVariante = currentItem.variantes[varianteIndex];
-        const variantesContainer = document.getElementById('variantes-container');
-        if (variantesContainer) {
-            tipoVariante = variantesContainer.dataset.tipoVariante;
-        }
-        
-        const valorVariante = obtenerValorVariante(selectedVariante);
-    }
-    
-    const itemToAdd = {
-        ...currentItem,
-        price: selectedVariante ?
-            selectedVariante.price : currentItem.price,
-        variante: selectedVariante ?
-            obtenerValorVariante(selectedVariante) : null,
-        tipoVariante: tipoVariante
-    };
-    
-    addToCart(itemToAdd, quantity, observation, itemToAdd.variante); // <-- LÍNEA CORREGIDA
-    closeAddItemModal();
-}
-
-
-// ========== CHECKOUT ==========
-function openCheckoutModal() {
-    checkoutModal.classList.remove('hidden');
-}
-
-function closeCheckoutModal() {
-    checkoutModal.classList.add('hidden');
-}
-
-function handleCheckoutSubmit(event) {
-    event.preventDefault();
-    
-    const formData = new FormData(customerForm);
-    let total = 0;
-    
-    cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-    });
-    const customerData = {
-        name: document.getElementById('name').value || 'Cliente',
-        address: document.getElementById('address').value,
-        observation: document.getElementById('order-observation').value.trim(),
-        phone: document.getElementById('phone').value,
-        paymentMethod: formData.get('payment'),
-        cashAmount: document.getElementById('cash-amount').value,
-        total,
-        cart: cart || []
-    };
-    
-    if (!customerData.address || !customerData.phone || !customerData.paymentMethod) {
-        alert('Por favor completa todos los campos obligatorios (*)');
-        return;
-    }
-    
-    saveUserData(customerData);
-    fetch(`/api/pedido/${window.restaurantConfig.restauranteConfig.extension}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(customerData)
-    });
-    
-    const message = formatOrderForWhatsApp(customerData);
-    const restaurantPhoneNumber = window.restaurantConfig.restauranteConfig.telefonoWhatsApp;
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantPhoneNumber}&text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank');
-    
-    cart = [];
-    renderCart();
-    closeCheckoutModal();
-    customerForm.reset();
-    cashPaymentDetails.classList.add('hidden');
-    
-    alert('¡Pedido enviado por WhatsApp!');
-}
-
-function formatOrderForWhatsApp(customerData) {
-    const restaurantName = window.restaurantConfig.restauranteConfig.nombre;
-    const now = new Date();
-    
-    let message = `¡Hola! 👋\n`;
-    message += `*NUEVO PEDIDO - ${restaurantName.toUpperCase()}*\n`;
-    message += `📅 ${now.toLocaleDateString('es-ES')} ⏰ ${now.toLocaleTimeString('es-ES')}\n\n`;
-    
-    message += `*👤 CLIENTE:*\n`;
-    message += `*Nombre:* ${customerData.name}\n`;
-    message += `*Teléfono:* ${customerData.phone}\n`;
-    message += `*Dirección:* ${customerData.address}\n`;
-    message += `*Pago:* ${customerData.paymentMethod === 'efectivo' ? 'Efectivo 💵' : 'Transferencia 💳'}\n`;
-    if (customerData.paymentMethod === 'efectivo' && customerData.total) {
-        message += `*Paga con:* $ ${parseInt(customerData.cashAmount).toLocaleString('es-CO')}\n`;
-    }
-    
-    message += `\n*🛒 PEDIDO:*\n`;
-    let total = 0;
-    cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        
-        const descriptiveName = `${item.category} - ${item.name}`;
-        const itemName = item.variante ? 
-            `${descriptiveName} (${item.variante})` : 
-            descriptiveName;
-            
-        message += `${index + 1}) ${item.quantity}x ${itemName}\n`;
-        message += `   Precio: $${item.price.toLocaleString('es-CO')} c/u\n`;
-        message += `   Subtotal: $${itemTotal.toLocaleString('es-CO')}\n`;
-        if (item.observation) {
-            message += `*Observación:*\n${item.observation}\n`;
-        }
-        message += `\n`;
-    });
-    
-    if (customerData.observation) {
-        message += `\n*📝 OBSERVACIÓN GENERAL:*\n"${customerData.observation}"\n\n`;
-    }
-    
-    message += `*💰 TOTAL: $${total.toLocaleString('es-CO')}*\n`;
-    message += `¡Por favor confirmar recepción! ✅`;
-    
-    return message;
-}
-
-
-// ========== UTILIDADES ==========
-function checkRestaurantStatus() {
-    const now = new Date();
-    const horaColombia = new Date(now.toLocaleString('en-US', {
-        timeZone: 'America/Bogota'
-    }));
-    
-    let currentTime = horaColombia.getHours() + (horaColombia.getMinutes() / 60);
-
-    const horario = window.restaurantConfig.horario;
-    const apertura = horario.aperturaDecimal;
-    const cierre = horario.cierreDecimal;
-
-    if (cierre > 24 && currentTime < apertura) {
-        currentTime += 24;
-    }
-
-    isRestaurantOpen = currentTime >= apertura && currentTime < cierre;
-
-    if (statusMessageElement) {
-        if (isRestaurantOpen) {
-            statusMessageElement.innerHTML = `
-                <p class="text-emerald-400 font-semibold">
-                    ✅ Abierto hasta las ${horario.cierreStr}
-                </p>`;
-        } else {
-            statusMessageElement.innerHTML = `
-                <p class="text-red-400 font-semibold">❌ Cerrado</p>
-                <p class="text-xs text-gray-400">
-                    Horario: ${horario.aperturaStr} - ${horario.cierreStr}
-                </p>`;
-        }
-        statusMessageElement.classList.remove('hidden');
-    }
-    updateCheckoutButton();
-}
-
-function saveUserData(customer) {
-    localStorage.setItem('customerName', customer.name);
-    localStorage.setItem('customerAddress', customer.address);
-    localStorage.setItem('customerPhone', customer.phone);
-}
-
-function loadUserData() {
-    document.getElementById('name').value = localStorage.getItem('customerName') || '';
-    document.getElementById('address').value = localStorage.getItem('customerAddress') || '';
-    document.getElementById('phone').value = localStorage.getItem('customerPhone') || '';
-}
-
-function setupEventListeners() {
-    decreaseQtyBtn.addEventListener('click', () => {
-        if (parseInt(quantityInput.value) > 1) quantityInput.value--;
-    });
-    
-    increaseQtyBtn.addEventListener('click', () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-    });
-    
-    confirmAddItemBtn.addEventListener('click', confirmAddItem);
-    cancelAddItemBtn.addEventListener('click', closeAddItemModal);
-    
-    // Modal de checkout
-    checkoutButton.addEventListener('click', openCheckoutModal);
-    cancelCheckoutBtn.addEventListener('click', closeCheckoutModal);
-    customerForm.addEventListener('submit', handleCheckoutSubmit);
-    
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            cashPaymentDetails.classList.toggle('hidden', e.target.value !== 'efectivo');
-        });
-    });
-}
-
-function showError(message) {
-    if (menuContainer) {
-        menuContainer.innerHTML = `
-            <div class="text-center py-8 text-red-400">
-                <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
-                <p>${message}</p>
-            </div>
-        `;
-    }
-    console.error('Error:', message);
-}
-</script>
-
- <%- include('partials/footer') %>
+    <%- include('partials/footer')%>
 </body>
 </html>

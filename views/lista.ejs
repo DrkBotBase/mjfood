@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title><%= info.name_page %></title>
+    
+  <meta name="description" content="<%= info.desc %>">
+  <meta name="keywords" content="">
+  <meta name="author" content="<%= info.author %>">
+  <meta name="theme-color" content="<%= info.colorTheme %>">
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="<%= info.dominio %>">
+
+  <meta property="og:title" content="<%= info.name_page %>">
+  <meta property="og:description" content="<%= info.desc %>.">
+  <meta property="og:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta property="og:image:alt" content="<%= info.name_page %>">
+  <meta property="fb:app_id" content="<%= info.fb_app_id %>">
+  <meta property="og:url" content="<%= info.dominio %>">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="<%= info.name_page %>">
+  <meta property="og:locale" content="es_ES">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= info.name_page %>">
+  <meta name="twitter:description" content="<%= info.desc %>">
+  <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta name="twitter:image:alt" content="<%= info.name_page %>">
+  <meta name="apple-mobile-web-app-status-bar-style" content="<%= info.colorTheme %>">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="manifest" href="/lista/manifest.json">
+  
+  <link rel="icon" href="/assets/fondos/<%= info.logo %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/fondos/<%= info.logo %>.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    :root {
+      --text-color: <%= info.colorBase.text %>;
+      --primary-color: <%= info.colorBase.primary %>;
+      --bg-color: <%= info.colorBase.bg %>;
+      --light-shadow: <%= info.colorBase.light %>;
+      --dark-shadow: <%= info.colorBase.dark %>;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .color-text {
+      color: var(--text-color);
+    }
+    .color-icon {
+      color: var(--primary-color);
+    }
+    .neumorphic-outset {
+      background: var(--bg-color);
+      border-radius: 1.25rem;
+      box-shadow: 6px 6px 12px var(--dark-shadow), -6px -6px 12px var(--light-shadow);
+      transition: all 0.2s ease-in-out;
+    }
+    .neumorphic-inset {
+      background: var(--bg-color);
+      border-radius: 1.25rem;
+      box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+      transition: all 0.2s ease-in-out;
+    }
+    .neumorphic-outset:hover {
+      box-shadow: 8px 8px 16px var(--dark-shadow), -8px -8px 16px var(--light-shadow);
+      transform: translateY(-2px);
+    }
+    .neumorphic-outset:active, .neumorphic-outset.active {
+       box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+       transform: translateY(0);
+    }
+    .text-inset {
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--text-color);
+      text-shadow: 1px 1px 1px var(--light-shadow), -1px -1px 1px var(--dark-shadow);
+    }
+    .neumorphic-button-primary {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-shadow: 1px 1px 1px var(--light-shadow);
+    }
+    .neumorphic-button-primary:hover {
+      color: #e65a00;
+    }
+    .neumorphic-button-filter {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+    .neumorphic-button-filter.active {
+       box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+       color: var(--primary-color);
+       font-weight: bold;
+    }
+    .neumorphic-input {
+      width: 100%;
+      background: var(--bg-color);
+      border: none;
+      padding: 0.5rem 1rem;
+      color: var(--text-color);
+    }
+    .neumorphic-input::placeholder {
+      color: #92a0b8;
+    }
+    .neumorphic-input:focus {
+      outline: none;
+    }
+    .restaurant-card {
+      padding: 1.5rem;
+    }
+    .restaurant-card img {
+      border-radius: 0.75rem;
+      box-shadow: 4px 4px 8px var(--dark-shadow), -4px -4px 8px var(--light-shadow);
+    }
+    .fa-solid {
+      color: #92a0b8;
+      width: 1.25rem;
+      text-align: center;
+    }
+    .absolute.blur-3xl {
+      display: none;
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <div class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-16">
+    <header class="text-center z-10">
+      <a href="/" class="block mb-4">
+        <span class="text-inset"><%= info.name_page %></span>
+      </a>
+      <p class="max-w-2xl mx-auto text-lg md:text-xl color-text mb-8">
+        Tu portal para amantes de la buena comida.
+      </p>
+      <a href="#restaurantes" class="neumorphic-outset neumorphic-button-primary">
+        Ver Restaurantes
+      </a>
+    </header>
+  </div>
+  
+  <main id="restaurantes" class="py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center mb-16">
+        <h2 class="text-4xl font-bold tracking-tight sm:text-5xl color-text">Nuestra Selección Exclusiva</h2>
+        <p class="mt-6 text-lg leading-8 color-text">
+          Desde la cocina tradicional hasta las propuestas más innovadoras, aquí tienes los lugares que no te puedes perder.
+        </p>
+      </div>
+      
+      <div class="mb-12 p-6 neumorphic-outset">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div class="w-full md:w-auto">
+            <h3 class="text-xl font-semibold mb-3">Ordenar por</h3>
+            <div class="flex flex-wrap gap-4">
+              <a href="?sort=popularity<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentSort === 'popularity' ? 'active' : '' %>">
+                Más populares
+              </a>
+              <a href="?sort=az<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentSort === 'az' ? 'active' : '' %>">
+                Orden A-Z
+              </a>
+              <a href="?sort=open<%= currentFilter !== 'all' ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentSort === 'open' ? 'active' : '' %>">
+                Abiertos primero
+              </a>
+            </div>
+          </div>
+      
+          <div class="w-full md:w-auto">
+            <h3 class="text-xl font-semibold mb-3">Filtrar por</h3>
+            <div class="flex flex-wrap gap-4">
+              <a href="?filter=all<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentFilter === 'all' ? 'active' : '' %>">
+                Todos
+              </a>
+              <a href="?filter=open<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentFilter === 'open' ? 'active' : '' %>">
+                Abiertos
+              </a>
+              <a href="?filter=closed<%= currentSort ? '&sort=' + currentSort : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+                 class="neumorphic-outset neumorphic-button-filter <%= currentFilter === 'closed' ? 'active' : '' %>">
+                Cerrados
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="color-text">
+            Mostrando <span id="restaurant-count"><%= restaurantes.length %></span> de <span id="total-restaurants"><%= totalItems %></span>
+          </div>
+      
+          <form action="/#restaurantes" method="GET" class="flex gap-2 w-full md:w-auto">
+            <input type="hidden" name="sort" value="<%= currentSort %>">
+            <input type="hidden" name="filter" value="<%= currentFilter %>">
+      
+            <div class="relative flex-1 neumorphic-inset flex items-center p-1">
+              <input type="text" name="search" placeholder="Buscar restaurante..." value="<%= searchTerm %>" class="neumorphic-input">
+            </div>
+      
+            <div class="flex gap-2">
+              <button type="submit" class="neumorphic-outset p-2 w-10 h-10 flex items-center justify-center" style="color: var(--primary-color)">
+                <i class="fas fa-search"></i>
+              </button>
+              <% if (searchTerm) { %>
+              <a href="?sort=<%= currentSort %>&filter=<%= currentFilter %>#restaurantes" class="neumorphic-outset p-2 w-10 h-10 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+              </a>
+              <% } %>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="restaurant-list" class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <% if (restaurantes && restaurantes.length > 0) { %>
+          <% restaurantes.forEach(resto => { %>
+            <article class="restaurant-card neumorphic-outset">
+              <a href="<%= resto.id %>" class="w-full">
+                <div class="relative w-full mb-6">
+                  <img src="<%= resto.logo || '/assets/fondos/mjfood.png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
+                </div>
+                <div class="max-w-xl w-full">
+                  <h3 class="text-2xl font-semibold leading-6 color-text">
+                    <%= resto.name %>
+                  </h3>
+                  <div class="mt-5 flex flex-col gap-y-3 text-sm">
+                    <div class="flex items-center gap-x-3">
+                      <i class="fa-solid fa-location-dot" style="color: var(--primary-color)"></i>
+                      <span><%= resto.address %></span>
+                    </div>
+                    <div class="flex items-center gap-x-3">
+                      <i class="fa-solid fa-phone" style="color: var(--primary-color)"></i>
+                      <span><%= resto.phone.replace('57', '') %></span>
+                    </div>
+                    <div class="flex items-center gap-x-3">
+                      <i class="fa-solid fa-clock" style="color: var(--primary-color)"></i>
+                      <% if (resto.hours.aperturaStr === 'Cerrado') { %>
+                        <span class="font-semibold" style="color: #e53e3e;">Cerrado hoy</span>
+                      <% } else { %>
+                        <span><%= resto.hours.aperturaStr %> - <%= resto.hours.cierreStr %></span>
+                      <% } %>
+                    </div>
+                    <div class="flex items-center gap-x-3">
+                      <i class="fa-solid fa-circle <%= resto.isOpen ? 'text-green-500' : 'text-red-500' %>"></i>
+                      <span class="font-semibold <%= resto.isOpen ? 'text-green-600' : 'text-red-600' %>">
+                        <%= resto.isOpen ? 'Abierto ahora' : 'Cerrado' %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </article>
+          <% }); %>
+        <% } else { %>
+          <p class="col-span-full text-center">
+            No hay restaurantes para mostrar.
+          </p>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.toString() !== '') {
+        setTimeout(() => {
+          const section = document.getElementById('restaurantes');
+          if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function() {
+          this.action = this.action.split('#')[0] + '#restaurantes';
+        });
+      }
+    });
+  </script>
+  
+  <footer class="pt-10 pb-8">
+    <div class="container mx-auto px-6 text-center">
+      <p>¿Eres propietario? 
+        <a href="https://wa.me/573046793853?text=Hola,%0Ame%20podrían%20dar%20información%20de%20como%20añadir%20mi%20restaurante%20a%20la%20plataforma.%0AGracias." 
+          class="text-emerald-400 hover:underline"
+          target="_blank" 
+          rel="noopener noreferrer">
+          Contáctanos para añadir tu restaurante
+        </a>
+      </p>
+      <div class="mt-12 border-t border-[var(--text-color)] pt-8 text-color">
+          <p>&copy; 2025 <%= info.name_page %>. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <%- include('partials/footer')%>
+</body>
+</html>

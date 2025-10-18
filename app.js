@@ -53,56 +53,100 @@ app.use('/api/pedidos', pedidosRouter);
 app.use('/facturas', ticketRoutes);
 
 let menus = {};
-app.get('/', async (req, res) => {
+app.get('/', (req,res) => {
+  try {
+    res.render('index', {
+      info
+    });
+  } catch (e) {
+    console.error('Error en la ruta principal: ', e);
+    res.status(500).render('error', {
+      info,
+      name_page: 'server error',
+      message: 'Error interno.',
+      restaurantesDisponibles: []
+    });
+  }
+});
+app.get('/lista', async (req, res) => {
   try {
     const { sort, filter, search, page = 1, limit = 6 } = req.query;
     const currentPage = parseInt(page);
     const itemsPerPage = parseInt(limit);
-    
+
     const puntosDB = await RestaurantePuntos.find().lean();
     const puntosMap = Object.fromEntries(puntosDB.map(r => [r.extension, r.puntos || 0]));
-    
-    let restaurantesInfo = Object.values(menus)
-      .map(menu => {
-        const horario = procesarHorario(menu.config);
-        
-        // Obtener hora actual en zona horaria de Colombia
-        const ahora = moment().tz('America/Bogota');
-        const horaActual = ahora.hours() + (ahora.minutes() / 60);
-        
-        let estaAbierto = false;
-        if (horario.cierreDecimal < horario.aperturaDecimal) {
-          // Horario que cruza medianoche (ej: 20:00 a 02:00)
-          estaAbierto = horaActual >= horario.aperturaDecimal || horaActual < (horario.cierreDecimal - 24);
-        } else {
-          // Horario normal (ej: 08:00 a 22:00)
-          estaAbierto = horaActual >= horario.aperturaDecimal && horaActual < horario.cierreDecimal;
-        }
-        
-        return {
-          id: menu.config.extension,
-          name: menu.config.nombre,
-          hours: horario,
-          address: menu.config.direccion || '',
-          phone: menu.config.telefonoWhatsApp,
-          logo: menu.config.logoUrl || '/assets/fondos/mjfood.png',
-          isOpen: estaAbierto,
-          popularity: puntosMap[menu.config.extension] || 0,
-          category: menu.config.category || 'general',
-          priceRange: menu.config.priceRange || 2, // Valor medio por defecto
-          services: menu.config.services || [],
-          tags: menu.config.tags || []
-        };
-      });
 
-    // filtros
+    function procesarHorario(schedule) {
+      const ahora = moment().tz('America/Bogota');
+      const dayOfWeek = ahora.day();
+      const currentTime = parseInt(ahora.format('HHmm'));
+
+      const hoy = schedule.find(s => s.day === dayOfWeek);
+      const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+      const checkIfOpen = (sched) => {
+        if (!sched || sched.open === 'closed') return false;
+        const openTime = parseInt(sched.open.replace(':', ''));
+        const closeTime = parseInt(sched.close.replace(':', ''));
+        if (isNaN(openTime) || isNaN(closeTime)) return false;
+        
+        if (closeTime < openTime) {
+          return currentTime >= openTime || currentTime < closeTime;
+        }
+        return currentTime >= openTime && currentTime < closeTime;
+      };
+      
+      let estaAbierto = false;
+      if (checkIfOpen(hoy)) {
+        estaAbierto = true;
+      } else if (
+        checkIfOpen(ayer) &&
+        ayer.close.replace(':', '') < ayer.open.replace(':', '') &&
+        currentTime < parseInt(ayer.close.replace(':', ''))
+      ) {
+        estaAbierto = true;
+      }
+
+      const aperturaStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.open;
+      const cierreStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.close;
+
+      return {
+        abierto: estaAbierto,
+        aperturaStr,
+        cierreStr
+      };
+    }
+
+    let restaurantesInfo = Object.values(menus).map(menu => {
+      const config = menu.config;
+      const schedule = menu.schedule || [];
+
+      const horario = procesarHorario(schedule);
+
+      return {
+        id: config.extension,
+        name: config.nombre,
+        address: config.direccion || '',
+        phone: config.telefonoWhatsApp,
+        logo: config.logoUrl || '/assets/fondos/mjfood.png',
+        isOpen: horario.abierto,
+        popularity: puntosMap[config.extension] || 0,
+        category: config.category || 'general',
+        hours: {
+          aperturaStr: horario.aperturaStr,
+          cierreStr: horario.cierreStr,
+          schedule
+        }
+      };
+    });
+
     if (filter === 'open') {
       restaurantesInfo = restaurantesInfo.filter(r => r.isOpen);
     } else if (filter === 'closed') {
       restaurantesInfo = restaurantesInfo.filter(r => !r.isOpen);
     }
-
-    // búsqueda
+    
     if (search) {
       const searchTerm = search.toLowerCase();
       restaurantesInfo = restaurantesInfo.filter(r => 
@@ -110,7 +154,6 @@ app.get('/', async (req, res) => {
       );
     }
 
-    // ordenamiento
     if (sort === 'az') {
       restaurantesInfo.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sort === 'open') {
@@ -120,23 +163,21 @@ app.get('/', async (req, res) => {
         return 0;
       });
     } else {
-      //restaurantesInfo.sort((a, b) => b.popularity - a.popularity);
-      restaurantesInfo.sort((a, b) => a.name.localeCompare(b.name));
+      restaurantesInfo.sort((a, b) => b.popularity - a.popularity);
     }
-
-    // Calcular paginación
+    
     const totalItems = restaurantesInfo.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
     const paginatedRestaurants = restaurantesInfo.slice(startIndex, endIndex);
-    
-    res.render('index', { 
+
+    res.render('lista', {
       info,
       restaurantes: paginatedRestaurants,
       pagination: {
-        currentPage: currentPage,
-        totalPages: totalPages,
+        currentPage,
+        totalPages,
         hasPrev: currentPage > 1,
         hasNext: currentPage < totalPages,
         prevPage: currentPage - 1,
@@ -145,10 +186,11 @@ app.get('/', async (req, res) => {
       currentSort: sort || 'popularity',
       currentFilter: filter || 'all',
       searchTerm: search || '',
-      totalItems: totalItems
+      totalItems
     });
+
   } catch (error) {
-    console.error('Error en la ruta principal:', error);
+    console.error('Error en la ruta lista:', error);
     res.status(500).render('error', {
       info,
       name_page: 'server error',
@@ -157,7 +199,7 @@ app.get('/', async (req, res) => {
     });
   }
 });
-app.get('/manifest.json', (req, res) => {
+app.get('/lista/manifest.json', (req, res) => {
   const manifest = {
     short_name: info.name_page,
     name: `${info.name_page} - Directorio`,
@@ -202,16 +244,18 @@ app.get('/:restaurante', (req, res) => {
     });
   }
 
-  const horarioNormalizado = procesarHorario(restauranteData.config);
-
   res.render('menu', {
     info,
-    name_page: restauranteData.config.nombre,
-    restaurante: req.params.restaurante,
-    restauranteConfig: restauranteData.config,
-    menuData: restauranteData.menu,
+    menuData: restauranteData,
     config: restauranteData.config,
-    horarioRestaurante: horarioNormalizado
+    manifestUrl: `/${req.params.restaurante}/manifest.json`,
+    pwa: {
+      icon: `/assets/icons/${restauranteData.config.extension}`,
+      themeColor: restauranteData.config.pwa?.theme_color || '#ffffff',
+      description: restauranteData.config.pwa?.description || `Menú digital de ${restauranteData.config.nombre}`,
+      shortName: restauranteData.config.pwa?.short_name || restauranteData.config.nombre
+    },
+    color: restauranteData.config?.color
   });
 });
 app.get('/:restaurante/sw.js', (req, res) => {
@@ -255,23 +299,23 @@ app.get('/:restaurante/manifest.json', (req, res) => {
     return res.status(404).json({ error: 'Restaurante no encontrado' });
   }
 
-  const pwaConfig = restauranteData.config.pwa || {};
+  const pwa = restauranteData.config.pwa || {};
   const manifest = {
-    short_name: pwaConfig.short_name || restauranteData.config.nombre,
-    name: pwaConfig.name || `${restauranteData.config.nombre} - Menú Digital`,
-    description: pwaConfig.description || `App de pedidos para ${restauranteData.config.nombre}`,
-    theme_color: pwaConfig.theme_color || "#0a0a0aff",
-    background_color: pwaConfig.background_color || "#0a0a0aff",
-    display: pwaConfig.display || "standalone",
-    start_url: pwaConfig.start_url || `/${req.params.restaurante}/`,
-    scope: pwaConfig.scope || `/${req.params.restaurante}/`,
-    icons: pwaConfig.icons || [{
+    short_name: pwa.short_name || restauranteData.config.nombre,
+    name: pwa.name || `${restauranteData.config.nombre} - Menú Digital`,
+    description: pwa.description || `App de pedidos para ${restauranteData.config.nombre}`,
+    theme_color: pwa.theme_color || "#0a0a0aff",
+    background_color: pwa.background_color || "#0a0a0aff",
+    display: pwa.display || "standalone",
+    start_url: pwa.start_url || `/${req.params.restaurante}/`,
+    scope: pwa.scope || `/${req.params.restaurante}/`,
+    icons: pwa.icons || [{
       "src": `/assets/fondos/mjfood.png`,
       "sizes": "512x512",
       "type": "image/png"
     }],
-    categories: pwaConfig.categories || ["food", "restaurant"],
-    lang: pwaConfig.lang || "es"
+    categories: pwa.categories || ["food", "restaurant"],
+    lang: pwa.lang || "es"
   };
 
   res.json(manifest);
@@ -289,7 +333,6 @@ app.post('/api/pedido/:extension', async (req, res) => {
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 });
-
 app.get('/api/panel/:extension/estadisticas', async (req, res) => {
   const { extension } = req.params;
   const { token } = req.query;
@@ -464,7 +507,6 @@ app.get('/:extension/panel', async (req, res) => {
       });
     }
 
-    // Si existe, validar token
     if (!token || token !== restaurante.token) {
       return res.render('panel-login', {
         extension: extension,
@@ -473,21 +515,18 @@ app.get('/:extension/panel', async (req, res) => {
       });
     }
 
-    // Obtener estadísticas del día actual
     const hoy = moment().tz('America/Bogota').format('YYYY-MM-DD');
     const estadisticasHoy = restaurante.estadisticasDiarias.find(d => d.dia === hoy) || {
       totalPedidos: 0,
       totalGastado: 0
     };
 
-    // Obtener estadísticas de la semana actual
     const semanaActual = moment().tz('America/Bogota').format('YYYY-WW');
     const estadisticasSemana = restaurante.estadisticasSemanales.find(s => s.semana === semanaActual) || {
       totalPedidos: 0,
       totalGastado: 0
     };
 
-    // Obtener estadísticas del mes actual
     const mesActual = moment().tz('America/Bogota').format('YYYY-MM');
     const estadisticasMes = restaurante.estadisticasMensuales.find(m => m.mes === mesActual) || {
       totalPedidos: 0,
@@ -519,9 +558,8 @@ app.get('/:extension/panel', async (req, res) => {
         mes: estadisticasMes
       },
       topClientes: topClientes,
-      // Mantener compatibilidad con tu vista actual
-      puntos: restaurante.totalPedidos, // equivalente a puntos
-      orden: 999, // puedes mantener esto o actualizar según tu lógica
+      puntos: restaurante.totalPedidos,
+      orden: 999,
       clientes: topClientes
     });
 
@@ -557,31 +595,6 @@ setInterval(() => {
     .then(res => console.log('Ping interno enviado:', res.status))
     .catch(err => console.error('Error en el ping:', err.message));
 }, 14 * 60 * 1000);
-
-function parseHoraToDecimal(horaStr) {
-  const [horas, minutos] = horaStr.replace(':', '.').split('.').map(Number);
-  return horas + (minutos / 60);
-}
-function formatHora(horaDecimal) {
-  const horas = Math.floor(horaDecimal % 24);
-  const minutos = Math.round((horaDecimal - Math.floor(horaDecimal)) * 60);
-  return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
-}
-function procesarHorario(config) {
-  let apertura = parseHoraToDecimal(config.horarioApertura);
-  let cierre = parseHoraToDecimal(config.horarioCierre);
-
-  if (cierre < apertura) {
-    cierre += 24;
-  }
-
-  return {
-    aperturaDecimal: apertura,
-    cierreDecimal: cierre,
-    aperturaStr: formatHora(apertura),
-    cierreStr: formatHora(cierre)
-  };
-}
 
 (async () => {
   menus = await cargarMenusDesdeArchivos();
