@@ -224,6 +224,9 @@ app.get('/lista/manifest.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(manifest));
 });
+app.get('/ping', (req, res) => {
+  res.send('Pong');
+});
 
 app.get('/:restaurante', (req, res) => {
   const restauranteData = menus[req.params.restaurante];
@@ -584,10 +587,6 @@ app.get('/admin/recargar-menus', async (req, res) => {
     message: `Menús recargados. ${ordenados.length} restaurantes cargados`,
     restaurantes: ordenados
   });
-});
-
-app.get('/ping', (req, res) => {
-  res.send('Pong');
 });
 
 setInterval(() => {
