@@ -227,6 +227,9 @@ app.get('/lista/manifest.json', (req, res) => {
 app.get('/ping', (req, res) => {
   res.send('Pong');
 });
+app.get('/publi', (req, res) => {
+  res.render('iframe', {info});
+});
 
 app.get('/:restaurante', (req, res) => {
   const restauranteData = menus[req.params.restaurante];

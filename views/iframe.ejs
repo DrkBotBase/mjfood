@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Westcol - Stream Fighters 4</title>
+  
+  <meta name="description" content="Peleas de la noche">
+  <meta name="keywords" content="">
+  <meta name="author" content="<%= info.author %>">
+  <meta name="theme-color" content="<%= info.colorTheme %>">
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="<%= info.dominio %>">
+  
+  <meta property="og:title" content="Westcol - Stream Fighters 4">
+  <meta property="og:description" content="Peleas de la noche.">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="Westcol - Stream Fighters 4">
+  <meta property="fb:app_id" content="<%= info.fb_app_id %>">
+  <meta property="og:url" content="<%= info.dominio %>">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Westcol - Stream Fighters 4">
+  <meta property="og:locale" content="es_ES">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Westcol - Stream Fighters 4">
+  <meta name="twitter:description" content="Peleas de la noche">
+  <meta name="twitter:image" content="">
+  <meta name="twitter:image:alt" content="Westcol - Stream Fighters 4">
+
+  <link rel="icon" href="/assets/fondos/<%= info.logo %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/fondos/<%= info.logo %>.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --text-color: #2D3748;
+      --primary-color: #4A5568;
+      --bg-color: #E2E8F0;
+      --light-shadow: #FFFFFF;
+      --dark-shadow: #CBD5E0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .neumorphic-flat {
+      background: var(--bg-color);
+      box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+    }
+    .neumorphic-pressed {
+      background: var(--bg-color);
+      box-shadow: inset 7px 7px 15px var(--dark-shadow), inset -7px -7px 15px var(--light-shadow);
+    }
+    .accent-text {
+      color: var(--primary-color);
+    }
+    
+    /* Contenedor responsivo para el iframe */
+    .iframe-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Estados de carga */
+    .iframe-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-color);
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Mensaje de error */
+    .iframe-error {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: #E53E3E;
+    }
+    
+    /* Controles para el iframe */
+    .iframe-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .control-btn {
+      padding: 8px 16px;
+      background: var(--bg-color);
+      border: none;
+      border-radius: 8px;
+      box-shadow: 3px 3px 6px var(--dark-shadow), -3px -3px 6px var(--light-shadow);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .control-btn:active {
+      box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
+    }
+  </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+      <div class="container mx-auto px-6 py-4">
+        <div class="neumorphic-flat w-full rounded-2xl p-4 flex justify-between items-center">
+          <h1 class="text-2xl font-bold tracking-tighter">Westcol - Stream Fighters 4</h1>
+          <div class="flex items-center space-x-2">
+            <span class="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="text-sm">En vivo</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <main>
+      <section class="py-16 md:py-24">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 leading-tight">
+             <span class="accent-text">Stream Fighters 4</span>.
+          </h2>
+          <p class="text-xl mt-4 max-w-2xl mx-auto">Disfruta del stream en directo de Westcol. ¡No te pierdas la acción!</p>
+          
+          <div class="mt-16 p-6 neumorphic-pressed rounded-3xl max-w-5xl mx-auto">
+            <!-- Contenedor del iframe con estados de carga -->
+            <div class="iframe-container" id="stream-container">
+              <div class="iframe-loading" id="loading-indicator">
+                <div class="spinner"></div>
+                <span class="ml-3">Cargando stream...</span>
+              </div>
+              <iframe 
+                id="stream-iframe"
+                src="https://kick.com/westcol/embed" 
+                allowfullscreen="true"
+                onload="hideLoadingIndicator()"
+                onerror="showError()">
+              </iframe>
+              <div class="iframe-error" id="error-message">
+                <p>No se pudo cargar el stream. Por favor, intenta recargar la página.</p>
+                <button class="control-btn mt-3" onclick="reloadIframe()">Reintentar</button>
+              </div>
+            </div>
+            
+            <!-- Controles del iframe -->
+            <div class="iframe-controls">
+              <button class="control-btn" onclick="toggleFullscreen()">Pantalla completa</button>
+              <button class="control-btn" onclick="reloadIframe()">Recargar</button>
+              <a href="https://kick.com/westcol" target="_blank" class="control-btn">Ver en Kick</a>
+            </div>
+            
+            <!-- Información del stream -->
+            <div class="mt-6 text-left max-w-2xl mx-auto">
+              <h3 class="text-xl font-bold mb-2">Acerca de este stream</h3>
+              <p>Westcol participa en Stream Fighters 4, un evento de gaming donde streamers compiten en diferentes juegos. ¡Sigue la transmisión para no perderte ningún momento!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer id="contact" class="pt-20 pb-8">
+      <div class="container mx-auto px-6 text-center">
+        <div class="mt-12 border-t border-[var(--text-color)] pt-8 text-color">
+          <p>&copy; 2025 MJFOOD. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Funciones para manejar el iframe
+      function hideLoadingIndicator() {
+        document.getElementById('loading-indicator').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+      }
+      
+      function showError() {
+        document.getElementById('loading-indicator').style.display = 'none';
+        document.getElementById('error-message').style.display = 'block';
+      }
+      
+      function reloadIframe() {
+        document.getElementById('loading-indicator').style.display = 'flex';
+        document.getElementById('error-message').style.display = 'none';
+        document.getElementById('stream-iframe').src = document.getElementById('stream-iframe').src;
+      }
+      
+      function toggleFullscreen() {
+        const iframe = document.getElementById('stream-iframe');
+        
+        if (!document.fullscreenElement) {
+          if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+          } else if (iframe.webkitRequestFullscreen) {
+            iframe.webkitRequestFullscreen();
+          } else if (iframe.msRequestFullscreen) {
+            iframe.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      }
+      
+      // Detectar cambios de tamaño de pantalla
+      window.addEventListener('resize', function() {
+        // Ajustes adicionales si es necesario al cambiar el tamaño
+      });
+    </script>
+</body>
+</html>
