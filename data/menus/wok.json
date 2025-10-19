@@ -56,190 +56,190 @@
   },
   "menu": [
     {"category": "Combos", "items": [
-      {"id": 1, "name": "Especial", "description": "Arroz Especial Personal + Coca-Cola 400ml", "basePrice": 22000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 2, "name": "Valenciana", "description": "Mini Valenciana + Coca-Cola 250ml", "basePrice": 14000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 3, "name": "Tawok", "description": "Arroz Tawok Grande + Coca-Cola 2.5L", "basePrice": 52000, "image": "", "placeholder": "Opción sin verduras...", "variants": []}
+      {"id": 1, "name": "Especial", "description": "Arroz Especial Personal + Coca-Cola 400ml", "basePrice": 22000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 2, "name": "Valenciana", "description": "Mini Valenciana + Coca-Cola 250ml", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 3, "name": "Tawok", "description": "Arroz Tawok Grande + Coca-Cola 2.5L", "basePrice": 52000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Arroces", "items": [
-      {"id": 4, "name": "Arroz Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 4, "name": "Arroz Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 20000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 5, "name": "Arroz Tawok", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 5, "name": "Arroz Tawok", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 25000},
         {"label": "Medio", "price": 38000},
         {"label": "Grande", "price": 46000}
       ]}]},
-      {"id": 6, "name": "Valenciana", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 6, "name": "Valenciana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 18000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 38000}
       ]}]},
-      {"id": 7, "name": "Arroz Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 7, "name": "Arroz Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 19000},
         {"label": "Medio", "price": 28000},
         {"label": "Grande", "price": 37000}
       ]}]},
-      {"id": 8, "name": "Arroz Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 8, "name": "Arroz Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 22000},
         {"label": "Medio", "price": 33000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 9, "name": "Arroz Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 9, "name": "Arroz Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 25000},
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 10, "name": "Arroz Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 10, "name": "Arroz Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 23000},
         {"label": "Medio", "price": 33000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 11, "name": "Arroz Carne", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 11, "name": "Arroz Carne", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 21000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 12, "name": "Arroz Pollo/Carne", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 12, "name": "Arroz Pollo/Carne", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 23000},
         {"label": "Medio", "price": 34000},
         {"label": "Grande", "price": 41000}
       ]}]},
-      {"id": 13, "name": "Arroz Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 13, "name": "Arroz Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 18000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 35000}
       ]}]}
     ]},
     {"category": "Chopsuey", "items": [
-      {"id": 14, "name": "Chopsuey Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 14, "name": "Chopsuey Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 22000},
         {"label": "Medio", "price": 32000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 15, "name": "Chopsuey Tawok", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 15, "name": "Chopsuey Tawok", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 25000},
         {"label": "Medio", "price": 38000},
         {"label": "Grande", "price": 46000}
       ]}]},
-      {"id": 16, "name": "Chopsuey Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 16, "name": "Chopsuey Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 25000},
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 43000}
       ]}]},
-      {"id": 17, "name": "Chopsuey Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 17, "name": "Chopsuey Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 20000},
         {"label": "Medio", "price": 28000},
         {"label": "Grande", "price": 37000}
       ]}]},
-      {"id": 18, "name": "Chopsuey Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 18, "name": "Chopsuey Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 23000},
         {"label": "Medio", "price": 33000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 19, "name": "Chopsuey Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 19, "name": "Chopsuey Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 22000},
         {"label": "Medio", "price": 33000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 20, "name": "Chopsuey Lomito", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 20, "name": "Chopsuey Lomito", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 27000},
         {"label": "Medio", "price": 37000},
         {"label": "Grande", "price": 45000}
       ]}]},
-      {"id": 21, "name": "Chopsuey Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 21, "name": "Chopsuey Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 18000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 35000}
       ]}]}
     ]},
     {"category": "Lomein", "items": [
-      {"id": 22, "name": "Lomein Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 22, "name": "Lomein Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 22000},
         {"label": "Medio", "price": 32000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 23, "name": "Lomein Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 23, "name": "Lomein Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 20000},
         {"label": "Medio", "price": 28000},
         {"label": "Grande", "price": 37000}
       ]}]},
-      {"id": 24, "name": "Lomein Lomito", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 24, "name": "Lomein Lomito", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 27000},
         {"label": "Medio", "price": 37000},
         {"label": "Grande", "price": 45000}
       ]}]},
-      {"id": 25, "name": "Lomein Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 25, "name": "Lomein Vegetal", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 18000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 35000}
       ]}]},
-      {"id": 26, "name": "Lomein Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 26, "name": "Lomein Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 25000},
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 43000}
       ]}]},
-      {"id": 27, "name": "Lomein Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 27, "name": "Lomein Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 23000},
         {"label": "Medio", "price": 33000},
         {"label": "Grande", "price": 42000}
       ]}]}
     ]},
     {"category": "Carnes", "items": [
-      {"id": 28, "name": "Cerdo Agridulce", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 28, "name": "Cerdo Agridulce", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 29, "name": "Pollo Agridulce", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 29, "name": "Pollo Agridulce", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Medio", "price": 32000},
         {"label": "Grande", "price": 40000}
       ]}]},
-      {"id": 30, "name": "Pollo a la Naranja", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 30, "name": "Pollo a la Naranja", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 19000},
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 31, "name": "Pollo Crocante", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 31, "name": "Pollo Crocante", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 20000},
         {"label": "Medio", "price": 35000},
         {"label": "Grande", "price": 42000}
       ]}]},
-      {"id": 32, "name": "Lomito Brocoli", "description": "", "basePrice": 0, "image": "", "placeholder": "Opción sin verduras...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 32, "name": "Lomito Brocoli", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 20000},
         {"label": "Medio", "price": 36000},
         {"label": "Grande", "price": 44000}
       ]}]}
     ]},
     {"category": "Lumpias", "items": [
-      {"id": 33, "name": "Especial x2 Unidades", "description": "", "basePrice": 13000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 34, "name": "Vegetales x2 Unidades", "description": "", "basePrice": 11000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 35, "name": "Pollo x2 Unidades", "description": "", "basePrice": 12000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 36, "name": "Camarón x2 Unidades", "description": "", "basePrice": 14000, "image": "", "placeholder": "Opción sin verduras...", "variants": []}
+      {"id": 33, "name": "Especial x2 Unidades", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 34, "name": "Vegetales x2 Unidades", "description": "", "basePrice": 11000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 35, "name": "Pollo x2 Unidades", "description": "", "basePrice": 12000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 36, "name": "Camarón x2 Unidades", "description": "", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Adicionales", "items": [
-      {"id": 37, "name": "Salsa Agridulce", "description": "", "basePrice": 1000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 38, "name": "Miel Mostaza", "description": "", "basePrice": 1000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 39, "name": "Soya", "description": "", "basePrice": 1000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 40, "name": "Camarón 150g", "description": "", "basePrice": 13000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 41, "name": "Pollo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 42, "name": "Cerdo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Opción sin verduras...", "variants": []}
+      {"id": 37, "name": "Salsa Agridulce", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 38, "name": "Miel Mostaza", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 39, "name": "Soya", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 40, "name": "Camarón 150g", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 41, "name": "Pollo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 42, "name": "Cerdo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
-      {"id": 43, "name": "Coca Cola 3L", "description": "", "basePrice": 15000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 44, "name": "Coca Cola 2.5L", "description": "", "basePrice": 12000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 45, "name": "Coca Cola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 46, "name": "Coca Cola 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 47, "name": "Coca Cola 250ml", "description": "", "basePrice": 2500, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 48, "name": "Coca Cola Zero 1.5L", "description": "", "basePrice": 7000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 49, "name": "Coca Cola Zero 400ml", "description": "", "basePrice": 3500, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 50, "name": "Coca Cola Zero 250ml", "description": "", "basePrice": 2500, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 51, "name": "Kola Roman 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 52, "name": "Kola Roman 400ml", "description": "", "basebasePrice": 4000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 53, "name": "Sprite 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 54, "name": "Sprite 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 55, "name": "Quatro 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "Opción sin verduras...", "variants": []},
-      {"id": 56, "name": "Quatro 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "Opción sin verduras...", "variants": []}
+      {"id": 43, "name": "Coca Cola 3L", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 44, "name": "Coca Cola 2.5L", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 45, "name": "Coca Cola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 46, "name": "Coca Cola 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 47, "name": "Coca Cola 250ml", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": []},
+      {"id": 48, "name": "Coca Cola Zero 1.5L", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 49, "name": "Coca Cola Zero 400ml", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 50, "name": "Coca Cola Zero 250ml", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": []},
+      {"id": 51, "name": "Kola Roman 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 52, "name": "Kola Roman 400ml", "description": "", "basebasePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 53, "name": "Sprite 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 54, "name": "Sprite 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 55, "name": "Quatro 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 56, "name": "Quatro 400ml", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []}
     ]}
   ]
 }
