@@ -9,17 +9,12 @@
     <meta name="description" content="<%= pwa.description %>">
     <meta name="theme-color" content="<%= pwa.themeColor %>">
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="<%= pwa.shortName %>">
-    
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
     <link rel="canonical" href="<%= info.dominio %>">
     
     <meta property="og:title" content="<%= config.nombre %>">
     <meta property="og:description" content="<%= pwa.description %>.">
-    
     <meta property="og:image" content="<%= info.dominio %><%= config.logoUrl %>">
     <meta property="og:image:alt" content="<%= config.nombre %>">
     <meta property="fb:app_id" content=" ">
@@ -31,14 +26,16 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= config.nombre %>">
     <meta name="twitter:description" content="<%= pwa.description %>">
-    <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+    <meta name="twitter:image" content="<%= info.dominio %><%= info.logoUrl %>">
     <meta name="twitter:image:alt" content="<%= config.nombre %>">
-    <meta name="apple-mobile-web-app-status-bar-style" content="<%= pwa.themeColor %>">
     <meta name="apple-mobile-web-app-capable" content="yes">
-
+    <meta name="apple-mobile-web-app-title" content="<%= pwa.shortName %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="<%= pwa.themeColor %>">
+    
     <link rel="manifest" href="<%= typeof manifestUrl !== 'undefined' ? manifestUrl : '/manifest.json' %>">
-    <link rel="icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/fondos/mjfood.png' %>">
-    <link rel="apple-touch-icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/fondos/mjfood.png' %>">
+    
+    <link rel="icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/mjfood.png' %>">
+    <link rel="apple-touch-icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/mjfood.png' %>">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -157,7 +154,7 @@
 
     <section class="container mx-auto p-4">
         <div class="neumorphic-flat rounded-2xl overflow-hidden">
-            <img id="restaurant-banner" src="" alt="" class="w-full h-48 object-cover">
+            <img id="restaurant-banner" src="" alt="" class="w-full h-50 object-cover">
             <div class="p-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div class="mb-4">
@@ -240,14 +237,14 @@
             <div class="flex justify-between font-semibold"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
             <div class="flex justify-between text-color"><span>Envío</span><span id="cart-shipping">$0</span></div>
             <div class="flex justify-between text-xl font-bold"><span>Total</span><span id="cart-total">$0</span></div>
-            <button id="confirm-order-btn" class="w-full mt-4 neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">Enviar Pedido por WhatsApp</button>
+            <button id="confirm-order-btn" class="w-full mt-4 neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">Enviar Pedido</button>
         </div>
     </div>
     <div id="success-modal-overlay" class="modal-overlay"></div>
     <div id="success-modal" class="modal-content neumorphic-flat rounded-2xl w-11/12 max-w-sm p-8 text-center">
         <div class="flex justify-center mb-4"><div class="neumorphic-pressed w-20 h-20 rounded-full flex items-center justify-center"><i data-lucide="check-circle" class="w-12 h-12 accent-text"></i></div></div>
         <h3 class="text-2xl font-bold mb-2">¡Pedido Listo!</h3>
-        <p class="text-color mb-6">Tu pedido ha sido preparado para enviar por WhatsApp. Serás redirigido.</p>
+        <p class="text-color mb-6">Tu pedido ha sido enviado. Serás redirigido.</p>
         <button id="close-success-btn" class="w-full neumorphic-button text-white font-bold py-3 px-6 rounded-xl" style="background-color: var(--primary-color);">Cerrar</button>
     </div>
     <div id="hours-modal-overlay" class="modal-overlay"></div>
@@ -340,7 +337,7 @@
             const statusDiv = document.getElementById('status-indicator');
             if (isOpen) {
                 statusDiv.textContent = 'Abierto'; statusDiv.className = 'status-indicator status-open';
-                cartModal.confirmBtn.disabled = false; cartModal.confirmBtn.textContent = 'Enviar Pedido por WhatsApp';
+                cartModal.confirmBtn.disabled = false; cartModal.confirmBtn.textContent = 'Enviar Pedido';
             } else {
                 statusDiv.textContent = 'Cerrado'; statusDiv.className = 'status-indicator status-closed';
                 cartModal.confirmBtn.disabled = true; cartModal.confirmBtn.textContent = 'Restaurante Cerrado';
@@ -498,7 +495,7 @@
                         <div class="space-y-4">
                         ${cat.items.map(item => `
                             <div class="neumorphic-pressed rounded-2xl p-4 flex items-center gap-4">
-                                <img src="${item.image || window.restaurantData.config.logoUrl}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
+                                <img src="${item.image || `/assets/${window.restaurantData.config.extension}/banner.png`}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
                                 <div class="flex-grow">
                                     <h3 class="text-lg md:text-xl font-bold">${item.name}</h3>
                                     <p class="text-sm text-color my-1 hidden sm:block">${item.description}</p>

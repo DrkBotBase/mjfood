@@ -1,13 +1,13 @@
 {
   "config": {
     "extension": "taylor_wok",
-    "orden": "9",
+    "orden": "1",
     "color": {
-      "text": "#1a1c21",
+      "text": "#000000",
       "primary": "#daba27",
-      "bg": "#e74c3c",
-      "light": "#ff6050",
-      "dark": "#c0392b"
+      "bg": "#e91b1a",
+      "light": "#ee5352",
+      "dark": "#b61110"
     },
     "pwa": {
       "short_name": "Taylor Wok",
@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/icons/taylor_wok.png",
+          "src": "/assets/taylor_wok/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,12 +30,12 @@
     "nombre": "Taylor Wok",
     "direccion": "Cra 10 # 8 - 66",
     "telefonoWhatsApp": "573052169035",
-    "logoUrl": "/assets/fondos/taylor_wok.png",
+    "logoUrl": "/assets/taylor_wok/banner.png",
     "taxRate": 0
   },
   "schedule": [
     { "day": 0, "open": "10:00", "close": "20:00" }, 
-    { "day": 1, "open": "10:00", "close": "20:00" }, 
+    { "day": 1, "open": "10:00", "close": "00:00" }, 
     { "day": 2, "open": "10:00", "close": "20:00" }, 
     { "day": 3, "open": "10:00", "close": "20:00" }, 
     { "day": 4, "open": "10:00", "close": "20:00" }, 

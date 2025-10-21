@@ -16,7 +16,7 @@
 
   <meta property="og:title" content="<%= info.name_page %>">
   <meta property="og:description" content="<%= info.desc %>.">
-  <meta property="og:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta property="og:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
   <meta property="og:image:alt" content="<%= info.name_page %>">
   <meta property="fb:app_id" content="<%= info.fb_app_id %>">
   <meta property="og:url" content="<%= info.dominio %>">
@@ -27,15 +27,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= info.name_page %>">
   <meta name="twitter:description" content="<%= info.desc %>">
-  <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
   <meta name="twitter:image:alt" content="<%= info.name_page %>">
   <meta name="apple-mobile-web-app-status-bar-style" content="<%= info.colorTheme %>">
   <meta name="apple-mobile-web-app-capable" content="yes">
 
   <link rel="manifest" href="/lista/manifest.json">
   
-  <link rel="icon" href="/assets/fondos/<%= info.logo %>.png" type="image/png">
-  <link rel="apple-touch-icon" href="/assets/fondos/<%= info.logo %>.png">
+  <link rel="icon" href="/assets/<%= info.logo %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/<%= info.logo %>.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -143,7 +143,7 @@
 <body class="antialiased">
   <div class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-16">
     <header class="text-center z-10">
-      <a href="/" class="block mb-4">
+      <a href="/lista" class="block mb-4">
         <span class="text-inset"><%= info.name_page %></span>
       </a>
       <p class="max-w-2xl mx-auto text-lg md:text-xl color-text mb-8">
@@ -208,7 +208,7 @@
             Mostrando <span id="restaurant-count"><%= restaurantes.length %></span> de <span id="total-restaurants"><%= totalItems %></span>
           </div>
       
-          <form action="/#restaurantes" method="GET" class="flex gap-2 w-full md:w-auto">
+          <form action="/lista/#restaurantes" method="GET" class="flex gap-2 w-full md:w-auto">
             <input type="hidden" name="sort" value="<%= currentSort %>">
             <input type="hidden" name="filter" value="<%= currentFilter %>">
       
@@ -236,7 +236,7 @@
             <article class="restaurant-card neumorphic-outset">
               <a href="<%= resto.id %>" class="w-full">
                 <div class="relative w-full mb-6">
-                  <img src="<%= resto.logo || '/assets/fondos/mjfood.png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
+                  <img src="<%= resto.logo || '/assets/mjfood.png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
                 </div>
                 <div class="max-w-xl w-full">
                   <h3 class="text-2xl font-semibold leading-6 color-text">

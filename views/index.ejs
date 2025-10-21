@@ -16,7 +16,7 @@
   
   <meta property="og:title" content="<%= info.name_page %>">
   <meta property="og:description" content="<%= info.desc %>.">
-  <meta property="og:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta property="og:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
   <meta property="og:image:alt" content="<%= info.name_page %>">
   <meta property="fb:app_id" content="<%= info.fb_app_id %>">
   <meta property="og:url" content="<%= info.dominio %>">
@@ -27,13 +27,13 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= info.name_page %>">
   <meta name="twitter:description" content="<%= info.desc %>">
-  <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/<%= info.logo %>.png">
+  <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
   <meta name="twitter:image:alt" content="<%= info.name_page %>">
   <meta name="apple-mobile-web-app-status-bar-style" content="<%= info.colorTheme %>">
   <meta name="apple-mobile-web-app-capable" content="yes">
   
-  <link rel="icon" href="/assets/fondos/<%= info.logo %>.png" type="image/png">
-  <link rel="apple-touch-icon" href="/assets/fondos/<%= info.logo %>.png">
+  <link rel="icon" href="/assets/<%= info.logo %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/<%= info.logo %>.png">
 
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -247,7 +247,12 @@
                 <li class="flex items-center"><i data-lucide="check" class="w-5 h-5 accent-text mr-2"></i>Enlace Web + Código QR único</li>
                 <li class="flex items-center"><i data-lucide="check" class="w-5 h-5 accent-text mr-2"></i>Soporte 24/7</li>
               </ul>
-              <button class="w-full neumorphic-button font-bold py-3 px-6 rounded-xl">Elegir Plan</button>
+              <a href="https://api.whatsapp.com/send?phone=573046793853&text=Hola,%0Ame%20interesa%20el%20plan%20(Fijo)%0AGracias." 
+                class="w-full neumorphic-button font-bold py-3 px-6 rounded-xl text-center block"
+                target="_blank" 
+                rel="noopener noreferrer">
+                Elegir Plan
+              </a>
             </div>
             <!-- Plan 2 (Recommended) -->
             <div class="w-full max-w-sm p-8 rounded-3xl relative" style="background-color: var(--primary-color); color: white;">
@@ -261,7 +266,12 @@
                 <li class="flex items-center"><i data-lucide="check" class="w-5 h-5 mr-2"></i>Soporte 24/7</li>
                 <li class="flex items-center"><i data-lucide="check" class="w-5 h-5 mr-2"></i>Más flexible</li>
               </ul>
-              <button class="w-full neumorphic-button bg-white text-[var(--primary-color)] font-bold py-3 px-6 rounded-xl">Elegir Plan</button>
+              <a href="https://api.whatsapp.com/send?phone=573046793853&text=Hola,%0Ame%20interesa%20el%20plan%20(Starter)%0AGracias." 
+                class="w-full neumorphic-button bg-white text-[var(--primary-color)] font-bold py-3 px-6 rounded-xl text-center block"
+                target="_blank" 
+                rel="noopener noreferrer">
+                Elegir Plan
+              </a>
             </div>
           </div>
         </div>

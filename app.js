@@ -129,7 +129,7 @@ app.get('/lista', async (req, res) => {
         name: config.nombre,
         address: config.direccion || '',
         phone: config.telefonoWhatsApp,
-        logo: config.logoUrl || '/assets/fondos/mjfood.png',
+        logo: config.logoUrl || '/assets/mjfood.png',
         isOpen: horario.abierto,
         popularity: puntosMap[config.extension] || 0,
         category: config.category || 'general',
@@ -212,7 +212,7 @@ app.get('/lista/manifest.json', (req, res) => {
     "scope": "/lista",
     "icons": [
       {
-        "src": "/assets/fondos/mjfood.png",
+        "src": "/assets/mjfood.png",
         "sizes": "512x512",
         "type": "image/png"
       }
@@ -256,7 +256,7 @@ app.get('/:restaurante', (req, res) => {
     config: restauranteData.config,
     manifestUrl: `/${req.params.restaurante}/manifest.json`,
     pwa: {
-      icon: `/assets/icons/${restauranteData.config.extension}`,
+      icon: `/assets/${restauranteData.config.extension}/icon.png`,
       themeColor: restauranteData.config.pwa?.theme_color || '#ffffff',
       description: restauranteData.config.pwa?.description || `Menú digital de ${restauranteData.config.nombre}`,
       shortName: restauranteData.config.pwa?.short_name || restauranteData.config.nombre
@@ -273,8 +273,8 @@ app.get('/:restaurante/sw.js', (req, res) => {
     const urlsToCache = [
       '/restaurant/${extension}',
       '/js/pwa-handler.js',
-      '/assets/icons/icon-192x192.png',
-      '/assets/icons/icon-512x512.png'
+      '/assets/${extension}/icon.png'
+      '/assets/${extension}/banner.png'
     ];
 
     self.addEventListener('install', event => {
@@ -316,7 +316,7 @@ app.get('/:restaurante/manifest.json', (req, res) => {
     start_url: pwa.start_url || `/${req.params.restaurante}/`,
     scope: pwa.scope || `/${req.params.restaurante}/`,
     icons: pwa.icons || [{
-      "src": `/assets/fondos/mjfood.png`,
+      "src": `/assets/mjfood.png`,
       "sizes": "512x512",
       "type": "image/png"
     }],

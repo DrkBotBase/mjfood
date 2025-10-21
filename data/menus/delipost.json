@@ -1,0 +1,19 @@
+{
+  "config": {
+    "extension": "https://vinapp.co/delipost",
+    "orden": "2",
+    "nombre": "Delipost",
+    "direccion": "Calle 8 # 11 - 05",
+    "telefonoWhatsApp": "573242496180",
+    "logoUrl": "/assets/delipost/banner.png"
+  },
+  "schedule": [
+    { "day": 0, "open": "16:30", "close": "22:45" }, 
+    { "day": 1, "open": "16:45", "close": "22:15" }, 
+    { "day": 2, "open": "16:45", "close": "22:15" }, 
+    { "day": 3, "open": "16:45", "close": "22:15" }, 
+    { "day": 4, "open": "16:45", "close": "22:15" }, 
+    { "day": 5, "open": "16:45", "close": "22:15" }, 
+    { "day": 6, "open": "16:30", "close": "22:45" }
+  ]
+}

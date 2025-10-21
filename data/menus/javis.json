@@ -1,0 +1,274 @@
+{
+  "config": {
+    "extension": "javis",
+    "orden": "2",
+    "color": {
+      "text": "#1a1c21",
+      "primary": "#e21c1b",
+      "bg": "#ffd800",
+      "light": "#ffdf2b",
+      "dark": "#c3a601"
+    },
+    "pwa": {
+      "short_name": "Javis",
+      "name": "Javis - Pedidos",
+      "description": "Restaurante de comida rapida.",
+      "theme_color": "#ffd800",
+      "background_color": "#ffd800",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/javis/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["fast_food", "restaurant"],
+      "lang": "es"
+    },
+    "nombre": "Javis",
+    "direccion": "Cra 18 # 19b - 04",
+    "telefonoWhatsApp": "573184023206",
+    "logoUrl": "/assets/javis/banner.png",
+    "taxRate": 0
+  },
+  "schedule": [
+    { "day": 0, "open": "17:30", "close": "23:50" }, 
+    { "day": 1, "open": "17:30", "close": "23:30" }, 
+    { "day": 2, "open": "17:30", "close": "23:30" }, 
+    { "day": 3, "open": "17:30", "close": "23:30" }, 
+    { "day": 4, "open": "17:30", "close": "23:30" }, 
+    { "day": 5, "open": "17:30", "close": "23:30" }, 
+    { "day": 6, "open": "17:30", "close": "23:50" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 2000 },
+    { "name": "Otra (consultar)", "price": 0 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "3184023206", 
+      "accountHolder": "Dia*** Och***" 
+    }
+  },
+  "menu": [
+    {"category": "Salchipapas", "items": [
+      {"id": 1, "name": "Salchipapa Sencilla", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 2, "name": "Salchipapa Pollo Papa", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 3, "name": "Salchipapa Salchipollo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 4, "name": "Salchipapa Ranchera", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 5, "name": "Salchipapa Choripapa", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 6, "name": "Salchipapa Butipapa", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 7, "name": "Salchipapa de Carne", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 8, "name": "Salchipapa de Cerdo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 9, "name": "Salchipapa Mixta", "description": "Pollo, Chorizo, Butifarra", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 10, "name": "Salchipapa Suiza", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Salchipapa Pollo Carne", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 12, "name": "Salchipapa Pollo Cerdo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 13, "name": "Salchipapa Pollo Suiza", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 14, "name": "Salchipapa Súper Javis 2 Personas", "description": "", "basePrice": 27000, "image": "", "placeholder": "", "variants": []},
+      {"id": 15, "name": "Salchipapa Súper Javis 4 Personas", "description": "", "basePrice": 45000, "image": "", "placeholder": "", "variants": []},
+      {"id": 16, "name": "Papas Javis", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Perros", "items": [
+      {"id": 17, "name": "Perro Sencillo", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 18, "name": "Perro Escocés", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 19, "name": "Perro Hawaiano", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 20, "name": "Perro Gemelo", "description": "", "basePrice": 9000, "image": "", "placeholder": "", "variants": []},
+      {"id": 21, "name": "Perro Pollo", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 22, "name": "Perro Choriperro", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 23, "name": "Perro Butiperro", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 24, "name": "Perro Plancha", "description": "", "basePrice": 6500, "image": "", "placeholder": "", "variants": []},
+      {"id": 25, "name": "Perro Italiano", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 26, "name": "Perro Ranchero", "description": "", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 27, "name": "Perro Ítalo Hawaiano", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 28, "name": "Perro Suizo", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 29, "name": "Perro Medio Suizo", "description": "", "basePrice": 9000, "image": "", "placeholder": "", "variants": []},
+      {"id": 30, "name": "Perro Medio Suizo Italiano", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 31, "name": "Perro Ítalo Suizo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 32, "name": "Perro Especial", "description": "Suizo, pollo, tocineta, gratinado", "basePrice": 16000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Picadas", "items": [
+      {"id": 33, "name": "Picada con Bollo", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 34, "name": "Picada Pollo", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 35, "name": "Picada Mixta", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Mazorcas", "items": [
+      {"id": 36, "name": "Mazorca Sencilla", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 8000},
+        {"label": "Gratinada", "price": 11000}
+      ]}]},
+      {"id": 37, "name": "Mazorca Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 14000},
+        {"label": "Gratinada", "price": 16000}
+      ]}]},
+      {"id": 38, "name": "Mazorca Mixta", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 14000},
+        {"label": "Gratinada", "price": 16000}
+      ]}]},
+      {"id": 39, "name": "Mazorca Hawaiana", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 12000},
+        {"label": "Gratinada", "price": 14000}
+      ]}]},
+      {"id": 40, "name": "Mazorca Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 15000},
+        {"label": "Gratinada", "price": 17000}
+      ]}]},
+      {"id": 41, "name": "Mazorca Suiza", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 15000},
+        {"label": "Gratinada", "price": 17000}
+      ]}]},
+      {"id": 42, "name": "Mazorca Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tipo", "options": [
+        {"label": "Costeña", "price": 0},
+        {"label": "Gratinada", "price": 18000}
+      ]}]}
+    ]},
+    {"category": "Hamburguesas", "items": [
+      {"id": 43, "name": "Hamburguesa de Carne", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 44, "name": "Hamburguesa Doble Carne", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 45, "name": "Hamburguesa de Pollo", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 46, "name": "Hamburguesa Doble Pollo", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 47, "name": "Hamburguesa Carne Pollo", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 48, "name": "Hamburguesa Especial", "description": "Carne, pollo, tocineta y jamón", "basePrice": 19000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Asados", "items": [
+      {"id": 49, "name": "Asado de Carne", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Media", "price": 12000},
+        {"label": "Entera", "price": 20000}
+      ]}]},
+      {"id": 50, "name": "Asado de Pechuga", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Media", "price": 10000},
+        {"label": "Entera", "price": 18000}
+      ]}]},
+      {"id": 51, "name": "Asado de Cerdo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Media", "price": 12000},
+        {"label": "Entera", "price": 18000}
+      ]}]},
+      {"id": 52, "name": "Asado Mixto", "description": "Carne, Pollo, Cerdo.", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
+      {"id": 53, "name": "Pechuga Gratinada", "description": "", "basePrice": 22000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Chuzoz Panes", "items": [
+      {"id": 54, "name": "Chuzo Pan Pollo", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 55, "name": "Chuzo Pan Carne", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 56, "name": "Chuzo Pan Mixto", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Combos", "items": [
+      {"id": 57, "name": "Perro Sencillo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 58, "name": "Perro a la Plancha", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11500, "image": "", "placeholder": "", "variants": []},
+      {"id": 59, "name": "Perro Gemelo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 60, "name": "Perro 1/2 Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 61, "name": "Perro Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 62, "name": "Hamburguesa de Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 63, "name": "Hamburguesa de Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 64, "name": "Hamburguesa Doble Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
+      {"id": 65, "name": "Hamburguesa Doble Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 66, "name": "Hamburguesa Combinada", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Sandwich", "items": [
+      {"id": 67, "name": "Jamón y Queso", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 68, "name": "Pollo, Jamón y Queso", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 69, "name": "Especial", "description": "Pollo, carne, jamón, tocineta, mozarella", "basePrice": 17000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Arepas", "items": [
+      {"id": 70, "name": "Queso", "description": "Solo de Lunes a Jueves", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 71, "name": "Pollo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 72, "name": "Carne", "description": "Solo de Lunes a Jueves", "basePrice": 9000, "image": "", "placeholder": "", "variants": []},
+      {"id": 73, "name": "Cerdo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 74, "name": "Mixta", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 75, "name": "Mixta Gratinada", "description": "Solo de Lunes a Jueves", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Pizzas Tradicional", "items": [
+      {"id": 76, "name": "Pizza Tradicional Jamón", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 6000},
+        {"label": "Small", "price": 14000},
+        {"label": "Medium", "price": 23000}
+      ]}]},
+      {"id": 77, "name": "Pizza Tradicional Pizzaperro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 8000},
+        {"label": "Small", "price": 17000},
+        {"label": "Medium", "price": 27000}
+      ]}]},
+      {"id": 78, "name": "Pizza Tradicional Bocadillo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 6000},
+        {"label": "Small", "price": 14000},
+        {"label": "Medium", "price": 23000}
+      ]}]},
+      {"id": 79, "name": "Pizza Tradicional Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 6000},
+        {"label": "Small", "price": 15000},
+        {"label": "Medium", "price": 25000}
+      ]}]},
+      {"id": 80, "name": "Pizza Tradicional Salami", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 6000},
+        {"label": "Small", "price": 14000},
+        {"label": "Medium", "price": 23000}
+      ]}]},
+      {"id": 81, "name": "Pizza Tradicional Hawaiana", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 7000},
+        {"label": "Small", "price": 15000},
+        {"label": "Medium", "price": 25000}
+      ]}]},
+      {"id": 82, "name": "Pizza Tradicional Vegetariana", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 6000},
+        {"label": "Small", "price": 14000},
+        {"label": "Medium", "price": 23000}
+      ]}]}
+    ]},
+    {"category": "Pizzas Combinadas", "items": [
+      {"id": 83, "name": "Pizza Combinada Jamón y Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 7000},
+        {"label": "Small", "price": 16000},
+        {"label": "Medium", "price": 26000}
+      ]}]},
+      {"id": 84, "name": "Pizza Combinada Pollo y Salami", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 7000},
+        {"label": "Small", "price": 17000},
+        {"label": "Medium", "price": 26000}
+      ]}]},
+      {"id": 85, "name": "Pizza Combinada Pollo Champiñones", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 8000},
+        {"label": "Small", "price": 17000},
+        {"label": "Medium", "price": 27000}
+      ]}]},
+      {"id": 86, "name": "Pizza Combinada Pollo Hawaiana", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 7000},
+        {"label": "Small", "price": 17000},
+        {"label": "Medium", "price": 26000}
+      ]}]},
+      {"id": 87, "name": "Pizza Combinada Pollo Maiz", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 7000},
+        {"label": "Small", "price": 17000},
+        {"label": "Medium", "price": 26000}
+      ]}]},
+      {"id": 88, "name": "Pizza Especial Javi's", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Baby", "price": 8000},
+        {"label": "Small", "price": 20000},
+        {"label": "Medium", "price": 30000}
+      ]}]}
+    ]},
+    {"category": "Adicionales", "items": [
+      {"id": 89, "name": "Papas a la Francesa", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 90, "name": "Bollo", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 91, "name": "Ranchera", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 92, "name": "Mozzarella", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 93, "name": "Suiza", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 94, "name": "Jamón", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 95, "name": "Maíz", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 96, "name": "Tocineta", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Bebidas", "items": [
+      {"id": 97, "name": "Gaseosa Personal", "description": "", "basePrice": 4000, "image": "", "placeholder": "Manzana, Pepsi, Uva, etc...", "variants": []},
+      {"id": 98, "name": "Gaseosa Pequeña", "description": "", "basePrice": 2000, "image": "", "placeholder": "Indica sabor...", "variants": []},
+      {"id": 99, "name": "Tea", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 100, "name": "Botella de Agua", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 101, "name": "Cerveza", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 102, "name": "Hit Litro", "description": "", "basePrice": 6000, "image": "", "placeholder": "Indica sabor...", "variants": []},
+      {"id": 103, "name": "Gaseosas 1.5L Postobon", "description": "", "basePrice": 7000, "image": "", "placeholder": "Manzana, Pepsi, Uva, etc...", "variants": []},
+      {"id": 104, "name": "CocaCola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 105, "name": "Gaseosa Litro Vidrio", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []}
+    ]}
+  ]
+}
