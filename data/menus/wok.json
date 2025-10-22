@@ -5,9 +5,9 @@
     "color": {
       "text": "#000000",
       "primary": "#daba27",
-      "bg": "#e91b1a",
-      "light": "#ee5352",
-      "dark": "#b61110"
+      "bg": "#ea4443",
+      "light": "#f55f5e",
+      "dark": "#b51413"
     },
     "pwa": {
       "short_name": "Taylor Wok",

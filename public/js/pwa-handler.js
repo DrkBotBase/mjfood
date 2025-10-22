@@ -188,8 +188,8 @@ class PWAHandler {
                 navigator.serviceWorker.ready.then(registration => {
                     registration.showNotification('¡Bienvenido!', {
                         body: 'Ahora puedes recibir actualizaciones de nuestros menús',
-                        icon: '/assets/icons/icon-192x192.png',
-                        badge: '/assets/icons/icon-72x72.png',
+                        icon: '/assets/icon.png',
+                        badge: '/assets/icon.png',
                         vibrate: [200, 100, 200],
                         tag: 'welcome-notification'
                     });

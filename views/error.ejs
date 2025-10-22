@@ -7,11 +7,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="<%= message %>">
-    <meta name="theme-color" content="#ffffff">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="<%= name_page %>">
+    <meta name="theme-color" content="<%= info.colorBase.bg %>">
     
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
@@ -20,7 +16,7 @@
     <meta property="og:title" content="<%= name_page %>">
     <meta property="og:description" content="<%= message %>.">
     
-    <meta property="og:image" content="<%= info.dominio %>/assets/fondos/mjfood.png">
+    <meta property="og:image" content="/assets/<%= info.logo %>.png">
     <meta property="og:image:alt" content="<%= name_page %>">
     <meta property="fb:app_id" content=" ">
     <meta property="og:url" content="<%= info.dominio %>">
@@ -31,13 +27,11 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= name_page %>">
     <meta name="twitter:description" content="<%= message %>">
-    <meta name="twitter:image" content="<%= info.dominio %>/assets/fondos/mjfood.png">
+    <meta name="twitter:image" content="/assets/<%= info.logo %>.png">
     <meta name="twitter:image:alt" content="<%= name_page %>">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
+    
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/output.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,59 +40,82 @@
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <!-- Estilos personalizados -->
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0a0a0a;
-        color: #f5f5f5;
-      }
-      .animated-gradient {
-        background: linear-gradient(90deg, #f97316, #ec4899, #8b5cf6, #f97316);
-        background-size: 300% 100%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: gradient-flow 10s ease-in-out infinite;
-      }
-      
-      @keyframes gradient-flow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
+    :root {
+      --text-color: <%= info.colorBase.text %>;
+      --primary-color: <%= info.colorBase.primary %>;
+      --bg-color: <%= info.colorBase.bg %>;
+      --light-shadow: <%= info.colorBase.light %>;
+      --dark-shadow: <%= info.colorBase.dark %>;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .neumorphic-flat {
+      background: var(--bg-color);
+      box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+    }
+    .neumorphic-button {
+      background: var(--bg-color);
+      box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+      transition: all 0.2s ease-in-out;
+    }
+    .neumorphic-button:hover {
+      box-shadow: 3px 3px 7px var(--dark-shadow), -3px -3px 7px var(--light-shadow);
+    }
+    .neumorphic-button:active {
+      box-shadow: inset 3px 3px 7px var(--dark-shadow), inset -3px -3px 7px var(--light-shadow);
+    }
+    .accent-text {
+      color: var(--primary-color);
+    }
     </style>
 </head>
-
 <body class="antialiased">
-    <main class="relative min-h-screen flex items-center justify-center text-center overflow-hidden px-6">
-        <!-- Fondo decorativo con gradiente y blur -->
-        <div class="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-orange-500/30 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-500"></div>
-
-        <div class="relative z-10">
-            <p class="text-9xl md:text-[12rem] font-black tracking-tighter leading-none animated-gradient">404</p>
-            <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mt-4">😕</h1>
-            <p class="mt-6 text-base md:text-lg leading-7 text-slate-300 max-w-lg mx-auto">
-              <%= message %>
-            </p>
-            
-            <% if (restaurantesDisponibles && restaurantesDisponibles.length > 0) { %>
-            <div class="max-w-md mx-auto">
-                <h2 class="text-xl text-emerald-400 mb-4">Restaurantes disponibles:</h2>
-                <div class="grid grid-cols-2 gap-3">
-                    <% restaurantesDisponibles.forEach(rest => { %>
-                        <a href="<%= rest.id %>" class="bg-gray-800 rounded px-4 py-2 hover:bg-gray-700 transition-colors">
-                            <%= rest.nombre %>
-                        </a>
-                    <% }); %>
-                </div>
-            </div>
-            <% } %>
-            
-            <div class="mt-10 flex items-center justify-center gap-x-6">
-                <a href="/" class="inline-block bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-orange-500 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-600/30">
-                    Volver al inicio
-                </a>
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+             <div class="neumorphic-flat w-full rounded-2xl p-4 flex justify-center items-center">
+                <a href="index.html" class="text-2xl font-bold tracking-tighter">Menú<span class="accent-text">Digital</span></a>
             </div>
         </div>
+    </header>
+
+    <!-- Header -->
+    <main>
+      <!-- 404 Section -->
+      <section class="min-h-[70vh] flex items-center justify-center text-center px-6">
+        <div>
+          <h1 class="text-8xl md:text-9xl font-extrabold tracking-tighter accent-text">404</h1>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-2"><%= message %></h2>
+          <p class="text-lg max-w-md mx-auto text-gray-600 mb-8">
+            ¡Ups! Parece que el plato que buscas no está en nuestro menú. Regresemos a la cocina principal.
+          </p>
+          
+          <% if (restaurantesDisponibles && restaurantesDisponibles.length > 0) { %>
+          <div class="grid grid-cols-2 gap-3 mb-8">
+            <% restaurantesDisponibles.forEach(rest => { %>
+            <a href="<%= rest.id %>" class="neumorphic-button font-bold py-4 px-10 rounded-xl text-lg">
+              <%= rest.nombre %>
+            </a>
+            <% }); %>
+          </div>
+          <% } %>
+          <a href="/lista" class="neumorphic-button inline-block text-white font-bold py-4 px-10 rounded-full text-lg" style="background-color: var(--primary-color);">
+            Volver al Inicio
+          </a>
+        </div>
+      </section>
     </main>
-</body>
+    
+    <!-- Footer -->
+    <footer class="pt-10 pb-8">
+      <div class="container mx-auto px-6 text-center">
+        <div class="border-t border-gray-300 pt-8 text-gray-500">
+          <p>&copy; 2024 MenúDigital. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

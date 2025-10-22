@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title><%= info.name_page %></title>
-    
+  
   <meta name="description" content="<%= info.desc %>">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="<%= info.keywords %>">
   <meta name="author" content="<%= info.author %>">
   <meta name="theme-color" content="<%= info.colorTheme %>">
-
+  
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
   <link rel="canonical" href="<%= info.dominio %>">
-
+  
   <meta property="og:title" content="<%= info.name_page %>">
   <meta property="og:description" content="<%= info.desc %>.">
   <meta property="og:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
@@ -23,26 +23,23 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="<%= info.name_page %>">
   <meta property="og:locale" content="es_ES">
-
+  
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= info.name_page %>">
   <meta name="twitter:description" content="<%= info.desc %>">
   <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
   <meta name="twitter:image:alt" content="<%= info.name_page %>">
-  <meta name="apple-mobile-web-app-status-bar-style" content="<%= info.colorTheme %>">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-
+  
   <link rel="manifest" href="/lista/manifest.json">
   
-  <link rel="icon" href="/assets/<%= info.logo %>.png" type="image/png">
-  <link rel="apple-touch-icon" href="/assets/<%= info.logo %>.png">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" href="/assets/<%= info.icon %>.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
   
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     :root {
       --text-color: <%= info.colorBase.text %>;
@@ -236,7 +233,7 @@
             <article class="restaurant-card neumorphic-outset">
               <a href="<%= resto.id %>" class="w-full">
                 <div class="relative w-full mb-6">
-                  <img src="<%= resto.logo || '/assets/mjfood.png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
+                  <img src="<%= resto.logo || '/assets/' + info.logo + 'png' %>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
                 </div>
                 <div class="max-w-xl w-full">
                   <h3 class="text-2xl font-semibold leading-6 color-text">

@@ -129,7 +129,7 @@ app.get('/lista', async (req, res) => {
         name: config.nombre,
         address: config.direccion || '',
         phone: config.telefonoWhatsApp,
-        logo: config.logoUrl || '/assets/mjfood.png',
+        logo: config.logoUrl || '/assets/banner.png',
         isOpen: horario.abierto,
         popularity: puntosMap[config.extension] || 0,
         category: config.category || 'general',
@@ -212,7 +212,7 @@ app.get('/lista/manifest.json', (req, res) => {
     "scope": "/lista",
     "icons": [
       {
-        "src": "/assets/mjfood.png",
+        "src": "/assets/banner.png",
         "sizes": "512x512",
         "type": "image/png"
       }
@@ -316,7 +316,7 @@ app.get('/:restaurante/manifest.json', (req, res) => {
     start_url: pwa.start_url || `/${req.params.restaurante}/`,
     scope: pwa.scope || `/${req.params.restaurante}/`,
     icons: pwa.icons || [{
-      "src": `/assets/mjfood.png`,
+      "src": `/assets/banner.png`,
       "sizes": "512x512",
       "type": "image/png"
     }],

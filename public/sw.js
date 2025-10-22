@@ -1,8 +1,7 @@
 const CACHE_NAME = 'main-app-v1';
 const urlsToCache = [
   '/lista',
-  '/assets/icons/icon-192x192.png',
-  '/assets/icons/icon-512x512.png'
+  '/assets/icon.png'
 ];
 
 self.addEventListener('install', event => {
