@@ -23,16 +23,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
-  console.log('🟢 Nuevo cliente conectado');
-
   socket.on('joinRestaurante', (extension) => {
     socket.join(extension);
-    console.log(`📡 Socket unido a sala restaurante: ${extension}`);
   });
-
-  socket.on('disconnect', () => {
-    console.log('🔴 Cliente desconectado');
-  });
+  socket.on('disconnect', () => {});
 });
 
 const { info, PORT } = require('./config')
@@ -73,18 +67,16 @@ app.get('/lista', async (req, res) => {
     const { sort, filter, search, page = 1, limit = 6 } = req.query;
     const currentPage = parseInt(page);
     const itemsPerPage = parseInt(limit);
-
-    const puntosDB = await RestaurantePuntos.find().lean();
-    const puntosMap = Object.fromEntries(puntosDB.map(r => [r.extension, r.puntos || 0]));
-
+    
+    const idsExcluir = ['demo'];
+    
     function procesarHorario(schedule) {
       const ahora = moment().tz('America/Bogota');
       const dayOfWeek = ahora.day();
       const currentTime = parseInt(ahora.format('HHmm'));
-
+      
       const hoy = schedule.find(s => s.day === dayOfWeek);
       const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-
       const checkIfOpen = (sched) => {
         if (!sched || sched.open === 'closed') return false;
         const openTime = parseInt(sched.open.replace(':', ''));
@@ -107,40 +99,42 @@ app.get('/lista', async (req, res) => {
       ) {
         estaAbierto = true;
       }
-
+      
       const aperturaStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.open;
       const cierreStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.close;
-
+      
       return {
         abierto: estaAbierto,
         aperturaStr,
         cierreStr
       };
     }
-
-    let restaurantesInfo = Object.values(menus).map(menu => {
-      const config = menu.config;
-      const schedule = menu.schedule || [];
-
-      const horario = procesarHorario(schedule);
-
-      return {
-        id: config.extension,
-        name: config.nombre,
-        address: config.direccion || '',
-        phone: config.telefonoWhatsApp,
-        logo: config.logoUrl || '/assets/banner.png',
-        isOpen: horario.abierto,
-        popularity: puntosMap[config.extension] || 0,
-        category: config.category || 'general',
-        hours: {
-          aperturaStr: horario.aperturaStr,
-          cierreStr: horario.cierreStr,
-          schedule
-        }
-      };
-    });
-
+    
+    let restaurantesInfo = Object.values(menus)
+      .filter(menu => !idsExcluir.includes(menu.config.extension))
+      .map(menu => {
+        const config = menu.config;
+        const schedule = menu.schedule || [];
+        
+        const horario = procesarHorario(schedule);
+        
+        return {
+          id: config.extension,
+          name: config.nombre,
+          address: config.direccion || '',
+          phone: config.telefonoWhatsApp,
+          logo: config.logoUrl || '/assets/banner.png',
+          isOpen: horario.abierto,
+          orden: parseInt(config.orden) || 0,
+          category: config.category || 'general',
+          hours: {
+            aperturaStr: horario.aperturaStr,
+            cierreStr: horario.cierreStr,
+            schedule
+          }
+        };
+      });
+      
     if (filter === 'open') {
       restaurantesInfo = restaurantesInfo.filter(r => r.isOpen);
     } else if (filter === 'closed') {
@@ -163,7 +157,7 @@ app.get('/lista', async (req, res) => {
         return 0;
       });
     } else {
-      restaurantesInfo.sort((a, b) => b.popularity - a.popularity);
+      restaurantesInfo.sort((a, b) => a.orden - b.orden);
     }
     
     const totalItems = restaurantesInfo.length;
@@ -183,7 +177,7 @@ app.get('/lista', async (req, res) => {
         prevPage: currentPage - 1,
         nextPage: currentPage + 1
       },
-      currentSort: sort || 'popularity',
+      currentSort: sort || 'orden',
       currentFilter: filter || 'all',
       searchTerm: search || '',
       totalItems
@@ -212,7 +206,7 @@ app.get('/lista/manifest.json', (req, res) => {
     "scope": "/lista",
     "icons": [
       {
-        "src": "/assets/banner.png",
+        "src": "/assets/icon.png",
         "sizes": "512x512",
         "type": "image/png"
       }
@@ -233,7 +227,7 @@ app.get('/publi', (req, res) => {
 
 app.get('/:restaurante', (req, res) => {
   const restauranteData = menus[req.params.restaurante];
- 
+  
   if (!restauranteData) {
     const restaurantesDisponibles = Object.values(menus)
       .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
@@ -316,7 +310,7 @@ app.get('/:restaurante/manifest.json', (req, res) => {
     start_url: pwa.start_url || `/${req.params.restaurante}/`,
     scope: pwa.scope || `/${req.params.restaurante}/`,
     icons: pwa.icons || [{
-      "src": `/assets/banner.png`,
+      "src": `/assets/icon.png`,
       "sizes": "512x512",
       "type": "image/png"
     }],
@@ -504,7 +498,6 @@ app.get('/:extension/panel', async (req, res) => {
       });
       
       await restaurante.save();
-      console.log(`🆕 Restaurante auto-creado: ${extension}`);
       
       return res.render('panel-login', {
         extension: extension,
@@ -601,7 +594,6 @@ setInterval(() => {
 (async () => {
   menus = await cargarMenusDesdeArchivos();
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
-  let IP = '192.168.1.31';
   app.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });
