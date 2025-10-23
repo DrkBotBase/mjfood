@@ -16,13 +16,13 @@
     "taxRate": 0
   },
   "schedule": [
-    { "day": 0, "open": "10:00", "close": "00:00" }, 
-    { "day": 1, "open": "10:00", "close": "11:30" }, 
-    { "day": 2, "open": "10:00", "close": "11:30" }, 
-    { "day": 3, "open": "10:00", "close": "11:30" }, 
-    { "day": 4, "open": "10:00", "close": "11:30" }, 
-    { "day": 5, "open": "10:00", "close": "00:00" }, 
-    { "day": 6, "open": "10:00", "close": "00:00" }
+    { "day": 0, "open": "24h", "close": "24h" }, 
+    { "day": 1, "open": "24h", "close": "24h" }, 
+    { "day": 2, "open": "24h", "close": "24h" }, 
+    { "day": 3, "open": "24h", "close": "24h" }, 
+    { "day": 4, "open": "24h", "close": "24h" }, 
+    { "day": 5, "open": "24h", "close": "24h" }, 
+    { "day": 6, "open": "24h", "close": "24h" }
   ],
   "shippingZones": [
     { "name": "Villa Carolina", "price": 6000 },

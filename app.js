@@ -47,6 +47,7 @@ app.use('/api/pedidos', pedidosRouter);
 app.use('/facturas', ticketRoutes);
 
 let menus = {};
+const IDS_EXCLUIR = ['demo'];
 app.get('/', (req,res) => {
   try {
     res.render('index', {
@@ -68,50 +69,74 @@ app.get('/lista', async (req, res) => {
     const currentPage = parseInt(page);
     const itemsPerPage = parseInt(limit);
     
-    const idsExcluir = ['demo'];
-    
     function procesarHorario(schedule) {
-      const ahora = moment().tz('America/Bogota');
-      const dayOfWeek = ahora.day();
-      const currentTime = parseInt(ahora.format('HHmm'));
-      
-      const hoy = schedule.find(s => s.day === dayOfWeek);
-      const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-      const checkIfOpen = (sched) => {
-        if (!sched || sched.open === 'closed') return false;
-        const openTime = parseInt(sched.open.replace(':', ''));
-        const closeTime = parseInt(sched.close.replace(':', ''));
-        if (isNaN(openTime) || isNaN(closeTime)) return false;
+        const ahora = moment().tz('America/Bogota');
+        const dayOfWeek = ahora.day();
+        const currentTime = parseInt(ahora.format('HHmm'));
         
-        if (closeTime < openTime) {
-          return currentTime >= openTime || currentTime < closeTime;
+        const hoy = schedule.find(s => s.day === dayOfWeek);
+        const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    
+        const checkIfOpen = (sched) => {
+            if (sched && sched.open === '24h') {
+                return true;
+            }
+            
+            if (!sched || sched.open === 'closed') {
+                return false;
+            }
+            
+            const openTime = parseInt(sched.open.replace(':', ''));
+            const closeTime = parseInt(sched.close.replace(':', ''));
+            if (isNaN(openTime) || isNaN(closeTime)) return false;
+            
+            if (closeTime < openTime) {
+                return currentTime >= openTime || currentTime < closeTime;
+            }
+            return currentTime >= openTime && currentTime < closeTime;
+        };
+        
+        let estaAbierto = false;
+        
+        if (hoy && hoy.open === '24h') {
+            estaAbierto = true;
+        } 
+        
+        else if (checkIfOpen(hoy)) {
+            estaAbierto = true;
+        } 
+        
+        else if (
+            checkIfOpen(ayer) &&
+            ayer.open !== '24h' &&
+            ayer.close.replace(':', '') < ayer.open.replace(':', '') &&
+            currentTime < parseInt(ayer.close.replace(':', ''))
+        ) {
+            estaAbierto = true;
         }
-        return currentTime >= openTime && currentTime < closeTime;
-      };
-      
-      let estaAbierto = false;
-      if (checkIfOpen(hoy)) {
-        estaAbierto = true;
-      } else if (
-        checkIfOpen(ayer) &&
-        ayer.close.replace(':', '') < ayer.open.replace(':', '') &&
-        currentTime < parseInt(ayer.close.replace(':', ''))
-      ) {
-        estaAbierto = true;
-      }
-      
-      const aperturaStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.open;
-      const cierreStr = (!hoy || hoy.open === 'closed') ? 'Cerrado' : hoy.close;
-      
-      return {
-        abierto: estaAbierto,
-        aperturaStr,
-        cierreStr
-      };
+        
+        let aperturaStr, cierreStr;
+        
+        if (!hoy || hoy.open === 'closed') {
+            aperturaStr = 'Cerrado';
+            cierreStr = 'Cerrado';
+        } else if (hoy.open === '24h') {
+            aperturaStr = '24 horas';
+            cierreStr = '24 horas';
+        } else {
+            aperturaStr = hoy.open;
+            cierreStr = hoy.close;
+        }
+        
+        return {
+            abierto: estaAbierto,
+            aperturaStr,
+            cierreStr
+        };
     }
     
     let restaurantesInfo = Object.values(menus)
-      .filter(menu => !idsExcluir.includes(menu.config.extension))
+      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension))
       .map(menu => {
         const config = menu.config;
         const schedule = menu.schedule || [];
@@ -230,12 +255,13 @@ app.get('/:restaurante', (req, res) => {
   
   if (!restauranteData) {
     const restaurantesDisponibles = Object.values(menus)
+      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension)) // Excluir aquí también
       .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
       .map(menu => ({
         id: menu.config.extension,
         nombre: menu.config.nombre
       }));
-
+      
     return res.status(404).render('error', {
       info,
       name_page: 'error 404',

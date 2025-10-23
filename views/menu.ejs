@@ -315,8 +315,12 @@
             const currentTime = now.getHours() * 100 + now.getMinutes();
             const todaysSchedule = window.restaurantData.schedule.find(s => s.day === dayOfWeek);
             let checkIsOpen = false;
-
-            if (todaysSchedule && todaysSchedule.open !== 'closed') {
+            
+            if (todaysSchedule && todaysSchedule.open === '24h') {
+                checkIsOpen = true;
+            } 
+            
+            else if (todaysSchedule && todaysSchedule.open !== 'closed') {
                 const openTime = parseInt(todaysSchedule.open.replace(':', ''));
                 const closeTime = parseInt(todaysSchedule.close.replace(':', ''));
                 if (closeTime < openTime) {
@@ -328,10 +332,14 @@
             
             const yesterday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
             const yesterdaySchedule = window.restaurantData.schedule.find(s => s.day === yesterday);
-            if (yesterdaySchedule && yesterdaySchedule.open !== 'closed') {
+            if (yesterdaySchedule && yesterdaySchedule.open === '24h') {
+                checkIsOpen = true;
+            }
+            
+            else if (yesterdaySchedule && yesterdaySchedule.open !== 'closed') {
                 const openTime = parseInt(yesterdaySchedule.open.replace(':', ''));
                 const closeTime = parseInt(yesterdaySchedule.close.replace(':', ''));
-                 if (closeTime < openTime && currentTime < closeTime) checkIsOpen = true;
+                if (closeTime < openTime && currentTime < closeTime) checkIsOpen = true;
             }
             
             isOpen = checkIsOpen;
@@ -354,16 +362,29 @@
             document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
         }
         function populateHoursModal() {
-            const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            const hoursList = document.getElementById('hours-list'); hoursList.innerHTML = '';
-            days.forEach((day, index) => {
-                const schedule = window.restaurantData.schedule.find(s => s.day === index);
-                const hoursText = (schedule && schedule.open !== 'closed') ? `${schedule.open} - ${schedule.close}` : 'Cerrado';
-                const dayEl = document.createElement('div'); dayEl.className = 'flex justify-between items-center';
-                dayEl.innerHTML = `<span class="font-semibold">${day}</span><span>${hoursText}</span>`;
-                hoursList.appendChild(dayEl);
-            });
-        }
+          const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+          const hoursList = document.getElementById('hours-list'); 
+          hoursList.innerHTML = '';
+          
+          days.forEach((day, index) => {
+              const schedule = window.restaurantData.schedule.find(s => s.day === index);
+              
+              // MANEJAR 24 HORAS
+              let hoursText;
+              if (schedule && schedule.open === '24h') {
+                  hoursText = 'Abierto 24 horas';
+              } else if (schedule && schedule.open !== 'closed') {
+                  hoursText = `${schedule.open} - ${schedule.close}`;
+              } else {
+                  hoursText = 'Cerrado';
+              }
+              
+              const dayEl = document.createElement('div');
+              dayEl.className = 'flex justify-between items-center';
+              dayEl.innerHTML = `<span class="font-semibold">${day}</span><span>${hoursText}</span>`;
+              hoursList.appendChild(dayEl);
+          });
+      }
         function toggleModal(modalKey, forceOpen = null) {
             const modal = modals[modalKey]; if (!modal) return;
             const action = forceOpen === null ? !modal.content.classList.contains('active') : forceOpen;
