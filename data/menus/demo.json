@@ -9,6 +9,24 @@
       "light": "#262222",
       "dark": "#000000"
     },
+    "pwa": {
+      "short_name": "MJ Street Prime",
+      "name": "MJ Street Prime - Pedidos",
+      "description": "Comida Urban-Premium.",
+      "theme_color": "#17171b",
+      "background_color": "#17171b",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/demo/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["food", "urban", "premium"],
+      "lang": "es"
+    },
     "nombre": "MJ Street Prime",
     "direccion": "Calle 94 # 51B",
     "telefonoWhatsApp": "573004166150",
