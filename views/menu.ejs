@@ -656,9 +656,9 @@
             document.getElementById('close-hours-btn').addEventListener('click', () => toggleModal('hours', false));
             modals.hours.overlay.addEventListener('click', () => toggleModal('hours', false));
             document.getElementById('cart-button').addEventListener('click', () => {
-    renderCart();
-    toggleModal('cart', true);
-});
+                renderCart();
+                toggleModal('cart', true);
+            });
             modals.item.overlay.addEventListener('click', () => toggleModal('item', false));
             document.getElementById('close-item-modal-btn').addEventListener('click', () => toggleModal('item', false));
             modals.cart.overlay.addEventListener('click', () => toggleModal('cart', false));
