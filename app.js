@@ -44,6 +44,7 @@ const session = require('express-session');
 
 const adminRoutes = require('./routes/admin');
 const pedidosRouter = require('./routes/pedidos');
+const jornadaRouter = require('./routes/jornada');
 
 app.use(session({
   secret: 'a_secret_key',
@@ -53,6 +54,7 @@ app.use(session({
 
 app.use('/admin', adminRoutes);
 app.use('/pedidos', pedidosRouter);
+app.use('/jornada', jornadaRouter);
 
 let menus = {};
 const IDS_EXCLUIR = ['demo'];
