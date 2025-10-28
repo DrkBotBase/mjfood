@@ -24,6 +24,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Cliente desconectado');
   });
+
+  const pedidosController = require('./controllers/pedidosController');
+  socket.on('nuevo:pedido', (pedidoData) => {
+    pedidosController.registrarPedido(io, socket, pedidoData);
+  });
 });
 
 app.use(express.json());

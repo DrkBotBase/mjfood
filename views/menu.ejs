@@ -257,7 +257,13 @@
         <div id="hours-list" class="p-6 space-y-2"></div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        const socket = io();
+        socket.on('connect', () => {
+            console.log('Conectado al servidor de sockets');
+        });
+
         window.restaurantData = <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>;
         
         let cart = [];
@@ -563,7 +569,9 @@
             const clientInfo = { name: document.getElementById('client-name').value.trim(), phone: document.getElementById('client-phone').value.trim(), address: document.getElementById('client-address').value.trim() };
             localStorage.setItem('clientInfo', JSON.stringify(clientInfo));
         }
-        function sendOrderViaWhatsApp() {
+        function sendOrder() {
+            if (!validateCartForm()) return;
+
             const clientName = document.getElementById('client-name').value.trim();
             const clientPhone = document.getElementById('client-phone').value.trim();
             const clientAddress = document.getElementById('client-address').value.trim();
@@ -571,57 +579,60 @@
             const cashAmount = document.getElementById('payment-cash-amount').value.trim();
             const selectedZoneOption = cartModal.shippingZoneSelect.options[cartModal.shippingZoneSelect.selectedIndex];
             const shippingZoneName = selectedZoneOption.dataset.name;
+            const shippingCost = parseFloat(cartModal.shippingZoneSelect.value) || 0;
             const comments = document.getElementById('order-comments').value.trim();
-        
-            const formatCOP = value => `$${Intl.NumberFormat('es-CO').format(Math.round(value))}`;
-        
-            const groupedCart = [];
-            cart.forEach(item => {
-                const existing = groupedCart.find(g =>
-                    g.id === item.id &&
-                    JSON.stringify(g.variants) === JSON.stringify(item.variants) &&
-                    g.instructions === item.instructions
-                );
-                if (existing) {
-                    existing.quantity += item.quantity;
-                } else {
-                    groupedCart.push({ ...item });
-                }
-            });
-        
-            let message = `*Nueva Orden - ${window.restaurantData.config.nombre}*\n\n`;
-            message += `*CLIENTE:* ${clientName}\n`;
-            message += `*TELÉFONO:* ${clientPhone}\n`;
-            message += `*DIRECCIÓN:* ${clientAddress}\n\n`;
-            message += `------------------------------\n\n`;
-            message += `*DETALLES DEL PEDIDO:*\n`;
-        
-            groupedCart.forEach(item => {
-                const totalItem = item.price * item.quantity;
-                message += `*${item.quantity}x ${item.name}* - ${formatCOP(totalItem)}\n`;
-                if (item.variants.length > 0)
-                    message += `  - _${item.variants.join(', ')}_\n`;
-                if (item.instructions)
-                    message += `  - _${item.instructions}_\n`;
-            });
-        
-            message += `\n------------------------------\n\n`;
-            message += `*Subtotal:* ${formatCOP(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0))}\n`;
-            message += `*Envío (${shippingZoneName}):* ${cartModal.shipping.textContent}\n`;
-        
-            const totalValue = parseInt(cartModal.total.textContent.replace(/\D/g, ''));
-            message += `*TOTAL A PAGAR:* ${formatCOP(totalValue)}\n\n`;
-        
-            message += `*MÉTODO DE PAGO:* ${paymentMethod === 'efectivo' ? 'Efectivo' : 'Transferencia'}\n`;
-            if (paymentMethod === 'efectivo' && cashAmount)
-                message += `  - _Paga con: ${formatCOP(cashAmount)}_\n`;
-        
-            if (comments)
-                message += `\n*COMENTARIOS ADICIONALES:*\n${comments}\n`;
-        
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=${window.restaurantData.config.telefonoWhatsApp}&text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + shippingCost;
+
+            const orderData = {
+                restauranteId: window.restaurantData.config.extension,
+                cliente: {
+                    nombre: clientName,
+                    telefono: clientPhone,
+                    direccion: clientAddress,
+                },
+                items: cart.map(item => ({
+                    id: item.id,
+                    nombre: item.name,
+                    cantidad: item.quantity,
+                    precio: item.price,
+                    variantes: item.variants,
+                    instrucciones: item.instructions,
+                })),
+                zonaEnvio: {
+                    nombre: shippingZoneName,
+                    costo: shippingCost,
+                },
+                metodoPago: paymentMethod,
+                pagaCon: cashAmount,
+                comentarios: comments,
+                subtotal: subtotal,
+                total: total,
+            };
+
+            socket.emit('nuevo:pedido', orderData);
+            saveClientData();
         }
+
+        socket.on('pedido:registrado', () => {
+            toggleModal('cart', false);
+            toggleModal('success', true);
+            cart = [];
+            renderCart();
+            // Reset form
+            document.getElementById('order-comments').value = '';
+            document.getElementById('payment-cash-amount').value = '';
+            const checkedPayment = document.querySelector('input[name="payment"]:checked');
+            if (checkedPayment) checkedPayment.checked = false;
+            document.getElementById('efectivo-details').style.display = 'none';
+            document.getElementById('transferencia-details').style.display = 'none';
+            cartModal.shippingZoneSelect.value = "";
+        });
+
+        socket.on('pedido:error', (error) => {
+            cartModal.formError.textContent = error.message || 'Hubo un error al procesar tu pedido. Intenta de nuevo.';
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             initializeApp(restaurantData);
@@ -640,17 +651,7 @@
                     if (item) openItemModal(item);
                 }
             });
-            cartModal.confirmBtn.addEventListener('click', () => {
-                if (validateCartForm()) {
-                    saveClientData();
-                    sendOrderViaWhatsApp();
-                    toggleModal('cart', false); toggleModal('success', true); cart = []; renderCart();
-                    document.getElementById('order-comments').value = ''; document.getElementById('payment-cash-amount').value = '';
-                    const checkedPayment = document.querySelector('input[name="payment"]:checked'); if(checkedPayment) checkedPayment.checked = false;
-                    document.getElementById('efectivo-details').style.display = 'none'; document.getElementById('transferencia-details').style.display = 'none';
-                    cartModal.shippingZoneSelect.value = "";
-                }
-            });
+            cartModal.confirmBtn.addEventListener('click', sendOrder);
             cartModal.shippingZoneSelect.addEventListener('change', updateCartSummary);
             document.getElementById('hours-button').addEventListener('click', () => toggleModal('hours', true));
             document.getElementById('close-hours-btn').addEventListener('click', () => toggleModal('hours', false));
