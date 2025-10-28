@@ -97,6 +97,9 @@
                 <button onclick="cambiarPestaña('historial')" id="tab-historial" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
                     <i class="fas fa-history mr-2"></i>Historial
                 </button>
+                <button onclick="cambiarPestaña('seguridad')" id="tab-seguridad" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                    <i class="fas fa-shield-alt mr-2"></i>Seguridad
+                </button>
             </div>
         </div>
     </div>
@@ -335,6 +338,35 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Pestaña de Seguridad -->
+        <div id="content-seguridad" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-shield-alt mr-2 text-gray-500"></i>
+                    Cambiar Contraseña (Token)
+                </h2>
+                <form id="form-cambiar-token" class="max-w-md space-y-4">
+                    <div>
+                        <label for="token-actual" class="block text-sm font-medium text-gray-700">Contraseña Actual</label>
+                        <input type="password" id="token-actual" name="token-actual" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-nuevo" class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
+                        <input type="password" id="token-nuevo" name="token-nuevo" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-confirmar" class="block text-sm font-medium text-gray-700">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="token-confirmar" name="token-confirmar" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Cambiar Contraseña
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
@@ -1477,6 +1509,47 @@
             console.error(mensaje);
             mostrarMensaje(mensaje, 'error');
         }
+
+        // Manejar cambio de contraseña
+        document.getElementById('form-cambiar-token').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const tokenActual = document.getElementById('token-actual').value;
+            const tokenNuevo = document.getElementById('token-nuevo').value;
+            const tokenConfirmar = document.getElementById('token-confirmar').value;
+
+            if (tokenNuevo !== tokenConfirmar) {
+                mostrarError('Las nuevas contraseñas no coinciden.');
+                return;
+            }
+
+            mostrarLoading(true);
+            try {
+                const response = await fetch('/admin/cambiar-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tokenActual,
+                        tokenNuevo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarMensaje('Contraseña actualizada correctamente.', 'success');
+                    document.getElementById('form-cambiar-token').reset();
+                } else {
+                    throw new Error(data.error || 'No se pudo cambiar la contraseña.');
+                }
+            } catch (error) {
+                mostrarError(error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        });
     </script>
 </body>
 </html>
