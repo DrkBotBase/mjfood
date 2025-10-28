@@ -6,6 +6,13 @@ const Pedido = require('../models/pedido');
 const Jornada = require('../models/Jornada');
 const ProcesarPedidoService = require('../services/procesarPedidoService');
 const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
+const pedidosController = require('../controllers/pedidosController');
+
+router.post('/', (req, res) => {
+  pedidosController.registrarPedido(req.io, null, req.body)
+    .then(pedido => res.status(201).json(pedido))
+    .catch(error => res.status(500).json({ error: error.message }));
+});
 
 // Middleware para validar token
 const validarToken = async (req, res, next) => {

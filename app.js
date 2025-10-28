@@ -1,8 +1,36 @@
 const express = require('express');
 const moment = require('moment-timezone');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+io.on('connection', (socket) => {
+  console.log('Nuevo cliente conectado');
+
+  socket.on('joinRoom', (room) => {
+    socket.join(room);
+    console.log(`Cliente se unió a la sala: ${room}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado');
+  });
+
+  const pedidosController = require('./controllers/pedidosController');
+  socket.on('nuevo:pedido', (pedidoData) => {
+    pedidosController.registrarPedido(io, socket, pedidoData);
+  });
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -10,8 +38,21 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const { info, PORT } = require('./config')
+const { info, PORT } = require('./config');
 const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
+const session = require('express-session');
+
+const adminRoutes = require('./routes/admin');
+const pedidosRouter = require('./routes/pedidos');
+
+app.use(session({
+  secret: 'a_secret_key',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use('/admin', adminRoutes);
+app.use('/pedidos', pedidosRouter);
 
 let menus = {};
 const IDS_EXCLUIR = ['demo'];
@@ -332,10 +373,15 @@ setInterval(() => {
     .catch(err => console.error('Error en el ping:', err.message));
 }, 14 * 60 * 1000);
 
+const { sincronizarUsuarios } = require('./utils/syncUsers');
+
 (async () => {
   menus = await cargarMenusDesdeArchivos();
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
-  app.listen(PORT, () => {
+
+  await sincronizarUsuarios();
+
+  server.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });
 })();

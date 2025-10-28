@@ -36,6 +36,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -96,6 +97,9 @@
                 </button>
                 <button onclick="cambiarPestaña('historial')" id="tab-historial" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
                     <i class="fas fa-history mr-2"></i>Historial
+                </button>
+                <button onclick="cambiarPestaña('seguridad')" id="tab-seguridad" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                    <i class="fas fa-shield-alt mr-2"></i>Seguridad
                 </button>
             </div>
         </div>
@@ -337,6 +341,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Pestaña de Seguridad -->
+        <div id="content-seguridad" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-shield-alt mr-2 text-gray-500"></i>
+                    Cambiar Contraseña (Token)
+                </h2>
+                <form id="form-cambiar-token" class="max-w-md space-y-4">
+                    <div>
+                        <label for="token-actual" class="block text-sm font-medium text-gray-700">Contraseña Actual</label>
+                        <input type="password" id="token-actual" name="token-actual" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-nuevo" class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
+                        <input type="password" id="token-nuevo" name="token-nuevo" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-confirmar" class="block text-sm font-medium text-gray-700">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="token-confirmar" name="token-confirmar" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Cambiar Contraseña
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
 
     <!-- Modal para detalles del pedido -->
@@ -402,33 +435,59 @@
         let todosLosPedidos = [];
         let socket = null;
 
-        // Inicializar Socket.io
         function inicializarSocket() {
+            if (socket) return; // Evitar múltiples conexiones
+
             socket = io();
-            
-            socket.emit('join-restaurant', extension);
-            
-            socket.on('nuevo-pedido', (pedido) => {
-                mostrarMensaje('¡Nuevo pedido recibido!', 'info');
-                actualizarBadgePendientes();
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+
+            socket.on('connect', () => {
+                console.log('Conectado al servidor de sockets.');
+                socket.emit('joinRoom', extension);
+            });
+
+            socket.on('pedido:nuevo', (pedido) => {
+                console.log('Nuevo pedido recibido:', pedido);
+                mostrarMensaje(`Nuevo pedido de ${pedido.nombreCliente}`, 'info');
+                agregarPedidoPendiente(pedido);
             });
             
             socket.on('pedido-aceptado', (pedido) => {
-                mostrarMensaje('Pedido aceptado', 'success');
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+                mostrarMensaje(`Pedido #${pedido._id.substring(18, 24)} aceptado`, 'success');
+                eliminarPedidoPendiente(pedido._id);
             });
-            
+
             socket.on('pedido-rechazado', (pedido) => {
-                mostrarMensaje('Pedido rechazado', 'error');
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+                mostrarMensaje(`Pedido #${pedido._id.substring(18, 24)} rechazado`, 'error');
+                eliminarPedidoPendiente(pedido._id);
             });
+        }
+
+        function agregarPedidoPendiente(pedido) {
+            const contenedor = document.getElementById('lista-pedidos-pendientes');
+            const sinPedidos = document.getElementById('sin-pedidos-pendientes');
+
+            sinPedidos.classList.add('hidden');
+
+            const pedidoHTML = crearPedidoHTML(pedido);
+            contenedor.insertAdjacentHTML('afterbegin', pedidoHTML);
+
+            const totalPendientes = contenedor.children.length;
+            actualizarBadgePendientes(totalPendientes);
+        }
+
+        function eliminarPedidoPendiente(pedidoId) {
+            const pedidoEl = document.getElementById(`pedido-${pedidoId}`);
+            if (pedidoEl) {
+                pedidoEl.remove();
+            }
+
+            const contenedor = document.getElementById('lista-pedidos-pendientes');
+            const totalPendientes = contenedor.children.length;
+
+            if (totalPendientes === 0) {
+                document.getElementById('sin-pedidos-pendientes').classList.remove('hidden');
+            }
+            actualizarBadgePendientes(totalPendientes);
         }
 
         // Cambiar entre pestañas
@@ -492,7 +551,43 @@
             }
         }
         
-        // Mostrar pedidos pendientes en la lista
+        function crearPedidoHTML(pedido) {
+            const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
+            const total = pedido.valorTotal || pedido.valorPedido; // Usar valorTotal si existe
+
+            return `
+                <div id="pedido-${pedido._id}" class="bg-orange-50 border border-orange-200 rounded-lg p-4 animate-fade-in">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-semibold text-orange-800">Pedido #${pedido._id.toString().substring(18, 24)}</h3>
+                            <p class="text-sm text-gray-600">${fecha}</p>
+                        </div>
+                        <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">Pendiente</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Cliente:</span> ${pedido.nombreCliente || 'N/A'}</p>
+                            <p class="text-sm"><span class="font-medium">Teléfono:</span> ${pedido.phone}</p>
+                            <p class="text-sm"><span class="font-medium">Dirección:</span> ${pedido.direccion || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Total:</span> <span class="font-bold text-green-600">$${total.toLocaleString('es-CO')}</span></p>
+                            <p class="text-sm"><span class="font-medium">Pago:</span> ${pedido.metodoPago}</p>
+                            ${pedido.observacionGeneral ? `<p class="text-sm"><span class="font-medium">Obs:</span> "${pedido.observacionGeneral}"</p>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-2">
+                        <button onclick='verDetallesPedidoCompleto(${JSON.stringify(pedido).replace(/"/g, "&quot;")})'
+                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                            <i class="fas fa-eye mr-1"></i> Ver Detalles
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         function mostrarPedidosPendientes(pedidos) {
             const contenedor = document.getElementById('lista-pedidos-pendientes');
             const sinPedidos = document.getElementById('sin-pedidos-pendientes');
@@ -500,62 +595,12 @@
             if (pedidos.length === 0) {
                 contenedor.innerHTML = '';
                 sinPedidos.classList.remove('hidden');
-                return;
+            } else {
+                sinPedidos.classList.add('hidden');
+                contenedor.innerHTML = pedidos.map(crearPedidoHTML).join('');
             }
-            
-            sinPedidos.classList.add('hidden');
-            contenedor.innerHTML = '';
-            
-            pedidos.forEach(pedido => {
-                const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
-                const pedidoHTML = `
-                    <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 class="font-semibold text-orange-800">Pedido #${pedido._id.toString().substring(18, 24)}</h3>
-                                <p class="text-sm text-gray-600">${fecha}</p>
-                            </div>
-                            <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">
-                                Pendiente
-                            </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                            <div>
-                                <p class="text-sm"><span class="font-medium">Cliente:</span> ${pedido.nombreCliente || 'No especificado'}</p>
-                                <p class="text-sm"><span class="font-medium">Teléfono:</span> ${pedido.phone}</p>
-                                <p class="text-sm"><span class="font-medium">Dirección:</span> ${pedido.direccion || 'No especificada'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm"><span class="font-medium">Total:</span> <span class="font-bold text-green-600">$${pedido.valorPedido.toLocaleString()}</span></p>
-                                <p class="text-sm"><span class="font-medium">Pago:</span> ${pedido.metodoPago === 'efectivo' ? 'Efectivo' : 'Transferencia'}</p>
-                                ${pedido.observacionGeneral ? `<p class="text-sm"><span class="font-medium">Observación:</span> "${pedido.observacionGeneral}"</p>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white p-3 rounded border mb-3">
-                            <h4 class="font-medium mb-2">Productos:</h4>
-                            ${pedido.items.map(item => `
-                                <div class="flex justify-between text-sm py-1 border-b last:border-b-0">
-                                    <span>${item.cantidad}x ${item.categoria} ${item.nombre}${item.variante ? ` (${item.variante})` : ''}</span>
-                                    <span>$${item.subtotal.toLocaleString()}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        
-                        <div class="flex justify-end space-x-2">
-                            <button onclick="verDetallesPedidoCompleto(${JSON.stringify(pedido).replace(/"/g, '&quot;')})" 
-                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
-                                <i class="fas fa-eye mr-1"></i> Ver Detalles
-                            </button>
-                        </div>
-                    </div>
-                `;
-                contenedor.innerHTML += pedidoHTML;
-            });
         }
         
-        // Actualizar badge de pedidos pendientes
         function actualizarBadgePendientes(cantidad) {
             const badge = document.getElementById('badge-pendientes');
             if (cantidad !== undefined) {
@@ -675,6 +720,7 @@
             
             cargarDatosIniciales();
             configurarEventListeners();
+            inicializarSocket();
         });
         
         document.getElementById('btnIniciarJornada').addEventListener('click', async () => {
@@ -1477,6 +1523,47 @@
             console.error(mensaje);
             mostrarMensaje(mensaje, 'error');
         }
+
+        // Manejar cambio de contraseña
+        document.getElementById('form-cambiar-token').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const tokenActual = document.getElementById('token-actual').value;
+            const tokenNuevo = document.getElementById('token-nuevo').value;
+            const tokenConfirmar = document.getElementById('token-confirmar').value;
+
+            if (tokenNuevo !== tokenConfirmar) {
+                mostrarError('Las nuevas contraseñas no coinciden.');
+                return;
+            }
+
+            mostrarLoading(true);
+            try {
+                const response = await fetch('/admin/cambiar-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tokenActual,
+                        tokenNuevo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarMensaje('Contraseña actualizada correctamente.', 'success');
+                    document.getElementById('form-cambiar-token').reset();
+                } else {
+                    throw new Error(data.error || 'No se pudo cambiar la contraseña.');
+                }
+            } catch (error) {
+                mostrarError(error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        });
     </script>
 </body>
 </html>

@@ -4,3 +4,4 @@ node_modules/
 copy.sh
 data.txt
 package-lock.json
+server.log
