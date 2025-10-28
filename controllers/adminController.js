@@ -113,3 +113,28 @@ exports.logout = (req, res) => {
     req.session.destroy();
     res.redirect('/admin/login');
 };
+
+exports.cambiarToken = async (req, res) => {
+    try {
+        const { extension } = req.session.user;
+        const { tokenActual, tokenNuevo } = req.body;
+
+        const restaurante = await RestauranteEstadisticas.findOne({ extension });
+
+        if (!restaurante || restaurante.token !== tokenActual) {
+            return res.status(403).json({ error: 'La contraseña actual es incorrecta.' });
+        }
+
+        restaurante.token = tokenNuevo;
+        await restaurante.save();
+
+        // Actualizar el token en la sesión también
+        req.session.user.token = tokenNuevo;
+
+        res.json({ message: 'Contraseña actualizada correctamente.' });
+
+    } catch (error) {
+        console.error('Error al cambiar el token:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};

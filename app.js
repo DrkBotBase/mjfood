@@ -368,9 +368,14 @@ setInterval(() => {
     .catch(err => console.error('Error en el ping:', err.message));
 }, 14 * 60 * 1000);
 
+const { sincronizarUsuarios } = require('./utils/syncUsers');
+
 (async () => {
   menus = await cargarMenusDesdeArchivos();
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
+
+  await sincronizarUsuarios();
+
   server.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });

@@ -9,4 +9,7 @@ router.post('/login', adminController.postLogin);
 router.get('/panel', isAuthenticated, adminController.getPanel);
 router.get('/logout', adminController.logout);
 
+// Nueva ruta para cambiar el token/contraseña
+router.post('/cambiar-token', isAuthenticated, adminController.cambiarToken);
+
 module.exports = router;
