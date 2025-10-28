@@ -15,16 +15,19 @@ exports.getLogin = (req, res) => {
     });
 };
 
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+
 exports.postLogin = async (req, res) => {
-    const { extension, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        const restaurante = await RestauranteEstadisticas.findOne({ extension });
+        const user = await User.findOne({ username });
 
-        if (restaurante && restaurante.token === password) {
+        if (user && bcrypt.compareSync(password, user.password)) {
             req.session.user = {
-                extension: restaurante.extension,
-                token: restaurante.token
+                extension: user.restauranteId,
+                username: user.username
             };
             res.redirect('/admin/panel');
         } else {
@@ -33,7 +36,7 @@ exports.postLogin = async (req, res) => {
                     name_page: 'Login'
                 },
                 error: 'Credenciales incorrectas',
-                extension: 'general'
+                restaurante: 'general'
             });
         }
     } catch (error) {
@@ -44,7 +47,7 @@ exports.postLogin = async (req, res) => {
 
 exports.getPanel = async (req, res) => {
     try {
-        const { extension, token } = req.session.user;
+        const { extension } = req.session.user;
 
         // General Statistics
         const estadisticas = await RestauranteEstadisticas.findOne({ extension });
@@ -82,7 +85,6 @@ exports.getPanel = async (req, res) => {
             },
             restaurante: extension,
             extension,
-            token,
             estadisticas: {
                 totalPedidos: estadisticas ? estadisticas.totalPedidos : 0,
                 totalGastado: estadisticas ? estadisticas.totalGastado : 0,
@@ -114,27 +116,24 @@ exports.logout = (req, res) => {
     res.redirect('/admin/login');
 };
 
-exports.cambiarToken = async (req, res) => {
+exports.changePassword = async (req, res) => {
     try {
-        const { extension } = req.session.user;
-        const { tokenActual, tokenNuevo } = req.body;
+        const { username } = req.session.user;
+        const { passwordActual, passwordNuevo } = req.body;
 
-        const restaurante = await RestauranteEstadisticas.findOne({ extension });
+        const user = await User.findOne({ username });
 
-        if (!restaurante || restaurante.token !== tokenActual) {
+        if (!user || !bcrypt.compareSync(passwordActual, user.password)) {
             return res.status(403).json({ error: 'La contraseña actual es incorrecta.' });
         }
 
-        restaurante.token = tokenNuevo;
-        await restaurante.save();
-
-        // Actualizar el token en la sesión también
-        req.session.user.token = tokenNuevo;
+        user.password = bcrypt.hashSync(passwordNuevo, 10);
+        await user.save();
 
         res.json({ message: 'Contraseña actualizada correctamente.' });
 
     } catch (error) {
-        console.error('Error al cambiar el token:', error);
+        console.error('Error al cambiar la contraseña:', error);
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 };

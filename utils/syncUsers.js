@@ -1,66 +1,41 @@
-// utils/syncUsers.js
-const crypto = require('crypto');
-const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
+const fs = require('fs/promises');
+const path = require('path');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 const { cargarMenusDesdeArchivos } = require('./recargarMenus');
 
-// Genera un token aleatorio y seguro
-function generarToken(longitud = 12) {
-    return crypto.randomBytes(longitud).toString('hex');
-}
-
 async function sincronizarUsuarios() {
-    console.log('🔄 Inciando sincronización de usuarios...');
+  try {
+    const menus = await cargarMenusDesdeArchivos();
+    const restaurantesIds = Object.keys(menus);
 
-    try {
-        // 1. Cargar todos los menús desde los archivos
-        const menus = await cargarMenusDesdeArchivos();
-        const extensionesDeMenus = Object.keys(menus);
+    for (const restauranteId of restaurantesIds) {
+      if (restauranteId === 'demo') continue;
 
-        // 2. Obtener todos los usuarios existentes de la base de datos
-        const usuariosExistentes = await RestauranteEstadisticas.find({}, 'extension');
-        const extensionesExistentes = usuariosExistentes.map(u => u.extension);
+      const existingUser = await User.findOne({ restauranteId });
 
-        // 3. Encontrar qué restaurantes no tienen un usuario creado
-        const nuevasExtensiones = extensionesDeMenus.filter(
-            ext => !extensionesExistentes.includes(ext)
-        );
+      if (!existingUser) {
+        const tempPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
 
-        if (nuevasExtensiones.length === 0) {
-            console.log('✅ Todos los restaurantes ya tienen un usuario.');
-            return;
-        }
+        const newUser = new User({
+          username: restauranteId,
+          password: hashedPassword,
+          restauranteId: restauranteId,
+          role: 'admin'
+        });
 
-        console.log(`🆕 Se encontraron ${nuevasExtensiones.length} restaurantes nuevos. Creando usuarios...`);
-
-        // 4. Crear los nuevos usuarios en la base de datos
-        for (const extension of nuevasExtensiones) {
-            const nuevoToken = generarToken();
-            const nombreRestaurante = menus[extension]?.config?.nombre || extension;
-
-            const nuevoUsuario = new RestauranteEstadisticas({
-                extension: extension,
-                token: nuevoToken,
-                nombre: nombreRestaurante,
-                totalPedidos: 0,
-                totalGastado: 0,
-                clientes: []
-            });
-
-            await nuevoUsuario.save();
-
-            // 5. Mostrar la información sensible en la consola para el administrador
-            console.log('--------------------------------------------------');
-            console.log(`✨ Usuario creado para: ${nombreRestaurante}`);
-            console.log(`   - Usuario (extensión): ${extension}`);
-            console.log(`   - Contraseña (token): ${nuevoToken}`);
-            console.log('--------------------------------------------------');
-        }
-
-        console.log('✅ Sincronización de usuarios completada.');
-
-    } catch (error) {
-        console.error('🔥 Error durante la sincronización de usuarios:', error);
+        await newUser.save();
+        console.log(`===========================================`);
+        console.log(`Nuevo usuario creado para ${restauranteId}`);
+        console.log(`Username: ${restauranteId}`);
+        console.log(`Password: ${tempPassword}`);
+        console.log(`===========================================`);
+      }
     }
+  } catch (error) {
+    console.error('Error al sincronizar usuarios:', error);
+  }
 }
 
 module.exports = { sincronizarUsuarios };

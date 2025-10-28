@@ -426,7 +426,6 @@
 
     <script>
         // Variables globales
-        const token = '<%= token %>';
         const extension = '<%= restaurante %>';
         let paginaActual = 1;
         const limitePorPagina = 10;
@@ -518,7 +517,7 @@
         async function cargarPedidosPendientes() {
             mostrarLoading(true);
             try {
-                const response = await fetch(`/api/pedidos/${extension}/pendientes?token=${token}`);
+                const response = await fetch(`/pedidos/${extension}/pendientes`);
                 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
@@ -640,7 +639,7 @@
             
             mostrarLoading(true);
             try {
-                const response = await fetch(`/api/pedidos/${pedidoId}/aceptar?token=${token}`, {
+                const response = await fetch(`/pedidos/${pedidoId}/aceptar`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ valorDomicilio })
@@ -682,7 +681,7 @@
             
             mostrarLoading(true);
             try {
-                const response = await fetch(`/api/pedidos/${pedidoSeleccionado}/rechazar?token=${token}&motivo=${encodeURIComponent(motivo)}`, {
+                const response = await fetch(`/pedidos/${pedidoSeleccionado}/rechazar?motivo=${encodeURIComponent(motivo)}`, {
                     method: 'PUT'
                 });
                 
@@ -724,7 +723,7 @@
         });
         
         document.getElementById('btnIniciarJornada').addEventListener('click', async () => {
-          const res = await fetch('/api/jornada/iniciar', {
+          const res = await fetch('/jornada/iniciar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ extension }) // extensión del restaurante
@@ -765,7 +764,7 @@
           confirmando = false;
           document.getElementById('confirmarCierre').classList.add('hidden');
       
-          const res = await fetch('/api/jornada/cerrar', {
+          const res = await fetch('/jornada/cerrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ extension })
@@ -831,7 +830,7 @@
         // Cargar estadísticas generales
         async function cargarEstadisticasGenerales() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas?token=${token}`);
+                const response = await fetch(`/panel/${extension}/estadisticas`);
                 if (!response.ok) throw new Error('Error en la respuesta del servidor');
                 
                 const data = await response.json();
@@ -855,7 +854,7 @@
         // Cargar estadísticas de hoy
         async function cargarEstadisticasHoy() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=hoy`);
+                const response = await fetch(`/panel/${extension}/estadisticas-periodo?periodo=hoy`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -872,7 +871,7 @@
         // Cargar estadísticas del período
         async function cargarEstadisticasPeriodo() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=${filtroActual}`);
+                const response = await fetch(`/panel/${extension}/estadisticas-periodo?periodo=${filtroActual}`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -907,7 +906,7 @@
         // Cargar ranking de clientes
         async function cargarRankingClientes() {
             try {
-                const response = await fetch(`/api/panel/${extension}/ranking-clientes?token=${token}`);
+                const response = await fetch(`/panel/${extension}/ranking-clientes`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -946,7 +945,7 @@
         // Cargar historial de pedidos
         async function cargarHistorialPedidos() {
             try {
-                const response = await fetch(`/api/panel/${extension}/historial-pedidos?token=${token}&page=${paginaActual}&limit=${limitePorPagina}`);
+                const response = await fetch(`/panel/${extension}/historial-pedidos?page=${paginaActual}&limit=${limitePorPagina}`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -1528,25 +1527,25 @@
         document.getElementById('form-cambiar-token').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const tokenActual = document.getElementById('token-actual').value;
-            const tokenNuevo = document.getElementById('token-nuevo').value;
-            const tokenConfirmar = document.getElementById('token-confirmar').value;
+            const passwordActual = document.getElementById('token-actual').value;
+            const passwordNuevo = document.getElementById('token-nuevo').value;
+            const passwordConfirmar = document.getElementById('token-confirmar').value;
 
-            if (tokenNuevo !== tokenConfirmar) {
+            if (passwordNuevo !== passwordConfirmar) {
                 mostrarError('Las nuevas contraseñas no coinciden.');
                 return;
             }
 
             mostrarLoading(true);
             try {
-                const response = await fetch('/admin/cambiar-token', {
+                const response = await fetch('/admin/change-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        tokenActual,
-                        tokenNuevo
+                        passwordActual,
+                        passwordNuevo
                     })
                 });
 
