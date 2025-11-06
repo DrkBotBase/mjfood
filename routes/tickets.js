@@ -11,8 +11,6 @@ router.get('/:pedidoId/ticket', async (req, res) => {
     if (!pedido) {
       return res.status(404).send('Pedido no encontrado');
     }
-console.log(pedido)
-    // generar PDF
     const pdfBuffer = await generarTicketPDF(pedido);
 
     res.set({

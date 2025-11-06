@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= name_page %></title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="<%= message %>">
+    
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="<%= name_page %>">
+    <meta property="og:description" content="<%= message %>.">
+    
+    <link rel="icon" href="/assets/<%= info.icon %>.png" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
+    
+    <meta property="og:image" content="/assets/<%= info.logo %>.png">
+    <meta property="og:image:alt" content="<%= name_page %>">
+    <meta property="fb:app_id" content="">
+    <meta property="og:url" content="<%= info.dominio %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= name_page %>">
+    <meta property="og:locale" content="es_ES">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= name_page %>">
+    <meta name="twitter:description" content="<%= message %>">
+    <meta name="twitter:image" content="/assets/<%= info.logo %>.png">
+    <meta name="twitter:image:alt" content="<%= name_page %>">
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/css/output.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapvis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <!-- Estilos personalizados -->
+    <style>
+    :root {
+      --text-color: <%= info.colorBase.text %>;
+      --primary-color: <%= info.colorBase.primary %>;
+      --bg-color: <%= info.colorBase.bg %>;
+      --light-shadow: <%= info.colorBase.light %>;
+      --dark-shadow: <%= info.colorBase.dark %>;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .neumorphic-flat {
+      background: var(--bg-color);
+      box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+    }
+    .neumorphic-button {
+      background: var(--bg-color);
+      box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+      transition: all 0.2s ease-in-out;
+    }
+    .neumorphic-button:hover {
+      box-shadow: 3px 3px 7px var(--dark-shadow), -3px -3px 7px var(--light-shadow);
+    }
+    .neumorphic-button:active {
+      box-shadow: inset 3px 3px 7px var(--dark-shadow), inset -3px -3px 7px var(--light-shadow);
+    }
+    .accent-text {
+      color: var(--primary-color);
+    }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+             <div class="neumorphic-flat w-full rounded-2xl p-4 flex justify-center items-center">
+                <a class="text-2xl font-bold tracking-tighter">MJ<span class="accent-text">FOOD</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Error Section -->
+    <main>
+      <section class="min-h-[70vh] flex items-center justify-center text-center px-6">
+        <div>
+          <h1 class="text-8xl md:text-9xl font-extrabold tracking-tighter accent-text">503</h1>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight mt-4 mb-2"><%= message %></h2>
+          <dotlottie-player
+            src="https://lottie.host/416da998-d9c8-421e-8a4e-32507fc4b030/onQPZ2TkIv.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 300px; height: 300px; margin: 0 auto;" class="mx-auto"
+            loop
+            autoplay>
+          </dotlottie-player>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="pb-8">
+      <div class="container mx-auto px-6 text-center">
+        <div class="border-t border-gray-300 pt-8 text-gray-500">
+          <p>&copy; 2024 MenúDigital. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

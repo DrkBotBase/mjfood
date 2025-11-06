@@ -39,7 +39,7 @@
     { "day": 2, "open": "10:00", "close": "20:00" }, 
     { "day": 3, "open": "10:00", "close": "20:00" }, 
     { "day": 4, "open": "10:00", "close": "20:00" }, 
-    { "day": 5, "open": "10:00", "close": "20:00" }, 
+    { "day": 5, "open": "10:00", "close": "22:00" }, 
     { "day": 6, "open": "10:00", "close": "20:00" }
   ],
   "shippingZones": [
@@ -56,9 +56,9 @@
   },
   "menu": [
     {"category": "Combos", "items": [
-      {"id": 1, "name": "Especial", "description": "Arroz Especial Personal + Coca-Cola 400ml", "basePrice": 22000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 2, "name": "Valenciana", "description": "Mini Valenciana + Coca-Cola 250ml", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 3, "name": "Tawok", "description": "Arroz Tawok Grande + Coca-Cola 2.5L", "basePrice": 52000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
+      {"id": 1, "name": "Combo Especial", "description": "Arroz Especial Personal + Coca-Cola 400ml", "basePrice": 22000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 2, "name": "Mini Valenciana", "description": "Arroz Valenciana + Coca-Cola 250ml", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 3, "name": "Combo Tawok", "description": "Arroz Tawok Grande + Coca-Cola 2.5L", "basePrice": 52000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Arroces", "items": [
       {"id": 4, "name": "Arroz Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
@@ -71,7 +71,7 @@
         {"label": "Medio", "price": 38000},
         {"label": "Grande", "price": 46000}
       ]}]},
-      {"id": 6, "name": "Valenciana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+      {"id": 6, "name": "Arroz Valenciana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
         {"label": "Personal", "price": 18000},
         {"label": "Medio", "price": 30000},
         {"label": "Grande", "price": 38000}
@@ -212,18 +212,18 @@
       ]}]}
     ]},
     {"category": "Lumpias", "items": [
-      {"id": 33, "name": "Especial x2 Unidades", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 34, "name": "Vegetales x2 Unidades", "description": "", "basePrice": 11000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 35, "name": "Pollo x2 Unidades", "description": "", "basePrice": 12000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 36, "name": "Camarón x2 Unidades", "description": "", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
+      {"id": 33, "name": "Lumpia Especial x2 Unidades", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 34, "name": "Lumpia Vegetales x2 Unidades", "description": "", "basePrice": 11000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 35, "name": "Lumpia Pollo x2 Unidades", "description": "", "basePrice": 12000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 36, "name": "Lumpia Camarón x2 Unidades", "description": "", "basePrice": 14000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Adicionales", "items": [
-      {"id": 37, "name": "Salsa Agridulce", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 38, "name": "Miel Mostaza", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 39, "name": "Soya", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 40, "name": "Camarón 150g", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 41, "name": "Pollo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
-      {"id": 42, "name": "Cerdo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
+      {"id": 37, "name": "Ad. Salsa Agridulce", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 38, "name": "Ad. Miel Mostaza", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 39, "name": "Ad. Soya", "description": "", "basePrice": 1000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 40, "name": "Ad. Camarón 150g", "description": "", "basePrice": 13000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 41, "name": "Ad. Pollo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+      {"id": 42, "name": "Ad. Cerdo", "description": "", "basePrice": 9000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
       {"id": 43, "name": "Coca Cola 3L", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},

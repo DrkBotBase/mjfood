@@ -4,13 +4,10 @@
         if (document.getElementById('pwa-update-banner')) {
             return;
         }
-        
         const banner = document.createElement('div');
         banner.id = 'pwa-update-banner';
-    
         const message = document.createElement('p');
         message.textContent = '¡Nueva versión disponible!';
-    
         const updateButton = document.createElement('button');
         updateButton.id = 'pwa-update-button';
         updateButton.textContent = 'Actualizar';
@@ -18,19 +15,16 @@
             newWorker.postMessage({ action: 'skipWaiting' });
             banner.remove();
         });
-        
         const closeButton = document.createElement('button');
         closeButton.id = 'pwa-close-button';
         closeButton.textContent = 'Ahora no';
         closeButton.addEventListener('click', () => {
             banner.remove();
         });
-        
         banner.appendChild(message);
         banner.appendChild(updateButton);
         banner.appendChild(closeButton);
         document.body.appendChild(banner);
-        
         styleUpdateBanner();
     }
     function styleUpdateBanner() {
@@ -46,7 +40,6 @@
                     opacity: 1;
                 }
             }
-    
             #pwa-update-banner {
                 position: fixed;
                 bottom: 20px;
@@ -64,12 +57,10 @@
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                 animation: slideInUp 0.5s ease-out forwards;
             }
-    
             #pwa-update-banner p {
                 margin: 0;
                 font-size: 15px;
             }
-    
             #pwa-update-banner button {
                 border: none;
                 border-radius: 5px;
@@ -78,7 +69,6 @@
                 font-weight: bold;
                 transition: background-color 0.2s;
             }
-    
             #pwa-update-button {
                 background-color: #38a169; /* Verde */
                 color: white;
@@ -86,7 +76,6 @@
             #pwa-update-button:hover {
                 background-color: #2f855a;
             }
-            
             #pwa-close-button {
                 background-color: transparent;
                 color: #a0aec0; /* Gris claro */
@@ -94,7 +83,6 @@
             #pwa-close-button:hover {
                 color: #e2e8f0;
             }
-            
             @media (max-width: 600px) {
                 #pwa-update-banner {
                     bottom: 0;
@@ -114,23 +102,16 @@
         const swPath = (typeof window.config !== 'undefined' && window.config.extension) 
           ? `/${window.config.extension}/sw.js`
           : '/lista/sw.js';
-        
         const scope = (typeof window.config !== 'undefined' && window.config.extension)
           ? `/${window.config.extension}/`
           : '/lista/';
-        
         navigator.serviceWorker.register(swPath, { scope })
           .then((registration) => {
-            console.log('SW registered: ', registration);
-            
             registration.addEventListener('updatefound', () => {
               const newWorker = registration.installing;
-              console.log('Nueva versión del Service Worker encontrada');
-              
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed') {
                   if (navigator.serviceWorker.controller) {
-                    console.log('Nuevo contenido disponible; por favor actualice.');
                     if (typeof showUpdateBanner === 'function') {
                       showUpdateBanner(newWorker);
                     }
@@ -143,7 +124,6 @@
             console.log('SW registration failed: ', registrationError);
           });
       });
-      
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         console.log('Controller changed, reloading page...');
         window.location.reload();

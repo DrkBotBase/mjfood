@@ -156,29 +156,29 @@
       {"id": 56, "name": "Chuzo Pan Mixto", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Combos", "items": [
-      {"id": 57, "name": "Perro Sencillo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
-      {"id": 58, "name": "Perro a la Plancha", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11500, "image": "", "placeholder": "", "variants": []},
-      {"id": 59, "name": "Perro Gemelo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
-      {"id": 60, "name": "Perro 1/2 Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
-      {"id": 61, "name": "Perro Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
-      {"id": 62, "name": "Hamburguesa de Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
-      {"id": 63, "name": "Hamburguesa de Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
-      {"id": 64, "name": "Hamburguesa Doble Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
-      {"id": 65, "name": "Hamburguesa Doble Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
-      {"id": 66, "name": "Hamburguesa Combinada", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []}
+      {"id": 57, "name": "Combo Perro Sencillo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 58, "name": "Combo Perro a la Plancha", "description": "Papas francesas más gaseosa pequeña", "basePrice": 11500, "image": "", "placeholder": "", "variants": []},
+      {"id": 59, "name": "Combo Perro Gemelo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 60, "name": "Combo Perro 1/2 Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 61, "name": "Combo Perro Suizo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 62, "name": "Combo Hamburguesa de Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 63, "name": "Combo Hamburguesa de Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 64, "name": "Combo Hamburguesa Doble Carne", "description": "Papas francesas más gaseosa pequeña", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
+      {"id": 65, "name": "Combo Hamburguesa Doble Pollo", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 66, "name": "Combo Hamburguesa Combinada", "description": "Papas francesas más gaseosa pequeña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Sandwich", "items": [
-      {"id": 67, "name": "Jamón y Queso", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
-      {"id": 68, "name": "Pollo, Jamón y Queso", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
-      {"id": 69, "name": "Especial", "description": "Pollo, carne, jamón, tocineta, mozarella", "basePrice": 17000, "image": "", "placeholder": "", "variants": []}
+      {"id": 67, "name": "Sandwich Jamón y Queso", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 68, "name": "Sandwich Pollo, Jamón y Queso", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 69, "name": "Sandwich Especial", "description": "Pollo, carne, jamón, tocineta, mozarella", "basePrice": 17000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Arepas", "items": [
-      {"id": 70, "name": "Queso", "description": "Solo de Lunes a Jueves", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
-      {"id": 71, "name": "Pollo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 72, "name": "Carne", "description": "Solo de Lunes a Jueves", "basePrice": 9000, "image": "", "placeholder": "", "variants": []},
-      {"id": 73, "name": "Cerdo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 74, "name": "Mixta", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 75, "name": "Mixta Gratinada", "description": "Solo de Lunes a Jueves", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
+      {"id": 70, "name": "Arepa de Queso", "description": "Solo de Lunes a Jueves", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 71, "name": "Arepa de Pollo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 72, "name": "Arepa de Carne", "description": "Solo de Lunes a Jueves", "basePrice": 9000, "image": "", "placeholder": "", "variants": []},
+      {"id": 73, "name": "Arepa de Cerdo", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 74, "name": "Arepa Mixta", "description": "Solo de Lunes a Jueves", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 75, "name": "Arepa Mixta Gratinada", "description": "Solo de Lunes a Jueves", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Pizzas Tradicional", "items": [
       {"id": 76, "name": "Pizza Tradicional Jamón", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [{"type": "radio", "name": "Tamaño", "options": [
@@ -250,14 +250,14 @@
       ]}]}
     ]},
     {"category": "Adicionales", "items": [
-      {"id": 89, "name": "Papas a la Francesa", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
-      {"id": 90, "name": "Bollo", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
-      {"id": 91, "name": "Ranchera", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
-      {"id": 92, "name": "Mozzarella", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
-      {"id": 93, "name": "Suiza", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
-      {"id": 94, "name": "Jamón", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
-      {"id": 95, "name": "Maíz", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
-      {"id": 96, "name": "Tocineta", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []}
+      {"id": 89, "name": "Ad. Papas a la Francesa", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 90, "name": "Ad. Bollo", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 91, "name": "Ad. Ranchera", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 92, "name": "Ad. Mozzarella", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 93, "name": "Ad. Suiza", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 94, "name": "Ad. Jamón", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 95, "name": "Ad. Maíz", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 96, "name": "Ad. Tocineta", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
       {"id": 97, "name": "Gaseosa Personal", "description": "", "basePrice": 4000, "image": "", "placeholder": "Manzana, Pepsi, Uva, etc...", "variants": []},

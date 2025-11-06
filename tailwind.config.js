@@ -14,6 +14,8 @@ module.exports = {
     "font-bold",
     "tracking-tighter",
     "accent-text",
+    "overflow-x-auto",
+    "whitespace-nowrap"
   ],
   theme: {
     extend: {

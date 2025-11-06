@@ -6,28 +6,15 @@ const Pedido = require('../models/pedido');
 const Jornada = require('../models/Jornada');
 const ProcesarPedidoService = require('../services/procesarPedidoService');
 const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
+const pedidosController = require('../controllers/pedidosController');
+const { isAuthenticated } = require('../middleware/auth');
 
-// Middleware para validar token
-const validarToken = async (req, res, next) => {
-    try {
-        const { token } = req.query;
-        const { extension } = req.params;
-        
-        const restaurante = await RestauranteEstadisticas.findOne({ extension });
-        
-        if (!restaurante || !token || token !== restaurante.token) {
-            return res.status(403).json({ error: 'Acceso no autorizado' });
-        }
-        
-        req.restaurante = restaurante;
-        next();
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Obtener pedidos pendientes
-router.get('/:extension/pendientes', async (req, res) => {
+router.post('/', (req, res) => {
+  pedidosController.registrarPedido(req.io, null, req.body)
+    .then(pedido => res.status(201).json(pedido))
+    .catch(error => res.status(500).json({ error: error.message }));
+});
+router.get('/:extension/pendientes', isAuthenticated, async (req, res) => {
     try {
         const { extension } = req.params;
         
@@ -42,22 +29,14 @@ router.get('/:extension/pendientes', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
-
-// Aceptar pedido
-router.put('/:id/aceptar', async (req, res) => {
+router.put('/:id/aceptar', isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    const { token } = req.query;
     const { valorDomicilio } = req.body;
 
     const pedido = await Pedido.findById(id);
     if (!pedido) {
       return res.status(404).json({ error: 'Pedido no encontrado' });
-    }
-
-    const restaurante = await RestauranteEstadisticas.findOne({ extension: pedido.extension });
-    if (!restaurante || !token || token !== restaurante.token) {
-      return res.status(403).json({ error: 'Acceso no autorizado' });
     }
 
     const jornadaActiva = await Jornada.findOne({ extension: pedido.extension, estado: 'abierta' });
@@ -82,7 +61,6 @@ router.put('/:id/aceptar', async (req, res) => {
 
     try {
       await ProcesarPedidoService.actualizarEstadisticasSiAceptado(pedidoActualizado);
-      console.log('✅ Estadísticas actualizadas para pedido:', pedidoActualizado._id);
     
       if (pedidoActualizado.jornadaId) {
         await Jornada.findByIdAndUpdate(
@@ -114,24 +92,14 @@ router.put('/:id/aceptar', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Rechazar pedido
-router.put('/:id/rechazar', async (req, res) => {
+router.put('/:id/rechazar', isAuthenticated, async (req, res) => {
     try {
         const { id } = req.params;
-        const { token, motivo } = req.query;
+        const { motivo } = req.query;
 
         const pedido = await Pedido.findById(id);
         if (!pedido) {
             return res.status(404).json({ error: 'Pedido no encontrado' });
-        }
-
-        const restaurante = await RestauranteEstadisticas.findOne({ 
-            extension: pedido.extension 
-        });
-        
-        if (!restaurante || !token || token !== restaurante.token) {
-            return res.status(403).json({ error: 'Acceso no autorizado' });
         }
 
         const pedidoActualizado = await Pedido.findByIdAndUpdate(

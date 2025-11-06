@@ -1,8 +1,32 @@
+require("dotenv").config()
 const express = require('express');
 const moment = require('moment-timezone');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+const session = require('express-session');
+const { info, PORT } = require('./config');
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+io.on('connection', (socket) => {
+  socket.on('joinRoom', (room) => {
+    socket.join(room);
+  });
+  socket.on('disconnect', () => {});
+  const pedidosController = require('./controllers/pedidosController');
+  socket.on('nuevo:pedido', (pedidoData) => {
+    pedidosController.registrarPedido(io, socket, pedidoData);
+  });
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -10,8 +34,34 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const { info, PORT } = require('./config')
+app.use((req, res, next) => {
+  const maintenance = process.env.MAINTENANCE === 'true';
+  if (maintenance) {
+    return res.status(503).render('mantenimiento', {
+      name_page: 'MJFOOD - Fuera de servicio',
+      message: 'Trabajamos para estar de vuelta pronto.',
+      info
+    });
+  }
+  next();
+});
+
 const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
+
+app.use(session({
+  secret: process.env.SECRET_KEY,
+  resave: false,
+  saveUninitialized: true
+}));
+
+const adminRoutes = require('./routes/admin');
+const pedidosRouter = require('./routes/pedidos');
+const jornadaRouter = require('./routes/jornada');
+const estadisticasRouter = require('./routes/estadisticas');
+app.use('/admin', adminRoutes);
+app.use('/pedidos', pedidosRouter);
+app.use('/jornada', jornadaRouter);
+app.use('/panel', estadisticasRouter);
 
 let menus = {};
 const IDS_EXCLUIR = ['demo'];
@@ -222,7 +272,7 @@ app.get('/:restaurante', (req, res) => {
   
   if (!restauranteData) {
     const restaurantesDisponibles = Object.values(menus)
-      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension)) // Excluir aquí también
+      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension))
       .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
       .map(menu => ({
         id: menu.config.extension,
@@ -332,10 +382,15 @@ setInterval(() => {
     .catch(err => console.error('Error en el ping:', err.message));
 }, 14 * 60 * 1000);
 
+const { sincronizarUsuarios } = require('./utils/syncUsers');
+
 (async () => {
   menus = await cargarMenusDesdeArchivos();
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
-  app.listen(PORT, () => {
+
+  await sincronizarUsuarios();
+
+  server.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
   });
 })();

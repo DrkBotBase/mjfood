@@ -5,57 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - <%= restaurante %></title>
     <link rel="stylesheet" href="/css/output.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .table-responsive {
+        .table-responsive,
+        .tabs-responsive {
             overflow-x: auto;
             max-width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
         }
-        .historial-table {
-            min-width: 600px;
-        }
-        @media (max-width: 768px) {
-            .historial-table {
-                min-width: 100%;
-            }
-        }
-        .table-responsive::-webkit-scrollbar {
+        .table-responsive::-webkit-scrollbar,
+        .tabs-responsive::-webkit-scrollbar {
             height: 8px;
+            width: 8px;
         }
-        .table-responsive::-webkit-scrollbar-track {
+        .table-responsive::-webkit-scrollbar-track,
+        .tabs-responsive::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 4px;
         }
-        .table-responsive::-webkit-scrollbar-thumb {
+        .table-responsive::-webkit-scrollbar-thumb,
+        .tabs-responsive::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 4px;
         }
-        .table-responsive::-webkit-scrollbar-thumb:hover {
+        .table-responsive::-webkit-scrollbar-thumb:hover,
+        .tabs-responsive::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
     </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#10B981',
-                        secondary: '#3B82F6',
-                        accent: '#F59E0B',
-                        dark: '#1F2937'
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <!-- Header -->
     <header class="bg-white shadow-lg">
         <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center flex-wrap gap-4">
+            <div class="flex justify-between items-center flex-wrap gap-y-4 gap-x-6">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">🍔 Panel de Control</h1>
                     <p class="text-gray-600">Restaurante: <span class="font-semibold"><%= restaurante %></span></p>
@@ -68,16 +57,18 @@
                         <i class="fas fa-sync-alt mr-2"></i> Actualizar
                     </button>
                 </div>
-                <div class="flex space-x-4 mb-4">
-                  <button id="btnIniciarJornada" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    Iniciar Jornada
-                  </button>
-                  <button id="btnCerrarJornada" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    Cerrar Jornada
-                  </button>
-                  <span id="confirmarCierre" class="hidden text-sm text-gray-600 ml-2">
-                    Clic nuevamente en <span id="contadorCierre">10</span>s para confirmar
-                  </span>
+                <div class="w-full sm:w-auto">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                      <button id="btnIniciarJornada" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full sm:w-auto">
+                        Iniciar Jornada
+                      </button>
+                      <button id="btnCerrarJornada" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full sm:w-auto">
+                        Cerrar Jornada
+                      </button>
+                    </div>
+                    <span id="confirmarCierre" class="hidden text-sm text-gray-600 mt-2 text-center sm:text-left">
+                      Clic nuevamente en <span id="contadorCierre">10</span>s para confirmar
+                    </span>
                 </div>
             </div>
         </div>
@@ -86,17 +77,21 @@
     <!-- Navegación de pestañas -->
     <div class="bg-white shadow-sm">
         <div class="container mx-auto px-4">
-            <div class="flex space-x-1">
-                <button onclick="cambiarPestaña('estadisticas')" id="tab-estadisticas" class="px-4 py-3 font-medium border-b-2 border-blue-500 text-blue-600">
+            <div class="tabs-responsive overflow-x-auto whitespace-nowrap">
+                <button onclick="cambiarPestaña('estadisticas')" id="tab-estadisticas" class="inline-block px-4 py-3 font-medium border-b-2 border-blue-500 text-blue-600">
                     <i class="fas fa-chart-bar mr-2"></i>Estadísticas
                 </button>
-                <button onclick="cambiarPestaña('pendientes')" id="tab-pendientes" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                <button onclick="cambiarPestaña('pendientes')" id="tab-pendientes" class="inline-block px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
                     <i class="fas fa-clock mr-2"></i>Pedidos Pendientes
                     <span id="badge-pendientes" class="ml-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs hidden">0</span>
                 </button>
-                <button onclick="cambiarPestaña('historial')" id="tab-historial" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                <button onclick="cambiarPestaña('historial')" id="tab-historial" class="inline-block px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
                     <i class="fas fa-history mr-2"></i>Historial
                 </button>
+                <button onclick="cambiarPestaña('seguridad')" id="tab-seguridad" class="inline-block px-4 py-3 font-medium border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                    <i class="fas fa-shield-alt mr-2"></i>Seguridad
+                </button>
+                <!-- Puedes agregar más pestañas aquí y se desplazarán en móvil -->
             </div>
         </div>
     </div>
@@ -293,7 +288,7 @@
         <div class="bg-white rounded-xl shadow-lg p-6">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
                 <h3 class="text-lg font-semibold text-gray-800">Historial de Pedidos Recientes</h3>
-                <div class="flex gap-2 flex-wrap">
+                <div class="flex gap-2 flex-wrap w-full sm:w-auto">
                     <input type="text" id="buscar-pedido" placeholder="Buscar teléfono..." 
                            class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-40">
                     <select id="filtro-tiempo" class="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
@@ -305,7 +300,7 @@
             </div>
             
             <div class="table-responsive">
-                <table class="w-full historial-table">
+                <table class="w-full min-w-[600px]">
                     <thead>
                         <tr class="border-b">
                             <th class="text-left py-2 text-sm">Fecha/Hora</th>
@@ -335,6 +330,35 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Pestaña de Seguridad -->
+        <div id="content-seguridad" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-6 mt-6 mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-shield-alt mr-2 text-gray-500"></i>
+                    Cambiar Contraseña (Token)
+                </h2>
+                <form id="form-cambiar-token" class="max-w-md space-y-4">
+                    <div>
+                        <label for="token-actual" class="block text-sm font-medium text-gray-700">Contraseña Actual</label>
+                        <input type="password" id="token-actual" name="token-actual" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-nuevo" class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
+                        <input type="password" id="token-nuevo" name="token-nuevo" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="token-confirmar" class="block text-sm font-medium text-gray-700">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="token-confirmar" name="token-confirmar" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Cambiar Contraseña
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
@@ -392,8 +416,6 @@
     </footer>
 
     <script>
-        // Variables globales
-        const token = '<%= token %>';
         const extension = '<%= restaurante %>';
         let paginaActual = 1;
         const limitePorPagina = 10;
@@ -402,38 +424,61 @@
         let todosLosPedidos = [];
         let socket = null;
 
-        // Inicializar Socket.io
         function inicializarSocket() {
+            if (socket) return;
+
             socket = io();
-            
-            socket.emit('join-restaurant', extension);
-            
-            socket.on('nuevo-pedido', (pedido) => {
-                mostrarMensaje('¡Nuevo pedido recibido!', 'info');
-                actualizarBadgePendientes();
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+
+            socket.on('connect', () => {
+                console.log('Conectado...');
+                socket.emit('joinRoom', extension);
+            });
+
+            socket.on('pedido:nuevo', (pedido) => {
+                mostrarMensaje(`Nuevo pedido de ${pedido.nombreCliente}`, 'info');
+                agregarPedidoPendiente(pedido);
             });
             
             socket.on('pedido-aceptado', (pedido) => {
-                mostrarMensaje('Pedido aceptado', 'success');
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+                mostrarMensaje(`Pedido #${pedido._id.substring(18, 24)} aceptado`, 'success');
+                eliminarPedidoPendiente(pedido._id);
             });
-            
+
             socket.on('pedido-rechazado', (pedido) => {
-                mostrarMensaje('Pedido rechazado', 'error');
-                if (document.getElementById('content-pendientes').classList.contains('active')) {
-                    cargarPedidosPendientes();
-                }
+                mostrarMensaje(`Pedido #${pedido._id.substring(18, 24)} rechazado`, 'error');
+                eliminarPedidoPendiente(pedido._id);
             });
         }
 
-        // Cambiar entre pestañas
+        function agregarPedidoPendiente(pedido) {
+            const contenedor = document.getElementById('lista-pedidos-pendientes');
+            const sinPedidos = document.getElementById('sin-pedidos-pendientes');
+
+            sinPedidos.classList.add('hidden');
+
+            const pedidoHTML = crearPedidoHTML(pedido);
+            contenedor.insertAdjacentHTML('afterbegin', pedidoHTML);
+
+            const totalPendientes = contenedor.children.length;
+            actualizarBadgePendientes(totalPendientes);
+        }
+
+        function eliminarPedidoPendiente(pedidoId) {
+            const pedidoEl = document.getElementById(`pedido-${pedidoId}`);
+            if (pedidoEl) {
+                pedidoEl.remove();
+            }
+
+            const contenedor = document.getElementById('lista-pedidos-pendientes');
+            const totalPendientes = contenedor.children.length;
+
+            if (totalPendientes === 0) {
+                document.getElementById('sin-pedidos-pendientes').classList.remove('hidden');
+            }
+            actualizarBadgePendientes(totalPendientes);
+        }
+
         function cambiarPestaña(pestaña) {
-            // Desactivar todas las pestañas
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -441,25 +486,20 @@
                 btn.classList.remove('border-blue-500', 'text-blue-600');
                 btn.classList.add('border-transparent', 'text-gray-600');
             });
-            
-            // Activar pestaña seleccionada
             document.getElementById(`content-${pestaña}`).classList.add('active');
             document.getElementById(`tab-${pestaña}`).classList.add('border-blue-500', 'text-blue-600');
             document.getElementById(`tab-${pestaña}`).classList.remove('border-transparent', 'text-gray-600');
             
-            // Cargar datos si es necesario
             if (pestaña === 'pendientes') {
                 cargarPedidosPendientes();
             } else if (pestaña === 'historial') {
                 cargarHistorialPedidos();
             }
         }
-
-        // Cargar pedidos pendientes
         async function cargarPedidosPendientes() {
             mostrarLoading(true);
             try {
-                const response = await fetch(`/api/pedidos/${extension}/pendientes?token=${token}`);
+                const response = await fetch(`/pedidos/${extension}/pendientes`);
                 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
@@ -476,8 +516,6 @@
                 actualizarBadgePendientes(pedidos.length);
                 
             } catch (error) {
-                console.error('Error cargando pedidos pendientes:', error);
-                
                 if (error.message.includes('403')) {
                     mostrarError('Acceso no autorizado. Verifica el token.');
                 } else if (error.message.includes('404')) {
@@ -492,7 +530,43 @@
             }
         }
         
-        // Mostrar pedidos pendientes en la lista
+        function crearPedidoHTML(pedido) {
+            const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
+            const total = pedido.valorTotal || pedido.valorPedido;
+
+            return `
+                <div id="pedido-${pedido._id}" class="bg-orange-50 border border-orange-200 rounded-lg p-4 animate-fade-in">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="font-semibold text-orange-800">Pedido #${pedido._id.toString().substring(18, 24)}</h3>
+                            <p class="text-sm text-gray-600">${fecha}</p>
+                        </div>
+                        <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">Pendiente</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Cliente:</span> ${pedido.nombreCliente || 'N/A'}</p>
+                            <p class="text-sm"><span class="font-medium">Teléfono:</span> ${pedido.phone}</p>
+                            <p class="text-sm"><span class="font-medium">Dirección:</span> ${pedido.direccion || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Total:</span> <span class="font-bold text-green-600">$${total.toLocaleString('es-CO')}</span></p>
+                            <p class="text-sm"><span class="font-medium">Pago:</span> ${pedido.metodoPago}</p>
+                            ${pedido.observacionGeneral ? `<p class="text-sm"><span class="font-medium">Obs:</span> "${pedido.observacionGeneral}"</p>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-2">
+                        <button onclick='verDetallesPedidoCompleto(${JSON.stringify(pedido).replace(/"/g, "&quot;")})'
+                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                            <i class="fas fa-eye mr-1"></i> Ver Detalles
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         function mostrarPedidosPendientes(pedidos) {
             const contenedor = document.getElementById('lista-pedidos-pendientes');
             const sinPedidos = document.getElementById('sin-pedidos-pendientes');
@@ -500,62 +574,12 @@
             if (pedidos.length === 0) {
                 contenedor.innerHTML = '';
                 sinPedidos.classList.remove('hidden');
-                return;
+            } else {
+                sinPedidos.classList.add('hidden');
+                contenedor.innerHTML = pedidos.map(crearPedidoHTML).join('');
             }
-            
-            sinPedidos.classList.add('hidden');
-            contenedor.innerHTML = '';
-            
-            pedidos.forEach(pedido => {
-                const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
-                const pedidoHTML = `
-                    <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h3 class="font-semibold text-orange-800">Pedido #${pedido._id.toString().substring(18, 24)}</h3>
-                                <p class="text-sm text-gray-600">${fecha}</p>
-                            </div>
-                            <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">
-                                Pendiente
-                            </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                            <div>
-                                <p class="text-sm"><span class="font-medium">Cliente:</span> ${pedido.nombreCliente || 'No especificado'}</p>
-                                <p class="text-sm"><span class="font-medium">Teléfono:</span> ${pedido.phone}</p>
-                                <p class="text-sm"><span class="font-medium">Dirección:</span> ${pedido.direccion || 'No especificada'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm"><span class="font-medium">Total:</span> <span class="font-bold text-green-600">$${pedido.valorPedido.toLocaleString()}</span></p>
-                                <p class="text-sm"><span class="font-medium">Pago:</span> ${pedido.metodoPago === 'efectivo' ? 'Efectivo' : 'Transferencia'}</p>
-                                ${pedido.observacionGeneral ? `<p class="text-sm"><span class="font-medium">Observación:</span> "${pedido.observacionGeneral}"</p>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white p-3 rounded border mb-3">
-                            <h4 class="font-medium mb-2">Productos:</h4>
-                            ${pedido.items.map(item => `
-                                <div class="flex justify-between text-sm py-1 border-b last:border-b-0">
-                                    <span>${item.cantidad}x ${item.categoria} ${item.nombre}${item.variante ? ` (${item.variante})` : ''}</span>
-                                    <span>$${item.subtotal.toLocaleString()}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        
-                        <div class="flex justify-end space-x-2">
-                            <button onclick="verDetallesPedidoCompleto(${JSON.stringify(pedido).replace(/"/g, '&quot;')})" 
-                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
-                                <i class="fas fa-eye mr-1"></i> Ver Detalles
-                            </button>
-                        </div>
-                    </div>
-                `;
-                contenedor.innerHTML += pedidoHTML;
-            });
         }
         
-        // Actualizar badge de pedidos pendientes
         function actualizarBadgePendientes(cantidad) {
             const badge = document.getElementById('badge-pendientes');
             if (cantidad !== undefined) {
@@ -568,66 +592,68 @@
             }
         }
 
-        // Aceptar pedido
-        async function aceptarPedido(pedidoId) {
-            if (!confirm('¿Estás seguro de aceptar este pedido?')) return;
-            
-            // Validación MANUAL del domicilio
-            const inputDomicilio = document.getElementById('input-domicilio');
-            const valor = inputDomicilio.value.trim();
-            
-            // Validar que no esté vacío (incluyendo el caso del valor 0)
-            if (valor === '') {
-                mostrarError('❌ El valor del domicilio es obligatorio');
-                inputDomicilio.focus();
-                inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
-                return;
-            }
-            
-            // Convertir a número y validar
-            const valorDomicilio = parseFloat(valor);
-            if (isNaN(valorDomicilio) || valorDomicilio < 0) {
-                mostrarError('❌ Ingrese un valor válido para el domicilio');
-                inputDomicilio.focus();
-                inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
-                return;
-            }
-            
-            mostrarLoading(true);
-            try {
-                const response = await fetch(`/api/pedidos/${pedidoId}/aceptar?token=${token}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ valorDomicilio })
-                });
-        
-                if (response.ok) {
-                    mostrarMensaje('Pedido aceptado correctamente', 'success');
-                    cerrarModal();
-                    cargarDatosIniciales();
-                } else {
-                    const data = await response.json();
-                    if (data.error && data.error.includes('No hay jornada iniciada')) {
-                        mostrarError('⚠️ No hay jornada iniciada. Inicie jornada para aceptar pedidos.');
-                    } else {
-                        mostrarError('Error al aceptar el pedido');
-                    }
-                }
-            } catch (error) {
-                console.error('Error:', error);
+async function aceptarPedido(pedidoId) {
+    if (!confirm('¿Estás seguro de aceptar este pedido?')) return;
+    const pedido = todosLosPedidos.find(p => p._id === pedidoId);
+    let valorDomicilio = pedido?.valorDomicilio ?? null;
+    const inputDomicilio = document.getElementById(`input-domicilio-${pedidoId}`);
+    
+    if (!valorDomicilio) {
+        if (!inputDomicilio) {
+            mostrarError('❌ No se encontró el input de domicilio');
+            return;
+        }
+
+        const valor = inputDomicilio.value.trim();
+        if (valor === '') {
+            mostrarError('❌ El valor del domicilio es obligatorio');
+            inputDomicilio.focus();
+            inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+            return;
+        }
+
+        valorDomicilio = parseFloat(valor);
+        if (isNaN(valorDomicilio) || valorDomicilio < 0) {
+            mostrarError('❌ Ingrese un valor válido para el domicilio');
+            inputDomicilio.focus();
+            inputDomicilio.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+            return;
+        }
+    }
+
+    mostrarLoading(true);
+
+    try {
+        const response = await fetch(`/pedidos/${pedidoId}/aceptar`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ valorDomicilio })
+        });
+
+        if (response.ok) {
+            mostrarMensaje('✅ Pedido aceptado correctamente', 'success');
+            cerrarModal();
+            cargarDatosIniciales();
+        } else {
+            const data = await response.json();
+            if (data.error && data.error.includes('No hay jornada iniciada')) {
+                mostrarError('⚠️ No hay jornada iniciada. Inicie jornada para aceptar pedidos.');
+            } else {
                 mostrarError('Error al aceptar el pedido');
-            } finally {
-                mostrarLoading(false);
             }
         }
-        // Rechazar pedido
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarError('⚠️ Error al aceptar el pedido');
+    } finally {
+        mostrarLoading(false);
+    }
+}
         function rechazarPedido(pedidoId) {
             pedidoSeleccionado = pedidoId;
             document.getElementById('motivo-rechazo').value = '';
             document.getElementById('modal-rechazar').classList.remove('hidden');
         }
-
-        // Confirmar rechazo
         async function confirmarRechazo() {
             const motivo = document.getElementById('motivo-rechazo').value.trim();
             if (!motivo) {
@@ -637,7 +663,7 @@
             
             mostrarLoading(true);
             try {
-                const response = await fetch(`/api/pedidos/${pedidoSeleccionado}/rechazar?token=${token}&motivo=${encodeURIComponent(motivo)}`, {
+                const response = await fetch(`/pedidos/${pedidoSeleccionado}/rechazar?motivo=${encodeURIComponent(motivo)}`, {
                     method: 'PUT'
                 });
                 
@@ -656,16 +682,11 @@
                 mostrarLoading(false);
             }
         }
-
-        // Cerrar modal de rechazo
         function cerrarModalRechazar() {
             document.getElementById('modal-rechazar').classList.add('hidden');
             pedidoSeleccionado = null;
         }
-
-        // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
-            // Establecer fechas por defecto
             const hoy = new Date();
             const hace7Dias = new Date();
             hace7Dias.setDate(hace7Dias.getDate() - 7);
@@ -675,19 +696,24 @@
             
             cargarDatosIniciales();
             configurarEventListeners();
+            inicializarSocket();
         });
         
         document.getElementById('btnIniciarJornada').addEventListener('click', async () => {
-          const res = await fetch('/api/jornada/iniciar', {
+          const res = await fetch('/jornada/iniciar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ extension }) // extensión del restaurante
+            body: JSON.stringify({ extension })
           });
           const data = await res.json();
           if (data.ok) {
-            alert('✅ Jornada iniciada');
+            mostrarMensaje('✅ Jornada iniciada', 'success');
           } else {
-            alert('⚠️ ' + data.message);
+            if (data.error === 'Jornada sin finalizar') {
+              mostrarMensaje('Hay una jornada disponible sin cerrar.', 'error')
+            } else {
+              alert('⚠️ ' + data.message);
+            }
           }
         });
 
@@ -696,7 +722,6 @@
       let interval;
       document.getElementById('btnCerrarJornada').addEventListener('click', async () => {
         if (!confirmando) {
-          // Primer click: activar confirmación
           confirmando = true;
           contador = 10;
           document.getElementById('confirmarCierre').classList.remove('hidden');
@@ -705,7 +730,6 @@
           interval = setInterval(() => {
             contador--;
             if (contador <= 0) {
-              // Tiempo agotado, cancelar
               clearInterval(interval);
               confirmando = false;
               document.getElementById('confirmarCierre').classList.add('hidden');
@@ -714,26 +738,25 @@
             }
           }, 1000);
         } else {
-          // Segundo click dentro de 10s: cerrar jornada
           clearInterval(interval);
           confirmando = false;
           document.getElementById('confirmarCierre').classList.add('hidden');
       
-          const res = await fetch('/api/jornada/cerrar', {
+          const res = await fetch('/jornada/cerrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ extension })
           });
           const data = await res.json();
           if (data.ok) {
-            alert('✅ Jornada cerrada');
+            mostrarMensaje('✅ Jornada cerrada', 'success');
           } else {
             alert('⚠️ ' + (data.message || 'Error al cerrar jornada'));
           }
         }
       });
 
-        // Configurar event listeners
+      
         function configurarEventListeners() {
             document.getElementById('filtro-periodo').addEventListener('change', function(e) {
                 if (e.target.value === 'personalizado') {
@@ -754,12 +777,10 @@
             });
         }
 
-        // Mostrar/ocultar loading
         function mostrarLoading(mostrar) {
             document.getElementById('loading-overlay').classList.toggle('hidden', !mostrar);
         }
 
-        // Cargar datos iniciales
         async function cargarDatosIniciales() {
             mostrarLoading(true);
             try {
@@ -782,10 +803,9 @@
             }
         }
 
-        // Cargar estadísticas generales
         async function cargarEstadisticasGenerales() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas?token=${token}`);
+                const response = await fetch(`/panel/${extension}/estadisticas`);
                 if (!response.ok) throw new Error('Error en la respuesta del servidor');
                 
                 const data = await response.json();
@@ -794,7 +814,6 @@
                 document.getElementById('total-gastado').textContent = `$${data.totalGastado.toLocaleString()}`;
                 document.getElementById('total-clientes').textContent = data.totalClientes.toLocaleString();
                 
-                // ✅ Nuevo: Métodos de pago en estadísticas generales (si los agregas al schema)
                 if (data.efectivo !== undefined) {
                     document.getElementById('total-efectivo').textContent = `$${data.totalEfectivo.toLocaleString()}`;
                     document.getElementById('total-transferencia').textContent = `$${data.totalTransferencia.toLocaleString()}`;
@@ -806,13 +825,14 @@
             }
         }
 
-        // Cargar estadísticas de hoy
         async function cargarEstadisticasHoy() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=hoy`);
+                const response = await fetch(`/panel/${extension}/estadisticas-periodo?periodo=hoy`);
+                
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
+                
                 document.getElementById('pedidos-hoy').textContent = data.totalPedidos || 0;
                 document.getElementById('gastado-hoy').textContent = `$${(data.totalGastado || 0).toLocaleString()}`;
                 
@@ -823,14 +843,13 @@
             }
         }
 
-        // Cargar estadísticas del período
         async function cargarEstadisticasPeriodo() {
             try {
-                const response = await fetch(`/api/panel/${extension}/estadisticas-periodo?token=${token}&periodo=${filtroActual}`);
+                const response = await fetch(`/panel/${extension}/estadisticas-periodo?periodo=${filtroActual}`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
-                
+                console.log(data)
                 document.getElementById('periodo-pedidos').textContent = data.totalPedidos.toLocaleString();
                 document.getElementById('periodo-gastado').textContent = `$${data.totalGastado.toLocaleString()}`;
                 /*
@@ -839,9 +858,7 @@
                 */
                 document.getElementById('periodo-efectivo').textContent = `$${(data.totalEfectivo || 0).toLocaleString()}`;
                 document.getElementById('periodo-transferencia').textContent = `$${(data.totalTransferencia || 0).toLocaleString()}`;
-              
                 
-                // Actualizar texto del período
                 let fechaTexto = '';
                 if (filtroActual === 'hoy') {
                     fechaTexto = 'Hoy';
@@ -857,11 +874,10 @@
                 mostrarError('Error al cargar estadísticas del período');
             }
         }
-
-        // Cargar ranking de clientes
+        
         async function cargarRankingClientes() {
             try {
-                const response = await fetch(`/api/panel/${extension}/ranking-clientes?token=${token}`);
+                const response = await fetch(`/panel/${extension}/ranking-clientes`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -897,10 +913,9 @@
             }
         }
 
-        // Cargar historial de pedidos
         async function cargarHistorialPedidos() {
             try {
-                const response = await fetch(`/api/panel/${extension}/historial-pedidos?token=${token}&page=${paginaActual}&limit=${limitePorPagina}`);
+                const response = await fetch(`/panel/${extension}/historial-pedidos?page=${paginaActual}&limit=${limitePorPagina}`);
                 if (!response.ok) throw new Error('Error en la respuesta');
                 
                 const data = await response.json();
@@ -915,8 +930,7 @@
                 mostrarError('Error al cargar historial');
             }
         }
-
-        // Mostrar pedidos en la tabla
+        
         function mostrarPedidosEnTabla(pedidos) {
             const tbody = document.getElementById('historial-pedidos');
             tbody.innerHTML = '';
@@ -934,7 +948,6 @@
                 const valorDomicilio = pedido.valorDomicilio || 0;
                 const valorTotal = valorPedido + valorDomicilio;
                 
-                // Determinar clase CSS según el estado
                 const rowClass = pedido.estado === 'rechazado' 
                     ? 'bg-red-50 hover:bg-red-100 border-l-4 border-red-500' 
                     : 'hover:bg-gray-50';
@@ -974,20 +987,14 @@
                 tbody.innerHTML += row;
             });
         }
-        
-        // Actualizar controles de paginación
         function actualizarPaginacion(paginacion) {
             document.getElementById('info-paginacion').textContent = 
                 `Mostrando ${paginacion.total > 0 ? ((paginaActual - 1) * limitePorPagina) + 1 : 0} - ${Math.min(paginaActual * limitePorPagina, paginacion.total)} de ${paginacion.total} pedidos`;
-            
             document.getElementById('pagina-actual').textContent = paginaActual;
-            
-            // Habilitar/deshabilitar botones
             document.getElementById('btn-anterior').disabled = paginaActual === 1;
             document.getElementById('btn-siguiente').disabled = paginaActual >= paginacion.paginas;
         }
 
-        // Cambiar página
         function cambiarPagina(direccion) {
             if (direccion === 'siguiente') {
                 paginaActual++;
@@ -996,8 +1003,7 @@
             }
             cargarHistorialPedidos();
         }
-
-        // Aplicar filtro personalizado
+        
         function aplicarFiltroPersonalizado() {
             const desde = document.getElementById('fecha-desde').value;
             const hasta = document.getElementById('fecha-hasta').value;
@@ -1010,8 +1016,7 @@
             mostrarMensaje('Filtro aplicado para fechas personalizadas', 'info');
             // Aquí implementarías la lógica específica para filtrar por fechas
         }
-
-        // Filtrar pedidos por término de búsqueda
+        
         function filtrarPedidos(termino) {
             if (!termino) {
                 mostrarPedidosEnTabla(todosLosPedidos);
@@ -1024,8 +1029,7 @@
             );
             mostrarPedidosEnTabla(pedidosFiltrados);
         }
-
-        // Aplicar filtro por tiempo
+        
         function aplicarFiltroTiempo(dias) {
             if (dias === 'all') {
                 mostrarPedidosEnTabla(todosLosPedidos);
@@ -1040,10 +1044,8 @@
             );
             mostrarPedidosEnTabla(pedidosFiltrados);
         }
-
-        // Ver detalles del pedido
+        
         /*function verDetallesPedido(phone, valor, fecha) {
-            // Buscar el pedido completo
             const pedidoCompleto = todosLosPedidos.find(p => 
                 p.phone === phone && 
                 p.valorPedido === valor && 
@@ -1064,18 +1066,14 @@
         }
 
         function verDetallesPedidoCompleto(pedido) {
-            // Convertir de string a objeto si es necesario
             const pedidoObj = typeof pedido === 'string' ? JSON.parse(pedido) : pedido;
             //mostrarDetallesPedidoModal(pedidoObj);
             verDetallesPedido(pedidoObj);
         }
         
-        // Mostrar modal con detalles del pedido
         function mostrarDetallesPedidoModal(pedido) {
             const modal = document.getElementById('modal-detalles');
             const contenido = document.getElementById('modal-contenido');
-            
-            console.log('Mostrando detalles del pedido:', pedido);
             
             const fechaFormateada = new Date(pedido.fechaPedido).toLocaleString('es-CO', {
                 year: 'numeric',
@@ -1084,8 +1082,7 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
-        
-            // Generar HTML para los items del pedido
+            
             let itemsHTML = '';
             if (pedido.items && pedido.items.length > 0) {
                 itemsHTML = `
@@ -1217,12 +1214,10 @@
             modal.classList.remove('hidden');
         }
         
-        // Cerrar modal
         function cerrarModal() {
           document.getElementById('modal-detalles').classList.add('hidden');
         }
-
-        // Exportar datos a CSV
+        
         function exportarDatos() {
             if (todosLosPedidos.length === 0) {
                 mostrarError('No hay datos para exportar');
@@ -1232,35 +1227,24 @@
             mostrarLoading(true);
             
             try {
-                // Crear contenido CSV
                 let csvContent = "Fecha,Teléfono,Valor\n";
-                
                 todosLosPedidos.forEach(pedido => {
                     const fecha = new Date(pedido.fechaPedido).toLocaleString('es-CO');
                     csvContent += `"${fecha}","${pedido.phone}","${pedido.valorPedido}"\n`;
                 });
-                
-                // Crear Blob con codificación UTF-8 y BOM
                 const blob = new Blob(["\uFEFF" + csvContent], {
                     type: "text/csv;charset=utf-8;"
                 });
-                
-                // Crear enlace de descarga
                 const link = document.createElement("a");
                 const url = URL.createObjectURL(blob);
                 link.setAttribute("href", url);
                 link.setAttribute("download", `pedidos_${extension}_${new Date().toISOString().split('T')[0]}.csv`);
                 document.body.appendChild(link);
-                
-                // Descargar archivo
                 link.click();
-                
-                // Limpiar
                 setTimeout(() => {
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
                 }, 100);
-                
                 mostrarMensaje('Datos exportados correctamente', 'success');
             } catch (error) {
                 console.error('Error exportando datos:', error);
@@ -1269,8 +1253,6 @@
                 mostrarLoading(false);
             }
         }
-
-        // Ver detalles del pedido
         function verDetallesPedido(pedido) {
             const modal = document.getElementById('modal-detalles');
             const contenido = document.getElementById('modal-contenido');
@@ -1296,7 +1278,7 @@
                         <div class="border-b pb-2 last:border-b-0">
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
-                                    <p class="font-medium">${item.cantidad}x ${item.categoria} ${item.nombre}</p>
+                                    <p class="font-medium">${item.cantidad}x ${item.nombre}</p>
                                     ${item.variante ? `<p class="text-sm text-gray-600">Variante: ${item.variante}</p>` : ''}
                                     ${item.observacion ? `<p class="text-sm text-gray-600">Observación: ${item.observacion}</p>` : ''}
                                 </div>
@@ -1314,36 +1296,10 @@
                     </div>
                 `;
             }
-        
-            // Calcular valores
-            const valorPedido = pedido.valorPedido || 0;
-            const valorDomicilio = pedido.valorDomicilio || 0;
-            const valorTotal = valorPedido + valorDomicilio;
-        
-            // Si el pedido NO está aceptado, mostrar input para domicilio + botón aceptar
-            const controlsHTML = pedido.estado === 'pendiente' ? `
-                <div class="bg-purple-50 p-4 rounded-lg space-y-3">
-                    <h4 class="font-semibold text-purple-800 mb-2">Acciones</h4>
-                    <label class="text-sm text-gray-600">Valor Domicilio:</label>
-                    <input 
-                      type="number" 
-                      id="input-domicilio" 
-                      placeholder="Ingrese valor domicilio (0 si es gratis)" 
-                      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-200"
-                      min="0"
-                      step="0.01"
-                      oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')"
-                    />
-                    <button onclick="aceptarPedido('${pedido._id}')" 
-                      class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
-                      <i class="fas fa-check mr-1"></i> Aceptar
-                    </button>
-                    <button onclick="rechazarPedido('${pedido._id}')" 
-                      class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
-                      <i class="fas fa-times mr-1"></i> Rechazar
-                    </button>
-                </div>
-            ` : '';
+            let valorPedido = pedido.valorPedido || 0;
+            let valorDomicilio = pedido.valorDomicilio ?? 0;
+            let mostrarInputDomicilio = pedido.valorDomicilio === null || pedido.valorDomicilio === undefined || pedido.valorDomicilio === 0;
+            let valorTotal = valorPedido + valorDomicilio;
         
             contenido.innerHTML = `
                 <div class="space-y-4">
@@ -1364,6 +1320,7 @@
                             </div>
                         </div>
                     </div>
+        
                     ${itemsHTML}
         
                     <div class="bg-green-50 p-4 rounded-lg">
@@ -1377,21 +1334,36 @@
                             <div>
                                 <span class="text-gray-600">Paga con:</span>
                                 <p class="font-medium">$${pedido.pagaCon.toLocaleString()}</p>
-                            </div>
-                            ` : ''}
+                            </div>` : ''}
+        
                             <div class="col-span-2">
                                 <span class="text-gray-600">Subtotal Pedido:</span>
                                 <p class="font-medium">$${valorPedido.toLocaleString()}</p>
                             </div>
-                            ${valorDomicilio > 0 ? `
+        
+                            ${mostrarInputDomicilio ? `
+                            <div class="col-span-2">
+                                <label class="text-gray-600">Valor Domicilio:</label>
+                                <input 
+                                    type="number" 
+                                    id="input-domicilio-${pedido._id}" 
+                                    placeholder="Ingrese valor domicilio (0 si es gratis)" 
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-200"
+                                    min="0"
+                                    step="0.01"
+                                    oninput="actualizarTotalEnVivo('${pedido._id}', ${valorPedido})"
+                                />
+                            </div>
+                            ` : `
                             <div class="col-span-2">
                                 <span class="text-gray-600">Valor Domicilio:</span>
                                 <p class="font-medium">$${valorDomicilio.toLocaleString()}</p>
                             </div>
-                            ` : ''}
+                            `}
+        
                             <div class="col-span-2">
                                 <span class="text-gray-600">Total:</span>
-                                <p class="text-lg font-bold text-green-600">$${valorTotal.toLocaleString()}</p>
+                                <p id="total-dinamico-${pedido._id}" class="text-lg font-bold text-green-600">$${valorTotal.toLocaleString()}</p>
                             </div>
                         </div>
                     </div>
@@ -1415,23 +1387,38 @@
                             </div>
                         </div>
                     </div>
-                    ${controlsHTML}
+        
+                    ${pedido.estado === 'pendiente' ? `
+                    <div class="bg-purple-50 p-4 rounded-lg space-y-3">
+                        <button onclick="aceptarPedido('${pedido._id}')" 
+                            class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-check mr-1"></i> Aceptar
+                        </button>
+                        <button onclick="rechazarPedido('${pedido._id}')" 
+                            class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+                            <i class="fas fa-times mr-1"></i> Rechazar
+                        </button>
+                    </div>` : ''}
                 </div>
             `;
         
             modal.classList.remove('hidden');
         }
-        
+        function actualizarTotalEnVivo(pedidoId, valorPedido) {
+            const input = document.getElementById(`input-domicilio-${pedidoId}`);
+            const total = document.getElementById(`total-dinamico-${pedidoId}`);
+            let valorDomicilio = parseFloat(input.value) || 0;
+            total.innerText = `$${(valorPedido + valorDomicilio).toLocaleString()}`;
+        }
+                
         function imprimirTicket(pedidoId) {
           window.open(`/facturas/${pedidoId}/ticket`, '_blank');
         }
         
-        // Cerrar modal
         function cerrarModal() {
             document.getElementById('modal-detalles').classList.add('hidden');
         }
-
-        // Actualizar todos los datos
+        
         function actualizarDatos() {
             const boton = event.target;
             const originalText = boton.innerHTML;
@@ -1444,10 +1431,8 @@
                 boton.disabled = false;
             });
         }
-
-        // Mostrar mensaje flotante
+        
         function mostrarMensaje(mensaje, tipo = 'info') {
-            // Crear elemento de notificación
             const notificacion = document.createElement('div');
             notificacion.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-semibold z-50 transition-transform transform translate-x-0 ${
                 tipo === 'error' ? 'bg-red-500' : 
@@ -1458,12 +1443,10 @@
             
             document.body.appendChild(notificacion);
             
-            // Animación de entrada
             setTimeout(() => {
                 notificacion.style.transform = 'translateX(0)';
             }, 10);
             
-            // Remover después de 3 segundos
             setTimeout(() => {
                 notificacion.style.transform = 'translateX(100%)';
                 setTimeout(() => {
@@ -1471,12 +1454,51 @@
                 }, 300);
             }, 3000);
         }
-
-        // Mostrar error
+        
         function mostrarError(mensaje) {
             console.error(mensaje);
             mostrarMensaje(mensaje, 'error');
         }
+        
+        document.getElementById('form-cambiar-token').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const passwordActual = document.getElementById('token-actual').value;
+            const passwordNuevo = document.getElementById('token-nuevo').value;
+            const passwordConfirmar = document.getElementById('token-confirmar').value;
+
+            if (passwordNuevo !== passwordConfirmar) {
+                mostrarError('Las nuevas contraseñas no coinciden.');
+                return;
+            }
+
+            mostrarLoading(true);
+            try {
+                const response = await fetch('/admin/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        passwordActual,
+                        passwordNuevo
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    mostrarMensaje('Contraseña actualizada correctamente.', 'success');
+                    document.getElementById('form-cambiar-token').reset();
+                } else {
+                    throw new Error(data.error || 'No se pudo cambiar la contraseña.');
+                }
+            } catch (error) {
+                mostrarError(error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // controllers/estadisticasController.js
 const Pedido = require('../models/pedido');
-const EstadisticasJornada = require('../models/estadisticas_jornada');
-const RestauranteEstadisticas = require('../models/restaurante_estadisticas'); // si aún quieres usarlo
+const EstadisticasJornada = require('../models/EstadisticasJornada');
+const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
 const moment = require('moment-timezone');
 
 class EstadisticasController {
@@ -21,6 +21,8 @@ class EstadisticasController {
         totalPedidos: estadisticas.totalPedidos,
         totalGastado: estadisticas.totalGastado,
         totalClientes: estadisticas.clientes.length,
+        totalEfectivo: estadisticas.totalEfectivo,
+        totalTransferencia: estadisticas.totalTransferencia,
         ultimaActualizacion: estadisticas.ultimaActualizacion
       });
 

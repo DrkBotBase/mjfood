@@ -6,74 +6,25 @@ const Pedido = require('../models/pedido');
 const EstadisticasJornada = require('../models/EstadisticasJornada');
 const moment = require('moment-timezone');
 
-// Iniciar jornada
 router.post('/iniciar', async (req, res) => {
   try {
     const { extension } = req.body;
     const timezone = 'America/Bogota';
 
-    const jornadasAbiertas = await Jornada.find({ extension, estado: 'abierta' });
-
-    for (const jornada of jornadasAbiertas) {
-      const pedidos = await Pedido.find({ jornadaId: jornada._id, estado: 'aceptado' });
-
-      let totalPedidos = pedidos.length;
-      let totalGastado = 0;
-      let totalEfectivo = 0;
-      let totalTransferencia = 0;
-      let clientesMap = new Map();
-
-      pedidos.forEach(p => {
-        const valorPedido = p.valorTotal || (p.valorPedido + (p.valorDomicilio || 0));
-        totalGastado += valorPedido;
-
-        if (p.metodoPago === 'efectivo') totalEfectivo += valorPedido;
-        if (p.metodoPago === 'transferencia') totalTransferencia += valorPedido;
-
-        if (!clientesMap.has(p.phone)) {
-          clientesMap.set(p.phone, {
-            phone: p.phone,
-            totalPedidos: 0,
-            totalGastado: 0,
-            ultimoPedido: p.fechaPedido
-          });
+    const jornadaAbierta = await Jornada.findOne({ extension, estado: 'abierta' });
+    
+    if (jornadaAbierta) {
+      return res.status(400).json({ 
+        ok: false, 
+        error: 'Jornada sin finalizar',
+        message: 'Ya existe una jornada abierta. Debe cerrarla antes de iniciar una nueva.',
+        jornadaAbierta: {
+          _id: jornadaAbierta._id,
+          inicio: jornadaAbierta.inicio,
+          totalPedidos: jornadaAbierta.totalPedidos,
+          totalVentas: jornadaAbierta.totalVentas
         }
-        let cliente = clientesMap.get(p.phone);
-        cliente.totalPedidos += 1;
-        cliente.totalGastado += valorPedido;
-        cliente.ultimoPedido = p.fechaPedido;
       });
-
-      jornada.cierre = moment().tz(timezone).toDate();
-      jornada.estado = 'cerrada';
-      jornada.totalPedidos = totalPedidos;
-      jornada.totalVentas = totalGastado;
-      await jornada.save();
-
-      let estadisticasJornada = await EstadisticasJornada.findOne({ jornadaId: jornada._id });
-      if (!estadisticasJornada) {
-        estadisticasJornada = new EstadisticasJornada({
-          extension,
-          jornadaId: jornada._id,
-          fechaInicio: jornada.inicio,
-          fechaCierre: jornada.cierre,
-          totalPedidos,
-          totalGastado,
-          totalEfectivo,
-          totalTransferencia,
-          clientes: Array.from(clientesMap.values()),
-          ultimaActualizacion: moment().tz(timezone).toDate()
-        });
-      } else {
-        estadisticasJornada.fechaCierre = jornada.cierre;
-        estadisticasJornada.totalPedidos = totalPedidos;
-        estadisticasJornada.totalGastado = totalGastado;
-        estadisticasJornada.totalEfectivo = totalEfectivo;
-        estadisticasJornada.totalTransferencia = totalTransferencia;
-        estadisticasJornada.clientes = Array.from(clientesMap.values());
-        estadisticasJornada.ultimaActualizacion = moment().tz(timezone).toDate();
-      }
-      await estadisticasJornada.save();
     }
 
     const nuevaJornada = new Jornada({
@@ -98,15 +49,18 @@ router.post('/iniciar', async (req, res) => {
     });
     await nuevaEstadistica.save();
 
-    res.json({ ok: true, jornada: nuevaJornada, estadistica: nuevaEstadistica });
+    res.json({ 
+      ok: true, 
+      message: 'Jornada iniciada correctamente',
+      jornada: nuevaJornada, 
+      estadistica: nuevaEstadistica 
+    });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
 });
-
-// Cerrar jornada
 router.post('/cerrar', async (req, res) => {
   try {
     const { extension } = req.body;
