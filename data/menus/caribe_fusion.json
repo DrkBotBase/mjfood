@@ -1,0 +1,157 @@
+{
+  "config": {
+    "extension": "wok_caribe_fusion",
+    "orden": "5",
+    "color": {
+      "text": "#e0e1e5",
+      "primary": "#0cf106",
+      "bg": "#17171b",
+      "light": "#262222",
+      "dark": "#000000"
+    },
+    "pwa": {
+      "short_name": "Wok Caribe Fusión",
+      "name": "Wok Caribe Fusion - Pedidos",
+      "description": "Restaurante de comida china.",
+      "theme_color": "#dd1b1a",
+      "background_color": "#dd1b1a",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/caribe_fusion/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["food", "chinese", "restaurant"],
+      "lang": "es"
+    },
+    "nombre": "Wok Caribe Fusión",
+    "direccion": "Calle 14 # 10 - 31",
+    "telefonoWhatsApp": "573013847510",
+    "logoUrl": "/assets/caribe_fusion/banner.png",
+    "taxRate": 0
+  },
+  "schedule": [
+    { "day": 0, "open": "11:30", "close": "22:00" }, 
+    { "day": 1, "open": "11:30", "close": "22:00" }, 
+    { "day": 2, "open": "11:30", "close": "22:00" }, 
+    { "day": 3, "open": "11:30", "close": "22:00" }, 
+    { "day": 4, "open": "11:30", "close": "22:00" }, 
+    { "day": 5, "open": "11:30", "close": "22:00" }, 
+    { "day": 6, "open": "11:30", "close": "22:00" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 3000 },
+    { "name": "Otra (consultar)", "price": 0 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "3013829664", 
+      "accountHolder": "Kev*** Per***" 
+    }
+  },
+  "menu": [
+    {"category": "Arroces", "items": [
+      {"id": 1, "name": "Arroz Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Personal", "price": 15000},
+        {"label": "Medio", "price": 27000},
+        {"label": "Entero", "price": 37000},
+        {"label": "Familiar", "price": 44000}
+      ]}]},
+      {"id": 2, "name": "Arroz Valenciana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Personal", "price": 14000},
+        {"label": "Medio", "price": 25000},
+        {"label": "Entero", "price": 35000},
+        {"label": "Familiar", "price": 41000}
+      ]}]},
+      {"id": 3, "name": "Arroz Con Pollo", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Personal", "price": 13000},
+        {"label": "Medio", "price": 23000},
+        {"label": "Entero", "price": 33000},
+        {"label": "Familiar", "price": 39000}
+      ]}]},
+      {"id": 4, "name": "Arroz Pollo/Camarón", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Personal", "price": 16000},
+        {"label": "Medio", "price": 28000},
+        {"label": "Entero", "price": 38000},
+        {"label": "Familiar", "price": 45000}
+      ]}]},
+      {"id": 5, "name": "Arroz Solo Camaron", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Personal", "price": 19000},
+        {"label": "Medio", "price": 32000},
+        {"label": "Entero", "price": 42000},
+        {"label": "Familiar", "price": 52000}
+      ]}]}
+    ]},
+    {"category": "Chopsuey", "items": [
+      {"id": 6, "name": "Chopsuey Especial", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Medio", "price": 27000},
+        {"label": "Entero", "price": 38000}
+      ]}]}
+    ]},
+    {"category": "Chow Main", "items": [
+      {"id": 7, "name": "Chow Main", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Medio", "price": 28000},
+        {"label": "Entero", "price": 40000}
+      ]}]}
+    ]},
+    {"category": "Pollo", "items": [
+      {"id": 8, "name": "Pollo Asado", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Entero", "price": 42000},
+        {"label": "Medio", "price": 22000},
+        {"label": "1/4 Pechuga y Ala", "price": 13000},
+        {"label": "1/4 Muslo y Contramuslo", "price": 11000}
+      ]}]},
+      {"id": 9, "name": "Pollo Broaster", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Tamaño", "options": [
+        {"label": "Entero", "price": 44000},
+        {"label": "Medio", "price": 23000},
+        {"label": "1/4 Pechuga y Ala", "price": 14000},
+        {"label": "1/4 Muslo y Contramuslo", "price": 12000}
+      ]}]}
+    ]},
+    {"category": "Limonadas", "items": [
+      {"id": 10, "name": "Coco", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Cerezada", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 12, "name": "Natural", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Jugos Naturales", "items": [
+      {"id": 13, "name": "Mango", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "Agua", "price": 7000},
+        {"label": "Leche", "price": 8000}
+      ]}]},
+      {"id": 14, "name": "Mora", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "Agua", "price": 7000},
+        {"label": "Leche", "price": 8000}
+      ]}]},
+      {"id": 15, "name": "Fresa", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "Agua", "price": 7000},
+        {"label": "Leche", "price": 8000}
+      ]}]},
+      {"id": 16, "name": "Guanabana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "Agua", "price": 7000},
+        {"label": "Leche", "price": 8000}
+      ]}]},
+      {"id": 17, "name": "Maracuya", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "Agua", "price": 7000},
+        {"label": "Leche", "price": 8000}
+      ]}]},
+      {"id": 18, "name": "Corozo", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Bebidas", "items": [
+      {"id": 19, "name": "Agua", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 20, "name": "Agua Con Gas", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": []},
+      {"id": 21, "name": "CocaCola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 22, "name": "Postobon 1.5L", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 23, "name": "Hit Litro", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 24, "name": "Hit Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 25, "name": "CocaCola Pet", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 26, "name": "Postobon Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 27, "name": "Glacial Litro", "description": "", "basePrice": 4500, "image": "", "placeholder": "", "variants": []},
+      {"id": 28, "name": "Glacial Pet", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []}
+    ]}
+  ]
+}

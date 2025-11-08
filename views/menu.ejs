@@ -299,7 +299,7 @@
             }
         
             const banner = document.getElementById('restaurant-banner');
-            banner.src = data.config.logoUrl;
+            banner.src = data.config.logoUrl || '/assets/banner.png';
             banner.alt = `${data.config.nombre}`;
             
             const transferDetails = document.getElementById('transferencia-details');
@@ -526,7 +526,7 @@
                         <div class="space-y-4">
                         ${cat.items.map(item => `
                             <div class="neumorphic-pressed rounded-2xl p-4 flex items-center gap-4">
-                                <img src="${item.image || window.restaurantData.config.logoUrl}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
+                                <img src="${item.image || window.restaurantData.config.logoUrl || '/assets/banner.png'}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
                                 <div class="flex-grow">
                                     <h3 class="text-lg md:text-xl font-bold">${item.name}</h3>
                                     <p class="text-sm text-color my-1 hidden sm:block">${item.description}</p>
@@ -611,14 +611,14 @@
           
           const isDemo = window.location.pathname.includes('/demo');
           
-          let message = `📦 *Nuevo Pedido - ${orderData.restauranteId || "Restaurante"}* \n\n`;
+          let message = `📦 *Nuevo Pedido - ${window.restaurantData.config.nombre || "Restaurante"}* \n\n`;
           message += `👤 *Cliente:* ${orderData.cliente.nombre}\n📞 *Teléfono:* ${orderData.cliente.telefono}\n🏠 *Dirección:* ${orderData.cliente.direccion}\n`;
           message += `🚚 *Zona de envío:* ${orderData.zonaEnvio.nombre} (${orderData.zonaEnvio.costo.toLocaleString()} COP)\n\n`;
       
           message += `🧾 *Detalle del pedido:*\n`;
           cart.forEach((item, i) => {
-            message += `${i + 1}. ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}\n`;
-            if (item.variants > 0)
+            message += `${i + 1}. ${item.name} ( x${item.quantity} ) - $${(item.price * item.quantity).toLocaleString()}\n`;
+            if (item.variants)
               message += `  - _${item.variants.join(', ')}_\n`;
             if (item.instructions) 
               message += `  - _${item.instructions}_\n`;

@@ -99,34 +99,79 @@
     }
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        const swPath = (typeof window.config !== 'undefined' && window.config.extension) 
-          ? `/${window.config.extension}/sw.js`
-          : '/lista/sw.js';
-        const scope = (typeof window.config !== 'undefined' && window.config.extension)
-          ? `/${window.config.extension}/`
-          : '/lista/';
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        const restaurante = pathSegments[0] || 'lista';
+        
+        const swPath = `/${restaurante}/sw.js`;
+        const scope = `/${restaurante}/`;
+        
+        console.log('Registering SW for restaurant:', restaurante);
+        
         navigator.serviceWorker.register(swPath, { scope })
           .then((registration) => {
+            console.log('✅ SW registered successfully for scope:', registration.scope);
+            
             registration.addEventListener('updatefound', () => {
               const newWorker = registration.installing;
+              console.log('New SW version found:', newWorker.state);
+              
               newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed') {
-                  if (navigator.serviceWorker.controller) {
-                    if (typeof showUpdateBanner === 'function') {
-                      showUpdateBanner(newWorker);
-                    }
+                console.log('SW state changed to:', newWorker.state);
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  if (typeof showUpdateBanner === 'function') {
+                    showUpdateBanner(newWorker);
                   }
                 }
               });
             });
           })
-          .catch((registrationError) => {
-            console.log('SW registration failed: ', registrationError);
+          .catch((error) => {
+            console.log('❌ SW registration failed:', error);
+            
+            console.log('Error details:', {
+              swPath,
+              scope,
+              currentURL: window.location.href,
+              errorMessage: error.message
+            });
           });
       });
+    
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         console.log('Controller changed, reloading page...');
         window.location.reload();
       });
+    }
+    
+    function showUpdateBanner(newWorker) {
+      console.log('New update available!');
+      
+      const updateBanner = document.createElement('div');
+      updateBanner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        z-index: 10000;
+      `;
+      updateBanner.innerHTML = `
+        Nueva versión disponible! 
+        <button onclick="updateSW()" style="margin-left: 10px; padding: 5px 10px;">
+          Actualizar
+        </button>
+      `;
+      document.body.appendChild(updateBanner);
+    }
+    
+    function updateSW() {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'SKIP_WAITING'
+        });
+      }
     }
   </script>

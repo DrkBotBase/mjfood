@@ -1,4 +1,4 @@
-const CACHE_NAME = 'main-app-v1';
+const CACHE_NAME = 'main-app-v2';
 const urlsToCache = [
   '/lista',
   '/assets/icon.png'
