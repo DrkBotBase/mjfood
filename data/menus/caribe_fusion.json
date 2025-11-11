@@ -13,8 +13,8 @@
       "short_name": "Wok Caribe Fusión",
       "name": "Wok Caribe Fusion - Pedidos",
       "description": "Restaurante de comida china.",
-      "theme_color": "#dd1b1a",
-      "background_color": "#dd1b1a",
+      "theme_color": "#17171b",
+      "background_color": "#17171b",
       "display": "standalone",
       "orientation": "portrait",
       "icons": [
@@ -113,45 +113,51 @@
         {"label": "1/4 Muslo y Contramuslo", "price": 12000}
       ]}]}
     ]},
+    {"category": "Asados", "items": [
+      {"id": 10, "name": "Plato Mixto", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Punta Gorda", "description": "", "basePrice": 30000, "image": "", "placeholder": "", "variants": []},
+      {"id": 12, "name": "Pechuga Asada", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 13, "name": "Costilla BBQ", "description": "", "basePrice": 37000, "image": "", "placeholder": "", "variants": []}
+    ]},
     {"category": "Limonadas", "items": [
-      {"id": 10, "name": "Coco", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 11, "name": "Cerezada", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
-      {"id": 12, "name": "Natural", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []}
+      {"id": 14, "name": "Limonada Coco", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 15, "name": "Limonada Cerezada", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 16, "name": "Limonada Natural", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Jugos Naturales", "items": [
-      {"id": 13, "name": "Mango", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
-        {"label": "Agua", "price": 7000},
-        {"label": "Leche", "price": 8000}
+      {"id": 17, "name": "Jugo Natural de Mango", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "En Agua", "price": 7000},
+        {"label": "En Leche", "price": 8000}
       ]}]},
-      {"id": 14, "name": "Mora", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
-        {"label": "Agua", "price": 7000},
-        {"label": "Leche", "price": 8000}
+      {"id": 18, "name": "Jugo Natural de Mora", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "En Agua", "price": 7000},
+        {"label": "En Leche", "price": 8000}
       ]}]},
-      {"id": 15, "name": "Fresa", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
-        {"label": "Agua", "price": 7000},
-        {"label": "Leche", "price": 8000}
+      {"id": 19, "name": "Jugo Natural de Fresa", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "En Agua", "price": 7000},
+        {"label": "En Leche", "price": 8000}
       ]}]},
-      {"id": 16, "name": "Guanabana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
-        {"label": "Agua", "price": 7000},
-        {"label": "Leche", "price": 8000}
+      {"id": 20, "name": "Jugo Natural de Guanabana", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "En Agua", "price": 7000},
+        {"label": "En Leche", "price": 8000}
       ]}]},
-      {"id": 17, "name": "Maracuya", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
-        {"label": "Agua", "price": 7000},
-        {"label": "Leche", "price": 8000}
+      {"id": 21, "name": "Jugo Natural de Maracuya", "description": "", "basePrice": 0, "image": "", "placeholder": "Descripción para el producto...", "variants": [{"type": "radio", "name": "Preparación", "options": [
+        {"label": "En Agua", "price": 7000},
+        {"label": "En Leche", "price": 8000}
       ]}]},
-      {"id": 18, "name": "Corozo", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []}
+      {"id": 22, "name": "Jugo Natural de Corozo", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
-      {"id": 19, "name": "Agua", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
-      {"id": 20, "name": "Agua Con Gas", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": []},
-      {"id": 21, "name": "CocaCola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 22, "name": "Postobon 1.5L", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
-      {"id": 23, "name": "Hit Litro", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
-      {"id": 24, "name": "Hit Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
-      {"id": 25, "name": "CocaCola Pet", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
-      {"id": 26, "name": "Postobon Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
-      {"id": 27, "name": "Glacial Litro", "description": "", "basePrice": 4500, "image": "", "placeholder": "", "variants": []},
-      {"id": 28, "name": "Glacial Pet", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []}
+      {"id": 23, "name": "Agua", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 24, "name": "Agua Con Gas", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": []},
+      {"id": 25, "name": "CocaCola 1.5L", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 26, "name": "Postobon 1.5L", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 27, "name": "Hit Litro", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 28, "name": "Hit Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 29, "name": "CocaCola Pet", "description": "", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+      {"id": 30, "name": "Postobon Pet", "description": "", "basePrice": 3500, "image": "", "placeholder": "", "variants": []},
+      {"id": 31, "name": "Glacial Litro", "description": "", "basePrice": 4500, "image": "", "placeholder": "", "variants": []},
+      {"id": 32, "name": "Glacial Pet", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []}
     ]}
   ]
 }

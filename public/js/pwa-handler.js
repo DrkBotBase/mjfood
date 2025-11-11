@@ -120,7 +120,7 @@ class PWAHandler {
                 top: 0;
                 left: 0;
                 right: 0;
-                background: #ff9800;
+                background: #f93f3f;
                 color: white;
                 text-align: center;
                 padding: 10px;
