@@ -528,9 +528,9 @@
                             <div class="neumorphic-pressed rounded-2xl p-4 flex items-center gap-4">
                                 <img src="${item.image || window.restaurantData.config.logoUrl || '/assets/banner.png'}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
                                 <div class="flex-grow">
-                                    <h3 class="text-lg md:text-xl font-bold">${item.name}</h3>
+                                    <h3 class="text-sm md:text-lg font-bold">${item.name}</h3>
                                     <p class="text-sm text-color my-1 hidden sm:block">${item.description}</p>
-                                    <p class="text-md md:text-lg font-semibold accent-text"></p>
+                                    <p class="text-md md:text-lg font-semibold accent-text">${item.basePrice == 0 ? 'Ver Precios ->' : '$'+item.basePrice}</p>
                                 </div>
                                 <div class="flex-shrink-0">
                                     <button class="select-item-btn mt-auto neumorphic-button text-white font-bold py-2 px-4 rounded-xl text-sm" style="background-color: var(--primary-color);" data-id="${item.id}">
@@ -618,10 +618,12 @@
           message += `🧾 *Detalle del pedido:*\n`;
           cart.forEach((item, i) => {
             message += `${i + 1}. ${item.name} ( x${item.quantity} ) - $${(item.price * item.quantity).toLocaleString()}\n`;
-            if (item.variants)
+            if (item.variants && item.variants.length > 0) {
               message += `  - _${item.variants.join(', ')}_\n`;
-            if (item.instructions) 
+            }
+            if (item.instructions && item.instructions.trim() !== '') {
               message += `  - _${item.instructions}_\n`;
+            }
           });
       
           message += `\n💰 *Subtotal:* $${orderData.subtotal.toLocaleString()}\n`;
@@ -651,92 +653,6 @@
           }
           window.open(whatsappUrl, '_blank');
         }
-  function sendOrder() {
-    if (!validateCartForm()) return;  
-
-    const clientName = document.getElementById('client-name').value.trim();  
-    const clientPhone = document.getElementById('client-phone').value.trim();  
-    const clientAddress = document.getElementById('client-address').value.trim();  
-    const paymentMethod = document.querySelector('input[name="payment"]:checked').value;  
-    const cashAmount = document.getElementById('payment-cash-amount').value.trim();  
-    const selectedZoneOption = cartModal.shippingZoneSelect.options[cartModal.shippingZoneSelect.selectedIndex];  
-    const shippingZoneName = selectedZoneOption.dataset.name;  
-    const shippingCost = parseFloat(cartModal.shippingZoneSelect.value) || 0;  
-    const comments = document.getElementById('order-comments').value.trim();  
-
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);  
-    const total = subtotal + shippingCost;  
-
-    const orderData = {  
-        restauranteId: window.restaurantData.config.extension,  
-        cliente: {  
-            nombre: clientName,  
-            telefono: clientPhone,  
-            direccion: clientAddress,  
-        },  
-        items: cart.map(item => ({  
-            id: item.id,  
-            nombre: item.name,  
-            cantidad: item.quantity,  
-            precio: item.price,  
-            variantes: item.variants,  
-            instrucciones: item.instructions,  
-        })),  
-        zonaEnvio: {  
-            nombre: shippingZoneName,  
-            costo: shippingCost,  
-        },  
-        metodoPago: paymentMethod,  
-        pagaCon: cashAmount,  
-        comentarios: comments,  
-        subtotal: subtotal,  
-        total: total,  
-    };
-    
-    const isDemo = window.location.pathname.includes('/demo');
-    
-    let message = `📦 *Nuevo Pedido - ${orderData.restauranteId || "Restaurante"}* \n\n`;
-    message += `👤 *Cliente:* ${orderData.cliente.nombre}\n📞 *Teléfono:* ${orderData.cliente.telefono}\n🏠 *Dirección:* ${orderData.cliente.direccion}\n`;
-    message += `🚚 *Zona de envío:* ${orderData.zonaEnvio.nombre} (${orderData.zonaEnvio.costo.toLocaleString()} COP)\n\n`;
-
-    message += `🧾 *Detalle del pedido:*\n`;
-    cart.forEach((item, i) => {
-        message += `${i + 1}. ${item.name} x${item.quantity} - $${(item.price * item.quantity).toLocaleString()}\n`;
-        if (item.variants > 0)
-          message += `  - _${item.variants.join(', ')}_\n`;
-        if (item.instructions) 
-          message += `  - _${item.instructions}_\n`;
-    });
-
-    message += `\n💰 *Subtotal:* $${orderData.subtotal.toLocaleString()}\n`;
-    message += `🚕 *Domicilio:* $${orderData.zonaEnvio.costo.toLocaleString()}\n`;
-    message += `💵 *Total a pagar:* *$${orderData.total.toLocaleString()}*\n`;
-    message += `💳 *Método de pago:* ${orderData.metodoPago}\n`;
-
-    if (orderData.metodoPago === 'Efectivo' && orderData.pagaCon) {
-        message += `💸 *Paga con:* $${parseInt(orderData.pagaCon).toLocaleString()}\n`;
-    }
-
-    if (comments) {
-        message += `\n🗒️ *Comentarios:* ${orderData.comentarios}\n`;
-    }
-
-    if (isDemo) {
-        message += `\n⚠️ *Nota:* Este pedido fue enviado desde la versión demo.\n`;
-    }
-
-    message += `\n🕒 *Pedido generado desde el portal digital.*`;
-
-    const restaurantPhone = window.restaurantData.config.telefonoWhatsApp;
-
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${restaurantPhone}&text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-
-    if (!isDemo) {
-        socket.emit('nuevo:pedido', orderData);  
-        saveClientData();  
-    }
-  }
         
         socket.on('pedido:registrado', () => {
             console.log('Pedido registrado.')
@@ -763,7 +679,6 @@
                     if (item) openItemModal(item);
                 }
             });
-            //cartModal.confirmBtn.addEventListener('click', sendOrder);
             cartModal.confirmBtn.addEventListener('click', () => {
               if (validateCartForm()) {
                 saveClientData();

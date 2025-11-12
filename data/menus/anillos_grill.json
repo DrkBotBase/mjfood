@@ -1,0 +1,152 @@
+{
+  "config": {
+    "extension": "anillos_grill",
+    "orden": "6",
+    "color": {
+      "text": "#1a1c21",
+      "primary": "#e21c1b",
+      "bg": "rgb(254,255,24)",
+      "light": "rgb(242,243,100)",
+      "dark": "rgb(204,205,72)"
+    },
+    "pwa": {
+      "short_name": "Anillos Grill",
+      "name": "Anillos Grill - Pedidos",
+      "description": "Restaurante de comida rapida.",
+      "theme_color": "#feff99",
+      "background_color": "#feff99",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/anillos/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["fast_food", "restaurant"],
+      "lang": "es"
+    },
+    "nombre": "Anillos Grill",
+    "direccion": "Calle 14 # 13 - 159",
+    "telefonoWhatsApp": "573183369542",
+    "logoUrl": "/assets/anillos/banner.png",
+    "taxRate": 0
+  },
+  "schedule": [
+    { "day": 0, "open": "17:30", "close": "01:30" }, 
+    { "day": 1, "open": "17:30", "close": "00:00" }, 
+    { "day": 2, "open": "17:30", "close": "00:00" }, 
+    { "day": 3, "open": "11:30", "close": "00:00" }, 
+    { "day": 4, "open": "17:30", "close": "00:00" }, 
+    { "day": 5, "open": "17:30", "close": "00:00" }, 
+    { "day": 6, "open": "17:30", "close": "01:30" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 2000 },
+    { "name": "Otra (consultar)", "price": 0 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "", 
+      "accountHolder": "" 
+    }
+  },
+  "menu": [
+    {"category": "Salchipapas", "items": [
+      {"id": 1, "name": "Salchipapa Sencilla", "description": "Papas francesas, salchicha, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 2, "name": "Salchipapa 5 Carnes", "description": "Papas francesas, salchicha, carne, pollo, chorizo, butifarra, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 3, "name": "Salchipapa Sencilla Gratinada", "description": "Papas francesas, salchicha, papachongo, lechuga, queso, salsa piña, salsa de la casa, queso gratinado", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 4, "name": "Salchipapa Especial Anillos Grill", "description": "Papas a la francesa, salchicha, pollo, carne, chorizo, butifarra, cebolla, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 5, "name": "Salchipapa Pollo", "description": "Papas francesas, salchicha, pollo, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 6, "name": "Salchipapa Carne", "description": "Papas francesas, carne, salchicha, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 7, "name": "Salchipapa Mixta", "description": "Papas francesas, carne, pollo, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 8, "name": "Salchipapa Trifásica", "description": "Papas francesas, chorizo, butifarra, pollo, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 9, "name": "Salchipapa Pollo Suizo", "description": "Papas francesas, salchicha suiza, pollo, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 10, "name": "Salchipapa Suiza Ranchera", "description": "Papas francesas, salchicha ranchera y suiza, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Salchipapa Salvajada Anillos Grill", "description": "Papas francesas, salchicha, pollo, carne, chorizo, butifarra, maíz, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 61000, "image": "", "placeholder": "", "variants": []},
+      {"id": 12, "name": "Salchipapa Chorizo Butifarra", "description": "Papas francesas, salchicha, chorizo, butifarra, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 13, "name": "Salchipapa Ranchera", "description": "Papas francesas, salchicha ranchera, papachongo, lechuga, queso, mozzarella, salsa piña, salsa de la casa", "basePrice": 17500, "image": "", "placeholder": "", "variants": []},
+      {"id": 14, "name": "Salchipapa Salvajada Anillos Grill", "description": "Papas francesas, salchicha, pollo, carne, chorizo, butifarra, pimentón, cebolla, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 28000, "image": "", "placeholder": "", "variants": []},
+      {"id": 15, "name": "Salchipapa Especial", "description": "Papas francesas, salchicha, carne, pollo, chorizo, butifarra, cebolla, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 33000, "image": "", "placeholder": "", "variants": []},
+      {"id": 16, "name": "Salchipapa Salvajada BIG", "description": "Papas francesas, salchicha, pollo, carne, chorizo, butifarra, maíz, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 38000, "image": "", "placeholder": "", "variants": []},
+      {"id": 17, "name": "Salchipapa Mega Especial Anillos Grill", "description": "Papas francesas, salchicha, carne, pollo, chorizo, butifarra, maíz, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 49000, "image": "", "placeholder": "", "variants": []},
+      {"id": 18, "name": "Salchipapa Suiza", "description": "Papas francesas, salchicha suiza y de pollo, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 17500, "image": "", "placeholder": "", "variants": []},
+      {"id": 19, "name": "Salchipapa Especial", "description": "Papas francesas, salchicha, carne, pollo, chorizo, butifarra, maíz, papachongo, lechuga, queso, salsa piña, salsa de la casa", "basePrice": 24000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Chuzos Desgranados", "items": [
+      {"id": 20, "name": "Chuzo Desgranado Carne y Pollo", "description": "Pollo grillé, carne, lechuga, mozzarella, chongo, salsa de la casa, salsa piña", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 21, "name": "Chuzo Desgranado Salchicha + Pollo", "description": "Pollo, salchicha, mozzarella, queso, chongo, lechuga, salsa de la casa, salsa piña", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 22, "name": "Chuzo Desgranado Trifásico", "description": "Queso, chorizo, butifarra, chongo, salchicha, salsa de la casa, salsa piña, lechuga", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 23, "name": "Chuzo Desgranado Especial Anillos Grill", "description": "Pollo, carne, chorizo, tocineta, salchicha, butifarra, mozzarella, queso, maíz, chongo, lechuga, salsa de la casa, salsa piña", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 24, "name": "Chuzo Desgranado Suizo Pollo", "description": "Pollo, salchicha suiza, mozzarella, queso, chongo, lechuga, salsa de la casa, salsa piña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 25, "name": "Chuzo Desgranado Anillos Bacon", "description": "Pollo, jamón, tocineta, mozzarella, queso, chongo, lechuga, salsa de la casa, salsa piña", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 26, "name": "Chuzo Desgranado Ranchero", "description": "Pollo, salchicha ranchera, mozzarella, queso, chongo, lechuga, salsa de la casa, salsa piña", "basePrice": 16000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Asados", "items": [
+      {"id": 27, "name": "Chuleta de Cerdo", "description": "", "basePrice": 21000, "image": "", "placeholder": "Papas o Bollo", "variants": []},
+      {"id": 28, "name": "Carne de Res", "description": "", "basePrice": 22000, "image": "", "placeholder": "Papas o Bollo", "variants": []},
+      {"id": 29, "name": "Pechuga", "description": "", "basePrice": 21000, "image": "", "placeholder": "Papas o Bollo", "variants": []},
+      {"id": 30, "name": "Pollo en Crema de Queso", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Hamburguesas", "items": [
+      {"id": 31, "name": "Hamburguesa VI", "description": "240gr de carne de res, mozzarella, tocineta, lechuga, tomate, cebolla caramelizada, queso doble crema y salsa de la casa", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 32, "name": "Hamburguesa Anillos de Cebolla", "description": "Carne de res, aros crujientes, mozzarella, tocineta, lechuga, tomate, cebolla y queso doble crema", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 33, "name": "Hamburguesa Anillo Bacon", "description": "Carne de res, doble tocineta, queso doble crema, tomate y cebolla caramelizada", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 34, "name": "Hamburguesa Gourmet", "description": "Carne de res, chorizo, mozzarella, tocineta, lechuga, tomate, cebolla caramelizada y queso doble crema", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 35, "name": "Hamburguesa Mixta", "description": "Carne de res, pechuga, mozzarella, tocineta, lechuga, tomate y cebolla caramelizada", "basePrice": 19000, "image": "", "placeholder": "", "variants": []},
+      {"id": 36, "name": "Hamburguesa Clásica", "description": "Carne de res, mozzarella, tocineta, lechuga, tomate y cebolla caramelizada", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 37, "name": "Hamburguesa de Pollo", "description": "Pechuga, tocineta, lechuga, tomate y cebolla", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 38, "name": "Hamburguesa Doble Pollo", "description": "240gr de pechuga, tocineta, lechuga, tomate y cebolla caramelizada", "basePrice": 19000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Perros", "items": [
+      {"id": 39, "name": "Perro Sencillo", "description": "Salchicha, cebolla, lechuga, papachongo, salsa de la casa, queso y salsa piña", "basePrice": 6500, "image": "", "placeholder": "", "variants": []},
+      {"id": 40, "name": "Perro a la Plancha", "description": "Salchicha, cebolla, lechuga, papachongo, salsa de la casa, queso y salsa piña", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 41, "name": "Perro Gemelo", "description": "Doble salchicha, cebolla, lechuga, papachongo, salsa de la casa, salsa piña y queso", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 42, "name": "Perro Chori", "description": "Chorizo, cebolla, lechuga, papachongo, salsa de la casa, queso y salsa piña", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 43, "name": "Perro Buti", "description": "Butifarra, cebolla, lechuga, papachongo, salsa de la casa, queso y salsa piña", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 44, "name": "Perro Hawaiano", "description": "Salchicha Premium, piña, tocineta, lechuga, papachongo, salsa de la casa y mozzarella", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+      {"id": 45, "name": "Polliperro", "description": "Salchicha pollo, tocineta, lechuga, papachongo, salsa de la casa, salsa piña y queso", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 46, "name": "Perro Suizo", "description": "Salchicha suiza, cebolla, lechuga, papachugo, tocineta, mozzarella y queso", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 47, "name": "Perro Medio Suizo", "description": "Media Salchicha suiza, cebolla, lechuga, papachugo, tocineta, mozzarella y queso", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 48, "name": "Perro Anillos Grill", "description": "Pollo, carne, salchicha, cebolla, pimentón, cebolla grillé, queso, mozzarella, papachongo, lechuga, salsa de la casa, salsa piña y tocineta", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 49, "name": "Perro Italiano Hawaiano", "description": "Salchicha italiana, piña, cebolla, lechuga, queso, papachongo, mozzarella y tocineta", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 50, "name": "Perro Gourmet", "description": "Salchicha, tocineta, queso, doble crema, maíz, cebolla, lechuga y salsa de la casa", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 51, "name": "Perro Alemán", "description": "Salchicha Alemana, tocineta, lechuga, papachongo, queso, mozzarella, salsa de la casa y salsa piña", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 52, "name": "Perro Ranchero", "description": "Salchicha ranchera, tocineta, cebolla, lechuga, papachongo, salsa de la casa, salsa piña, queso y mozzarella", "basePrice": 14000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Vaqueritos", "items": [
+      {"id": 53, "name": "Vaquerito de Carne", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 54, "name": "Vaquerito de Pechuga", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 55, "name": "Vaquerito de Chuleta", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Mazorcas", "items": [
+      {"id": 56, "name": "Mazorca Sencilla", "description": "Maíz, papa chongo, lechuga, butifarra, chorizo, mozzarella, queso criollo, salsa piña, salsa de la casa", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 57, "name": "Mazorca Trifásica", "description": "Maíz, queso, papa chongo, lechuga, salsa piña, salsa de la casa, mozzarella, pollo, chorizo, butifarra", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 58, "name": "Mazorca Anillos Bacon", "description": "Maíz, jamón, pollo, tocineta, queso, lechuga, salsa piña, salsa de casa, mozzarella", "basePrice": 19000, "image": "", "placeholder": "", "variants": []},
+      {"id": 59, "name": "Mazorca Anillo Grill Especial", "description": "Maíz, queso, salsa piña, salsa de la casa, lechuga, pollo, chorizo, butifarra, cerdo, chongo", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 60, "name": "Mazorca Suiza", "description": "Maíz, papa chongo, lechuga, salchicha suiza, salchicha, queso, mozzarella", "basePrice": 17000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Adicionales", "items": [
+      {"id": 61, "name": "Maíz", "description": "", "basePrice": 6500, "image": "", "placeholder": "", "variants": []},
+      {"id": 62, "name": "Chorizo", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 63, "name": "Papas a la Francesa", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []},
+      {"id": 64, "name": "Salchicha Suiza", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 65, "name": "Queso Gratinado", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Bebidas", "items": [
+      {"id": 66, "name": "Coca-Cola Litro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 67, "name": "Coca-Cola Personal", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 68, "name": "Coca-Cola Mini", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 69, "name": "Manzana Litro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 70, "name": "Manzana Personal", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 71, "name": "Jugo Hit Litro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 72, "name": "Pony Malta Litro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 73, "name": "Jugos", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 74, "name": "Agua", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},
+      {"id": 75, "name": "Cerveza", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []}
+    ]}
+  ]
+}
