@@ -231,7 +231,8 @@
         <% if (restaurantes && restaurantes.length > 0) { %>
           <% restaurantes.forEach(resto => { %>
             <article class="restaurant-card neumorphic-outset">
-              <a href="<%= resto.id %>" class="w-full">
+              <a href="<%= resto.id.startsWith('http') ? resto.id : '/' + resto.id %>" class="w-full" 
+                      <%= resto.id.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : '' %>>
                 <div class="relative w-full mb-6">
                   <img src="<%= resto.logo || '/assets/banner.png'%>" alt="Logo de <%= resto.name %>" class="aspect-[16/9] w-full object-cover">
                 </div>
@@ -273,6 +274,37 @@
           </p>
         <% } %>
       </div>
+      
+      <% if (pagination.totalPages > 1) { %>
+      <div class="mt-16 flex justify-center items-center gap-3 flex-wrap">
+        
+        <% if (pagination.hasPrev) { %>
+          <a href="?page=<%= pagination.prevPage %><%= currentSort ? '&sort=' + currentSort : '' %><%= currentFilter ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+             class="neumorphic-outset px-4 py-2 rounded-lg color-text hover:text-[var(--primary-color)] transition">
+            « Anterior
+          </a>
+        <% } else { %>
+          <span class="neumorphic-inset px-4 py-2 rounded-lg opacity-50">« Anterior</span>
+        <% } %>
+
+        <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+          <a href="?page=<%= i %><%= currentSort ? '&sort=' + currentSort : '' %><%= currentFilter ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+             class="neumorphic-outset px-4 py-2 rounded-lg <%= pagination.currentPage === i ? 'active font-semibold text-[var(--primary-color)]' : 'color-text' %>">
+            <%= i %>
+          </a>
+        <% } %>
+
+        <% if (pagination.hasNext) { %>
+          <a href="?page=<%= pagination.nextPage %><%= currentSort ? '&sort=' + currentSort : '' %><%= currentFilter ? '&filter=' + currentFilter : '' %><%= searchTerm ? '&search=' + searchTerm : '' %>#restaurantes" 
+             class="neumorphic-outset px-4 py-2 rounded-lg color-text hover:text-[var(--primary-color)] transition">
+            Siguiente »
+          </a>
+        <% } else { %>
+          <span class="neumorphic-inset px-4 py-2 rounded-lg opacity-50">Siguiente »</span>
+        <% } %>
+
+      </div>
+      <% } %>
     </div>
   </main>
 
