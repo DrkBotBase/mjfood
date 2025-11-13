@@ -130,11 +130,11 @@
       {"id": 60, "name": "Mazorca Suiza", "description": "Maíz, papa chongo, lechuga, salchicha suiza, salchicha, queso, mozzarella", "basePrice": 17000, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Adicionales", "items": [
-      {"id": 61, "name": "Maíz", "description": "", "basePrice": 6500, "image": "", "placeholder": "", "variants": []},
-      {"id": 62, "name": "Chorizo", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
-      {"id": 63, "name": "Papas a la Francesa", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []},
-      {"id": 64, "name": "Salchicha Suiza", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 65, "name": "Queso Gratinado", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []}
+      {"id": 61, "name": "Ad. Maíz", "description": "", "basePrice": 6500, "image": "", "placeholder": "", "variants": []},
+      {"id": 62, "name": "Ad. Chorizo", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
+      {"id": 63, "name": "Ad. Papas a la Francesa", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []},
+      {"id": 64, "name": "Ad. Salchicha Suiza", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 65, "name": "Ad. Queso Gratinado", "description": "", "basePrice": 7500, "image": "", "placeholder": "", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
       {"id": 66, "name": "Coca-Cola Litro", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": []},

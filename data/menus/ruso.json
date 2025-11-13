@@ -1,0 +1,155 @@
+{
+  "config": {
+    "extension": "the_ruso_fast_food",
+    "orden": "7",
+    "color": {
+      "text": "#e0e1e5",
+      "primary": "#0cf106",
+      "bg": "#17171b",
+      "light": "#262222",
+      "dark": "#000000"
+    },
+    "pwa": {
+      "short_name": "The Ruso Fast Food",
+      "name": "The Ruso - Pedidos",
+      "description": "Restaurante de comida rapida.",
+      "theme_color": "#17171b",
+      "background_color": "#17171b",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/the_ruso/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["fast food", "restaurant"],
+      "lang": "es"
+    },
+    "nombre": "The Ruso Fast Food",
+    "direccion": "Calle 14 # 13 - 135",
+    "telefonoWhatsApp": "573017179786",
+    "logoUrl": "/assets/the_ruso/banner.png",
+    "taxRate": 0
+  },
+  "schedule": [
+    { "day": 0, "open": "17:00", "close": "00:00" }, 
+    { "day": 1, "open": "17:00", "close": "00:00" }, 
+    { "day": 2, "open": "17:00", "close": "00:00" }, 
+    { "day": 3, "open": "17:00", "close": "00:00" }, 
+    { "day": 4, "open": "17:00", "close": "00:00" }, 
+    { "day": 5, "open": "17:00", "close": "00:00" }, 
+    { "day": 6, "open": "17:00", "close": "00:00" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 2000 },
+    { "name": "Otra (consultar)", "price": 0 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "", 
+      "accountHolder": ""
+    }
+  },
+  "menu": [
+    {"category": "Perros","items": [
+      {"id": 1, "name": "Perro Sencillo", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 2, "name": "Perro Sencillo + Papa", "description": "", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 3, "name": "Perro A La Plancha", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+      {"id": 4, "name": "Perro Medio Suizo", "description": "", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 5, "name": "Perro Suizo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 6, "name": "Perro Pollo Suizo", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 7, "name": "Perro Choriperro", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 8, "name": "Perro Butíperro", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 9, "name": "Perro Gemelo", "description": "", "basePrice": 11000, "image": "", "placeholder": "", "variants": []},
+      {"id": 10, "name": "Perro Ranchero", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Perro Trifásico", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 12, "name": "Perro Mixto", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 13, "name": "Perro Italo Suizo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 14, "name": "Polliperro", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 15, "name": "Perro Especial + Papa", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Picadas", "items": [
+      {"id": 16, "name": "Picada Chorizo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 17, "name": "Picada Butifarra", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 18, "name": "Picada Combinada", "description": "", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
+      {"id": 19, "name": "Picada Suiza", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 20, "name": "Picada Pollo Suiza", "description": "", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 21, "name": "Picada Pollo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 22, "name": "Picada Carne", "description": "", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 23, "name": "Picada Pollo Carne", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 24, "name": "Picada Trifásica Suiza", "description": "", "basePrice": 24000, "image": "", "placeholder": "", "variants": []},
+      {"id": 25, "name": "Picada Gratinada", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Salchipapas", "items": [
+      {"id": 26, "name": "Salchipapa Sencilla", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": []},
+      {"id": 27, "name": "Salchipapa Butípapa", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 28, "name": "Salchipapa Chorípapa", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 29, "name": "Salchipapa Choributí", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 30, "name": "Salchipapa Suiza", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 31, "name": "Salchipapa Ranchera", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 32, "name": "Salchipapa Pollo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 33, "name": "Salchipapa Carne", "description": "", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 34, "name": "Salchipapa Pollo Carne", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 35, "name": "Salchipapa Pollo Suiza", "description": "", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 36, "name": "Salchipapa Pollo Ranchera", "description": "", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 37, "name": "Salchipapa Trifásica Suiza", "description": "", "basePrice": 24000, "image": "", "placeholder": "", "variants": []},
+      {"id": 38, "name": "Salchipapa Especial Gratinada", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": []},
+      {"id": 39, "name": "Salchipapa Super Especial", "description": "", "basePrice": 44000, "image": "", "placeholder": "", "variants": []},
+      {"id": 40, "name": "Salchipapa Super de la Casa", "description": "", "basePrice": 75000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Hamburguesas", "items": [
+      {"id": 41, "name": "Hamburguesa Carne", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 42, "name": "Hamburguesa Pollo", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": []},
+      {"id": 43, "name": "Hamburguesa Sencilla + Papa", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 44, "name": "Hamburguesa Doble Carnes", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 45, "name": "Hamburguesa Doble Carnes + Papa", "description": "", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 46, "name": "Hamburguesa Mixta", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 47, "name": "Hamburguesa Tres Carnes + Papas", "description": "", "basePrice": 24000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Asados", "items": [
+      {"id": 48, "name": "Asado Punta Gorda", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": []},
+      {"id": 49, "name": "Asado Pechuga", "description": "", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
+      {"id": 50, "name": "Asado Cerdo", "description": "", "basePrice": 22000, "image": "", "placeholder": "", "variants": []},
+      {"id": 51, "name": "Asado Mixta", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": []},
+      {"id": 52, "name": "Asado Pechuga Gratinada", "description": "", "basePrice": 27000, "image": "", "placeholder": "", "variants": []},
+      {"id": 53, "name": "Asado Pechuga Encebollada o Cerdo", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Patacones", "items": [
+      {"id": 54, "name": "Patacón Butifarra", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
+      {"id": 55, "name": "Patacón Chorizo", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": []},
+      {"id": 56, "name": "Patacón Pollo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
+      {"id": 57, "name": "Patacón Suiza", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+      {"id": 58, "name": "Patacón Pollo Suiza", "description": "", "basePrice": 21000, "image": "", "placeholder": "", "variants": []},
+      {"id": 59, "name": "Patacón Pollo Carne", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 60, "name": "Patacón Especial", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Mazorcas", "items": [
+      {"id": 61, "name": "Mazorca Sencilla", "description": "", "basePrice": 20000, "image": "", "placeholder": "", "variants": []},
+      {"id": 62, "name": "Mazorca Pollo", "description": "", "basePrice": 27000, "image": "", "placeholder": "", "variants": []},
+      {"id": 63, "name": "Mazorca Mixta", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": []},
+      {"id": 64, "name": "Mazorca Trifásica", "description": "", "basePrice": 24000, "image": "", "placeholder": "", "variants": []},
+      {"id": 65, "name": "Mazorca Carne", "description": "", "basePrice": 20000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Adicionales", "items": [
+      {"id": 66, "name": "Ad. Papa", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 67, "name": "Ad. Bollo", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 68, "name": "Ad. Gratinado", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []},
+      {"id": 69, "name": "Ad. Grille", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 70, "name": "Ad. Tocineta", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 71, "name": "Ad. Maíz", "description": "", "basePrice": 3000, "image": "", "placeholder": "", "variants": []},
+      {"id": 72, "name": "Ad. Cebolla", "description": "", "basePrice": 2000, "image": "", "placeholder": "", "variants": []},
+      {"id": 73, "name": "Ad. Pollo", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
+      {"id": 74, "name": "Ad. Carne", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []}
+    ]},
+    {"category": "Bebidas", "items": [
+      {"id": 75, "name": "Postobon", "description": "", "basePrice": 0, "image": "", "placeholder": "Sabor y Tamaño", "variants": []},
+      {"id": 76, "name": "Coca Cola", "description": "", "basePrice": 0, "image": "", "placeholder": "Tamaño", "variants": []},
+      {"id": 77, "name": "Jugos Hit", "description": "", "basePrice": 0, "image": "", "placeholder": "Sabor y Tamaño", "variants": []},
+      {"id": 78, "name": "Agua", "description": "", "basePrice": 0, "image": "", "placeholder": "Tamaño", "variants": []}
+    ]}
+  ]
+}
