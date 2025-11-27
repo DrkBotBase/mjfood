@@ -58,6 +58,8 @@ const adminRoutes = require('./routes/admin');
 const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
 const estadisticasRouter = require('./routes/estadisticas');
+const pushRoutes = require('./routes/pushRouter');
+app.use('/push', pushRoutes);
 app.use('/admin', adminRoutes);
 app.use('/pedidos', pedidosRouter);
 app.use('/jornada', jornadaRouter);
@@ -305,7 +307,6 @@ app.get('/:restaurante/sw.js', (req, res) => {
   const extension = req.params.restaurante;
   res.setHeader('Content-Type', 'application/javascript');
   res.send(`
-    // Service Worker para el restaurante ${extension}
     const CACHE_NAME = 'restaurant-${extension}-v2';
     const urlsToCache = [
       '/${extension}/',
@@ -314,19 +315,21 @@ app.get('/:restaurante/sw.js', (req, res) => {
       '/assets/${extension}/banner.png'
     ];
 
+    // ==========================
+    //   INSTALACIÓN (CACHE)
+    // ==========================
     self.addEventListener('install', event => {
       event.waitUntil(
         caches.open(CACHE_NAME)
-          .then(cache => {
-            return cache.addAll(urlsToCache);
-          })
-          .catch(error => {
-            console.log('Cache addAll failed:', error);
-          })
+          .then(cache => cache.addAll(urlsToCache))
+          .catch(error => console.log('Cache addAll failed:', error))
       );
       self.skipWaiting();
     });
 
+    // ==========================
+    //   ACTIVACIÓN
+    // ==========================
     self.addEventListener('activate', event => {
       event.waitUntil(
         caches.keys().then(cacheNames => {
@@ -342,19 +345,75 @@ app.get('/:restaurante/sw.js', (req, res) => {
       self.clients.claim();
     });
 
+    // ==========================
+    //   FETCH
+    // ==========================
     self.addEventListener('fetch', event => {
       event.respondWith(
         caches.match(event.request)
-          .then(response => {
-            return response || fetch(event.request);
-          })
+          .then(response => response || fetch(event.request))
       );
     });
-    
+
+    // ==========================
+    //   ACTUALIZACIÓN MANUAL
+    // ==========================
     self.addEventListener('message', event => {
-      if (event.data.type === 'SKIP_WAITING') {
+      if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
       }
+    });
+
+    // ==========================
+    //   PUSH NOTIFICATIONS
+    // ==========================
+    self.addEventListener('push', event => {
+      let data = { title: "MJ STREET PRIME", message: "Nueva notificación" };
+
+      try {
+        if (event.data) {
+          data = event.data.json();
+        }
+      } catch (e) {
+        console.error("Error parsing push data:", e);
+      }
+
+      const options = {
+        body: data.message,
+        icon: '/assets/${extension}/icon.png',
+        badge: '/assets/${extension}/icon.png',
+        vibrate: [200, 100, 200],
+        data: { url: '/${extension}/' }
+      };
+
+      event.waitUntil(
+        self.registration.showNotification(
+          data.title || "Notificación",
+          options
+        )
+      );
+    });
+
+    // ==========================
+    //   ABRIR APP AL CLIC
+    // ==========================
+    self.addEventListener('notificationclick', event => {
+      const url = event.notification.data.url || '/${extension}/';
+      event.notification.close();
+
+      event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+          .then(clientList => {
+            for (const client of clientList) {
+              if (client.url.includes(url) && 'focus' in client) {
+                return client.focus();
+              }
+            }
+            if (clients.openWindow) {
+              return clients.openWindow(url);
+            }
+          })
+      );
     });
   `);
 });

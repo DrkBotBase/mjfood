@@ -512,11 +512,20 @@
                 cartModal.formError.textContent = 'Por favor, completa todos los campos obligatorios (*).'; return false;
             } return true;
         }
+        /*New code accordion*/
         function renderMenu() {
             menuContainer.innerHTML = '';
+            const activeCategory = window.restaurantData.activeCategory; // Puede ser undefined
+            
             window.restaurantData.menu.forEach(cat => {
+                // Si no existe activeCategory, ninguna categoría inicia activa (comportamiento original)
+                const isActive = activeCategory ? cat.category === activeCategory : false;
+                const accordionClass = isActive ? 
+                    'category-accordion neumorphic-flat rounded-2xl active' : 
+                    'category-accordion neumorphic-flat rounded-2xl';
+                
                 const accordion = document.createElement('div');
-                accordion.className = 'category-accordion neumorphic-flat rounded-2xl';
+                accordion.className = accordionClass;
                 accordion.innerHTML = `
                     <button class="category-header w-full p-6 flex justify-between items-center text-left">
                         <h2 class="text-3xl font-bold tracking-tight">${cat.category}</h2>
@@ -664,11 +673,14 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             initializeApp(restaurantData);
-
+            
+            /*new listener*/
             menuContainer.addEventListener('click', e => {
                 const header = e.target.closest('.category-header');
                 if (header) {
-                    const clickedAccordion = header.parentElement; const wasActive = clickedAccordion.classList.contains('active');
+                    const clickedAccordion = header.parentElement;
+                    const wasActive = clickedAccordion.classList.contains('active');
+                    
                     document.querySelectorAll('.category-accordion').forEach(acc => acc.classList.remove('active'));
                     if (!wasActive) clickedAccordion.classList.add('active');
                 }

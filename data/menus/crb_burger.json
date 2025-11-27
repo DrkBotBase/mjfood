@@ -1,0 +1,73 @@
+{
+  "config": {
+    "extension": "crb_burger",
+    "orden": "9",
+    "color": {
+      "text": "#e0e1e5",
+      "primary": "#0cf106",
+      "bg": "#17171b",
+      "light": "#262222",
+      "dark": "#000000"
+    },
+    "pwa": {
+      "short_name": "CRB Burger",
+      "name": "CRB Burger - Pedidos",
+      "description": "Las mejores Hamburguesas.",
+      "theme_color": "#17171b",
+      "background_color": "#17171b",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/crb_burger/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["fast food", "restaurant"],
+      "lang": "es"
+    },
+    "nombre": "CRB Burger",
+    "direccion": "Calle 14 # 14 - 24",
+    "telefonoWhatsApp": "573042048572",
+    "logoUrl": "/assets/crb_burger/banner.png",
+    "taxRate": 0
+  },
+  "schedule": [
+    { "day": 0, "open": "17:00", "close": "23:55" }, 
+    { "day": 1, "open": "17:00", "close": "23:55" }, 
+    { "day": 2, "open": "17:00", "close": "23:55" }, 
+    { "day": 3, "open": "17:00", "close": "23:55" }, 
+    { "day": 4, "open": "17:00", "close": "23:55" }, 
+    { "day": 5, "open": "17:00", "close": "23:55" }, 
+    { "day": 6, "open": "17:00", "close": "23:55" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 2000 },
+    { "name": "Otra (consultar)", "price": 0 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "", 
+      "accountHolder": ""
+    }
+  },
+  "activeCategory": "Combos",
+  "menu": [
+    {"category": "Combos", "items": [
+      {"id": 1, "name": "Classic Burger", "description": "Pan Brioche - Carne Premium - Queso Cheddar - Tomate - Cebolla", "basePrice": 19000, "image": "/assets/crb_burger/1.png", "placeholder": "", "variants": []},
+      {"id": 2, "name": "Sweet Burger", "description": "Pan Brioche - Carne Premium - Tocineta - Queso Mozzarella - Cebolla Caramelizada", "basePrice": 22000, "image": "/assets/crb_burger/2.png", "placeholder": "", "variants": []},
+      {"id": 3, "name": "Pulled Pork", "description": "Pan Brioche - Carne Premium Pulled Pork - Queso Mozzarella", "basePrice": 26000, "image": "/assets/crb_burger/3.png", "placeholder": "", "variants": []},
+      {"id": 4, "name": "Oklahoma Burger", "description": "Pan Brioche - Carne Premium - Quedo Cheddar - Pepinillos - Cebolla", "basePrice": 22000, "image": "/assets/crb_burger/4.png", "placeholder": "", "variants": []},
+      {"id": 5, "name": "Pig Burger", "description": "Pan Brioche - Carne Premium - Queso Cheddar - Chicharron", "basePrice": 26000, "image": "/assets/crb_burger/5.png", "placeholder": "", "variants": []},
+      {"id": 6, "name": "Tocci Cheddar - Doble Sabor", "description": "Pan Brioche - Doble Carne Premium - Doble Queso Cheddar - Doble Tocino", "basePrice": 28000, "image": "/assets/crb_burger/6.png", "placeholder": "", "variants": []},
+      {"id": 7, "name": "Blue Burger", "description": "Pan Brioche - Carne Premium - Queso Costeño - Chorizo Santarrosano - Salsa Queso Azul", "basePrice": 28000, "image": "/assets/crb_burger/7.png", "placeholder": "", "variants": []},
+      {"id": 8, "name": "Onion Burger", "description": "Pan Brioche - Carne Premium - Queso Mozzarella - Aros De Cebolla - Tocineta - Chorizo Artesanal", "basePrice": 22000, "image": "/assets/crb_burger/8.png", "placeholder": "", "variants": []},
+      {"id": 9, "name": "Chicken Burger", "description": "Pan Brioche - Pechuga De Pollo Apanado - Queso Mozzarella - Tocineta - Miel Mostaza", "basePrice": 22000, "image": "/assets/crb_burger/9.png", "placeholder": "", "variants": []},
+      {"id": 10, "name": "Perro Americano", "description": "Pan Brioche - Salchicha Americana - Queso Costeño - Tocino - Papas Fritas", "basePrice": 15000, "image": "/assets/crb_burger/10.png", "placeholder": "", "variants": []},
+      {"id": 11, "name": "Nuggets De Pollo", "description": "Nuggets De Pollo - Papas Fritas", "basePrice": 15000, "image": "/assets/crb_burger/11.png", "placeholder": "", "variants": []}
+    ]}
+  ]
+}
