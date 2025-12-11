@@ -25,58 +25,182 @@ class PWAHandler {
         this.initNotifications();
     }
     showInstallPromotion() {
-        if (!document.getElementById('pwa-install-button')) {
-            const installButton = document.createElement('button');
-            installButton.id = 'pwa-install-button';
-            installButton.className = 'pwa-install-btn';
-            installButton.innerHTML = '📲 Instalar App';
-            installButton.addEventListener('click', () => this.installApp());
-            
-            if (document.querySelector('.floating-action')) {
-                document.querySelector('.floating-action').appendChild(installButton);
-            } else {
-                document.body.appendChild(installButton);
-            }
-            this.styleInstallButton();
-        }
-    }
-    styleInstallButton() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .pwa-install-btn {
-                position: fixed;
-                bottom: 100px;
-                right: 20px;
-                padding: 12px 20px;
-                background: var(--color-primary, #2563EB);
-                color: white;
-                border: none;
-                border-radius: 50px;
-                font-weight: bold;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-                cursor: pointer;
-                z-index: 1000;
-                transition: all 0.3s ease;
-            }
-            
-            .pwa-install-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-            }
-            
-            @media (max-width: 768px) {
-                .pwa-install-btn {
-                    bottom: 70px;
-                    right: 15px;
-                    padding: 10px 16px;
-                    font-size: 14px;
-                }
-            }
+    // 1. Verificamos que no exista ya el banner
+    if (!document.getElementById('pwa-install-banner')) {
+        
+        // 2. Crear el contenedor principal
+        const banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.className = 'pwa-banner';
+        
+        // 3. Definir el contenido HTML interno (Icono + Texto + Botones)
+        banner.innerHTML = `
+            <div class="pwa-content">
+                <div class="pwa-icon">📱</div>
+                <div class="pwa-info">
+                    <h3>Instalar App</h3>
+                    <p>Agrega nuestra app a tu inicio para una experiencia más rápida y fluida.</p>
+                </div>
+            </div>
+            <div class="pwa-actions">
+                <button id="pwa-close-btn" class="btn-text">Ahora no</button>
+                <button id="pwa-accept-btn" class="btn-primary">Instalar</button>
+            </div>
         `;
-        document.head.appendChild(style);
+
+        // 4. Agregar al body
+        document.body.appendChild(banner);
+
+        // 5. Agregar los eventos (Listeners)
+        
+        // Botón de Instalar
+        const installBtn = banner.querySelector('#pwa-accept-btn');
+        installBtn.addEventListener('click', () => {
+            this.installApp();
+            banner.remove(); // Opcional: cerrar banner tras instalar
+        });
+
+        // Botón de Cerrar (Solo elimina el elemento del DOM actual)
+        const closeBtn = banner.querySelector('#pwa-close-btn');
+        closeBtn.addEventListener('click', () => {
+            // Animación de salida antes de remover
+            banner.style.opacity = '0';
+            banner.style.transform = 'translateY(20px)';
+            setTimeout(() => banner.remove(), 300);
+        });
+
+        // 6. Inyectar estilos
+        this.styleInstallBanner();
     }
+}
+
+styleInstallBanner() {
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Contenedor del Banner */
+        .pwa-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: #ffffff; /* Fondo blanco limpio */
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra suave y moderna */
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            font-family: system-ui, -apple-system, sans-serif;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Parte superior: Icono y Texto */
+        .pwa-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pwa-icon {
+            font-size: 24px;
+            background: #F3F4F6;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .pwa-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .pwa-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #6B7280;
+            line-height: 1.4;
+        }
+
+        /* Botones */
+        .pwa-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .pwa-actions button {
+            cursor: pointer;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        /* Estilo Botón "Ahora no" */
+        .btn-text {
+            background: transparent;
+            color: #6B7280;
+        }
+        .btn-text:hover {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        /* Estilo Botón "Instalar" */
+        .btn-primary {
+            background: var(--primary-color, #2563EB); /* Usa tu variable de color */
+            color: white;
+        }
+        .btn-primary:hover {
+            filter: brightness(110%);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Animación de entrada */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 50px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* Ajustes para Móviles */
+        @media (max-width: 480px) {
+            .pwa-banner {
+                width: 100%;
+                bottom: 0;
+                left: 0;
+                transform: none; /* Quitamos el centrado */
+                border-radius: 16px 16px 0 0; /* Solo bordes superiores redondos */
+                animation: slideUpMobile 0.4s ease-out;
+            }
+            
+            @keyframes slideUpMobile {
+                from { transform: translateY(100%); }
+                to { transform: translateY(0); }
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
     hideInstallPromotion() {
-        const installButton = document.getElementById('pwa-install-button');
+        const installButton = document.getElementById('pwa-install-banner');
         if (installButton) {
             installButton.remove();
         }
@@ -202,7 +326,7 @@ class PWAHandler {
         
         shareButton.addEventListener('click', () => this.shareApp());
         
-        const installButton = document.getElementById('pwa-install-button');
+        const installButton = document.getElementById('pwa-install-banner');
         if (installButton) {
           installButton.insertAdjacentElement('afterend', shareButton);
         } else if (document.querySelector('.floating-action')) {
