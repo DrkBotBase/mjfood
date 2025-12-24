@@ -7,7 +7,7 @@ module.exports = {
     dominio: 'https://mjfood.top',
     whatsapp: '17755107666',
     keywords: 'menú digital, restaurantes, comida, pedidos online, código QR, carta digital, menú QR, MJ Food, restaurantes Colombia, tecnología restaurantes',
-    colorTheme: '#0a0a0a',
+    colorTheme: '#e0e5ec',
     fb_app_id: '',
     logo: 'banner',
     icon: 'icon',
