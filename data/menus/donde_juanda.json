@@ -34,13 +34,13 @@
     "taxRate": 0
   },
   "schedule": [
-    { "day": 0, "open": "10:00", "close": "23:55" }, 
-    { "day": 1, "open": "10:00", "close": "23:55" }, 
-    { "day": 2, "open": "10:00", "close": "23:55" }, 
-    { "day": 3, "open": "10:00", "close": "23:55" }, 
-    { "day": 4, "open": "10:00", "close": "23:55" }, 
-    { "day": 5, "open": "10:00", "close": "23:55" }, 
-    { "day": 6, "open": "10:00", "close": "23:55" }
+    { "day": 0, "open": "15:30", "close": "23:00" }, 
+    { "day": 1, "open": "15:30", "close": "23:00" }, 
+    { "day": 2, "open": "15:30", "close": "23:00" }, 
+    { "day": 3, "open": "15:30", "close": "23:00" }, 
+    { "day": 4, "open": "15:30", "close": "23:00" }, 
+    { "day": 5, "open": "15:30", "close": "23:00" }, 
+    { "day": 6, "open": "15:30", "close": "23:00" }
   ],
   "shippingZones": [
     { "name": "La Playa", "price": 2000 },
@@ -56,20 +56,20 @@
   },
   "menu": [
     {"category": "Picadas Sencillas", "items": [
-      {"id": 1, "name": "Oreja", "description": "", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
-      {"id": 2, "name": "Chinchurria", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 3, "name": "Cuajo", "description": "", "basePrice": 8000, "image": "", "placeholder": "", "variants": []},
-      {"id": 4, "name": "Morcilla", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
-      {"id": 5, "name": "Chorizo de Cerdo", "description": "", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
-      {"id": 6, "name": "Chorizo Rojo", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": []}
+      {"id": 1, "name": "Oreja", "description": "", "basePrice": 10000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 2, "name": "Chinchurria", "description": "", "basePrice": 8000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 3, "name": "Cuajo", "description": "", "basePrice": 8000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 4, "name": "Morcilla", "description": "", "basePrice": 7000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 5, "name": "Chorizo de Cerdo", "description": "", "basePrice": 7000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 6, "name": "Chorizo Rojo", "description": "", "basePrice": 5000, "image": "", "placeholder": "Tajada o Bollo", "variants": []}
     ]},
     {"category": "Picadas Combinadas", "items": [
-      {"id": 7, "name": "Oreja + Chinchurria", "description": "", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
-      {"id": 8, "name": "Oreja + Cuajo", "description": "", "basePrice": 18000, "image": "", "placeholder": "", "variants": []},
-      {"id": 9, "name": "Oreja + Chorizo de Cerdo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": []},
-      {"id": 10, "name": "Oreja + Chorizo Rojo", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": []},
-      {"id": 11, "name": "Oreja + Chorizo de Cerdo + Chinchurria", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": []},
-      {"id": 12, "name": "Todas las Carnes", "description": "", "basePrice": 45000, "image": "", "placeholder": "", "variants": []}
+      {"id": 7, "name": "Oreja + Chinchurria", "description": "", "basePrice": 18000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 8, "name": "Oreja + Cuajo", "description": "", "basePrice": 18000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 9, "name": "Oreja + Chorizo de Cerdo", "description": "", "basePrice": 17000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 10, "name": "Oreja + Chorizo Rojo", "description": "", "basePrice": 15000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 11, "name": "Oreja + Chorizo de Cerdo + Chinchurria", "description": "", "basePrice": 25000, "image": "", "placeholder": "Tajada o Bollo", "variants": []},
+      {"id": 12, "name": "Todas las Carnes", "description": "", "basePrice": 45000, "image": "", "placeholder": "Tajada o Bollo", "variants": []}
     ]},
     {"category": "Bebidas", "items": [
       {"id": 13, "name": "Coca-Cola 1 Lt", "description": "", "basePrice": 6000, "image": "", "placeholder": "", "variants": []},
