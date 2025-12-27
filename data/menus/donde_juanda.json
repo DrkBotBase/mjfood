@@ -34,13 +34,13 @@
     "taxRate": 0
   },
   "schedule": [
-    { "day": 0, "open": "15:30", "close": "23:00" }, 
-    { "day": 1, "open": "15:30", "close": "23:00" }, 
-    { "day": 2, "open": "15:30", "close": "23:00" }, 
-    { "day": 3, "open": "15:30", "close": "23:00" }, 
-    { "day": 4, "open": "15:30", "close": "23:00" }, 
-    { "day": 5, "open": "15:30", "close": "23:00" }, 
-    { "day": 6, "open": "15:30", "close": "23:00" }
+    { "day": 0, "open": "15:30", "close": "22:00" }, 
+    { "day": 1, "open": "15:30", "close": "22:00" }, 
+    { "day": 2, "open": "15:30", "close": "22:00" }, 
+    { "day": 3, "open": "15:30", "close": "22:00" }, 
+    { "day": 4, "open": "15:30", "close": "22:00" }, 
+    { "day": 5, "open": "15:30", "close": "22:00" }, 
+    { "day": 6, "open": "15:30", "close": "22:00" }
   ],
   "shippingZones": [
     { "name": "La Playa", "price": 2000 },
