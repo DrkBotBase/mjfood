@@ -1,0 +1,128 @@
+{
+  "config": {
+    "extension": "alitas_picantes",
+    "orden": "10",
+    "color": {
+      "text": "#e0e1e5",
+      "primary": "#f10906",
+      "bg": "#17171b",
+      "light": "#262222",
+      "dark": "#000000"
+    },
+    "pwa": {
+      "short_name": "Alitas Picantes",
+      "name": "Alitas Picantes - Pedidos",
+      "description": "Alitas, hamburguesas y mucho picante 🔥",
+      "theme_color": "#000000",
+      "background_color": "#000000",
+      "display": "standalone",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "/assets/alitas_picantes/icon.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "categories": ["food", "fastfood"],
+      "lang": "es"
+    },
+    "nombre": "Alitas Picantes",
+    "direccion": "calle 8 # 12 - 05",
+    "telefonoWhatsApp": "573004863753",
+    "logoUrl": "/assets/alitas_picantes/banner.png"
+  },
+  "schedule": [
+    { "day": 0, "open": "16:30", "close": "23:30" },
+    { "day": 1, "open": "16:30", "close": "23:30" },
+    { "day": 2, "open": "16:30", "close": "23:30" },
+    { "day": 3, "open": "16:30", "close": "23:30" },
+    { "day": 4, "open": "16:30", "close": "23:30" },
+    { "day": 5, "open": "16:30", "close": "23:30" },
+    { "day": 6, "open": "16:30", "close": "23:30" }
+  ],
+  "shippingZones": [
+    { "name": "La Playa", "price": 2000 },
+    { "name": "Villa Campestre", "price": 3000 }
+  ],
+  "paymentInfo": {
+    "transfer": { 
+      "bankName": "Nequi", 
+      "accountType": "Cuenta", 
+      "accountNumber": "", 
+      "accountHolder": ""
+    }
+  },
+  "menu": [
+    {"category": "Alitas", "items": [
+      { "id": 1, "name": "6 alitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 18000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 2, "name": "12 alitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 36000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 3, "name": "18 alitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 50000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Costillitas", "items": [
+      { "id": 4, "name": "5 costillitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 18000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 5, "name": "10 costillitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 36000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 6, "name": "18 costillitas", "description": "BBQ tradicional, BBQ picante o pimentón ahumado", "basePrice": 60000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Asados", "items": [
+      { "id": 7, "name": "Carne Asada", "description": "", "basePrice": 26000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 8, "name": "Pechuga Asada", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 9, "name": "Cerdo Asado", "description": "", "basePrice": 23000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 10, "name": "Asado Mixta", "description": "", "basePrice": 27000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 11, "name": "Pechuga gratinada", "description": "", "basePrice": 28000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Salchipapas", "items": [
+      { "id": 12, "name": "Salchipapa Sencilla", "description": "", "basePrice": 14000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 13, "name": "Butipapa", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 14, "name": "Choripapa", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 15, "name": "Salchipapa Choributi", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 16, "name": "Salchipapa Ranchera", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 17, "name": "Salchipapa Suiza", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 18, "name": "Salchipapa de Pollo", "description": "", "basePrice": 18000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 19, "name": "Salchipapa Pollo carne", "description": "", "basePrice": 24000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 20, "name": "Salchipapa Pollo suiza", "description": "", "basePrice": 22000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 21, "name": "Salchipapa Pollo ranchera", "description": "", "basePrice": 22000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 22, "name": "Salchipapa Trifásica suiza", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 23, "name": "Salchipapa Especial gratinada", "description": "", "basePrice": 27000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Hamburguesas", "items": [
+      { "id": 24, "name": "Hamburguesa de Carne", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 25, "name": "Hamburguesa de Pollo", "description": "", "basePrice": 13000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 26, "name": "Hamburguesa Sencilla + papas", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 27, "name": "Hamburguesa Doble carne", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 28, "name": "Hamburguesa Doble carne + papas", "description": "", "basePrice": 21000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 29, "name": "Hamburguesa Mixta", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 30, "name": "Hamburguesa Tres carnes + papas", "description": "", "basePrice": 25000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Perros", "items": [
+      { "id": 31, "name": "Perro Sencillo + papas", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 32, "name": "Perro Sencillo a la plancha", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 33, "name": "Perro Suizo", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 34, "name": "Perro Pollo suizo", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 35, "name": "Perro Pollo ranchero", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 36, "name": "Polliperro", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 37, "name": "Perro Gemelo", "description": "", "basePrice": 12000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 38, "name": "Perro Ranchero", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 39, "name": "Perro Mixto", "description": "", "basePrice": 16000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 40, "name": "Perro Trifásico", "description": "", "basePrice": 17000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 41, "name": "Perro Especial + papas", "description": "", "basePrice": 28000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 42, "name": "Perro de la casa", "description": "", "basePrice": 15000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Adicionales", "items": [
+      { "id": 43, "name": "Ad. 1 alita", "description": "", "basePrice": 2500, "image": "", "placeholder": "", "variants": [] },
+      { "id": 44, "name": "Ad. Papa", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 45, "name": "Ad. Gratinado", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": [] },
+      { "id": 46, "name": "Ad. 1 costillita", "description": "", "basePrice": 5000, "image": "", "placeholder": "", "variants": [] }
+    ]},
+    {"category": "Bebidas", "items": [
+      { "id": 47, "name": "Gaseosa personal", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 48, "name": "Postobón 1.5", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 49, "name": "Coca-Cola 1.5", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 50, "name": "Agua", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 51, "name": "Cerveza", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 52, "name": "Micheladas", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 53, "name": "Cocteles", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] },
+      { "id": 54, "name": "Jugo Hit", "description": "", "basePrice": 0, "image": "", "placeholder": "", "variants": [] }
+    ]}
+  ]
+}
