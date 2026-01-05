@@ -39,6 +39,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
           --text-color: <%= color.text || info.colorBase.text%>;
@@ -146,6 +147,11 @@
             color: #3e1010;
             box-shadow: 0 0 5px #FF3131, 0 0 10px #FF3131, 0 0 15px #FF3131;
         }
+        .like-btn {
+        position: fixed;
+        bottom: 90px;
+        right: 25px;
+      }
     </style>
 </head>
 <body class="antialiased">
@@ -256,7 +262,11 @@
         <div class="p-6 border-b border-[var(--dark-shadow)] flex justify-between items-center"><h3 class="text-2xl font-bold">Nuestros Horarios</h3><button id="close-hours-btn" class="neumorphic-button p-2 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button></div>
         <div id="hours-list" class="p-6 space-y-2"></div>
     </div>
-
+    <button id="likeBtn" class="like-btn flex items-center gap-2 px-4 py-2 rounded-xl bg-white shadow text-gray-400 transition" onclick="handleLike(event)">
+      <i class="fa-solid fa-star"></i>
+      <span id="likeCount"><%= likes %></span>
+    </button>
+    
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -663,6 +673,25 @@
           window.open(whatsappUrl, '_blank');
         }
         
+        const RESTAURANTE_ID = window.restaurantData.config.extension;
+        async function handleLike(event) {
+          event.preventDefault();
+      
+          const btn = document.getElementById('likeBtn');
+          const count = document.getElementById('likeCount');
+      
+          const res = await fetch(`/likes/${RESTAURANTE_ID}`, {
+            method: 'POST'
+          });
+      
+          const data = await res.json();
+          count.innerText = data.likes;
+      
+          if (data.liked) {
+            btn.classList.add('like-active', 'text-[var(--primary-color)]');
+          }
+        }
+        
         socket.on('pedido:registrado', () => {
             console.log('Pedido registrado.')
         });
@@ -674,60 +703,192 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeApp(restaurantData);
             
-            /*new listener*/
-            menuContainer.addEventListener('click', e => {
+            /* =========================
+               EVENTOS GENERALES
+               ========================= */
+            document.body.addEventListener('click', async e => {
+
+                /* ===== ACCORDION CATEGORÍAS ===== */
                 const header = e.target.closest('.category-header');
                 if (header) {
                     const clickedAccordion = header.parentElement;
                     const wasActive = clickedAccordion.classList.contains('active');
                     
-                    document.querySelectorAll('.category-accordion').forEach(acc => acc.classList.remove('active'));
+                    document
+                        .querySelectorAll('.category-accordion')
+                        .forEach(acc => acc.classList.remove('active'));
+
                     if (!wasActive) clickedAccordion.classList.add('active');
                 }
+
+                /* ===== SELECCIONAR ITEM ===== */
                 const selectBtn = e.target.closest('.select-item-btn');
                 if (selectBtn) {
                     const itemId = parseInt(selectBtn.dataset.id);
-                    const item = window.restaurantData.menu.flatMap(cat => cat.items).find(i => i.id === itemId);
+                    const item = window.restaurantData.menu
+                        .flatMap(cat => cat.items)
+                        .find(i => i.id === itemId);
+
                     if (item) openItemModal(item);
                 }
+
+                /* ===== LIKE RESTAURANTE ===== */
+                const likeBtn = e.target.closest('.restaurant-like-btn');
+                if (likeBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (likeBtn.dataset.loading === 'true') return;
+                    if (likeBtn.classList.contains('like-active')) return;
+
+                    likeBtn.dataset.loading = 'true';
+                    likeBtn.classList.add('scale-90', 'opacity-70');
+
+                    const restaurantId = likeBtn.dataset.restaurant;
+                    const countSpan = likeBtn.querySelector('.like-count');
+
+                    try {
+                        const res = await fetch(`/likes/${restaurantId}/like`, {
+                            method: 'POST'
+                        });
+
+                        const data = await res.json();
+
+                        if (data.liked) {
+                            likeBtn.classList.add(
+                                'like-active',
+                                'text-[var(--primary-color)]'
+                            );
+                            likeBtn.classList.remove('text-gray-400');
+
+                            if (countSpan) {
+                                countSpan.innerText = data.likes;
+                                countSpan.classList.add('scale-125');
+                                setTimeout(() => {
+                                    countSpan.classList.remove('scale-125');
+                                }, 200);
+                            }
+                        } else {
+                            likeBtn.classList.add('opacity-50');
+                        }
+
+                    } catch (err) {
+                        console.error('Like error:', err);
+                    } finally {
+                        likeBtn.dataset.loading = 'false';
+                        likeBtn.classList.remove('scale-90', 'opacity-70');
+                    }
+                }
             });
+
+            /* =========================
+               CONFIRMAR PEDIDO
+               ========================= */
             cartModal.confirmBtn.addEventListener('click', () => {
               if (validateCartForm()) {
                 saveClientData();
                 sendOrderViaWhatsApp();
-                toggleModal('cart', false); toggleModal('success', true); cart = []; renderCart();
-                // Reset form
+                toggleModal('cart', false);
+                toggleModal('success', true);
+                cart = [];
+                renderCart();
+
                 document.getElementById('order-comments').value = '';
                 document.getElementById('payment-cash-amount').value = '';
                 document.getElementById('efectivo-details').style.display = 'none';
                 document.getElementById('transferencia-details').style.display = 'none';
+
                 const checkedPayment = document.querySelector('input[name="payment"]:checked');
                 if (checkedPayment) checkedPayment.checked = false;
+
                 cartModal.shippingZoneSelect.value = "";
               }
             });
+
+            /* =========================
+               RESUMEN CARRITO
+               ========================= */
             cartModal.shippingZoneSelect.addEventListener('change', updateCartSummary);
-            document.getElementById('hours-button').addEventListener('click', () => toggleModal('hours', true));
-            document.getElementById('close-hours-btn').addEventListener('click', () => toggleModal('hours', false));
-            modals.hours.overlay.addEventListener('click', () => toggleModal('hours', false));
-            document.getElementById('cart-button').addEventListener('click', () => {
-                renderCart();
-                toggleModal('cart', true);
-            });
-            modals.item.overlay.addEventListener('click', () => toggleModal('item', false));
-            document.getElementById('close-item-modal-btn').addEventListener('click', () => toggleModal('item', false));
-            modals.cart.overlay.addEventListener('click', () => toggleModal('cart', false));
-            document.getElementById('close-cart-btn').addEventListener('click', () => toggleModal('cart', false));
-            modals.success.overlay.addEventListener('click', () => toggleModal('success', false));
-            document.getElementById('close-success-btn').addEventListener('click', () => toggleModal('success', false));
-            document.getElementById('item-decrease-qty').addEventListener('click', () => { let qty = parseInt(itemModal.qty.textContent); if (qty > 1) { itemModal.qty.textContent = qty - 1; calculateItemPrice(); } });
-            document.getElementById('item-increase-qty').addEventListener('click', () => { let qty = parseInt(itemModal.qty.textContent); itemModal.qty.textContent = qty + 1; calculateItemPrice(); });
+
+            /* =========================
+               MODALES
+               ========================= */
+            document.getElementById('hours-button')
+                .addEventListener('click', () => toggleModal('hours', true));
+
+            document.getElementById('close-hours-btn')
+                .addEventListener('click', () => toggleModal('hours', false));
+
+            modals.hours.overlay
+                .addEventListener('click', () => toggleModal('hours', false));
+
+            document.getElementById('cart-button')
+                .addEventListener('click', () => {
+                    renderCart();
+                    toggleModal('cart', true);
+                });
+
+            modals.item.overlay
+                .addEventListener('click', () => toggleModal('item', false));
+
+            document.getElementById('close-item-modal-btn')
+                .addEventListener('click', () => toggleModal('item', false));
+
+            modals.cart.overlay
+                .addEventListener('click', () => toggleModal('cart', false));
+
+            document.getElementById('close-cart-btn')
+                .addEventListener('click', () => toggleModal('cart', false));
+
+            modals.success.overlay
+                .addEventListener('click', () => toggleModal('success', false));
+
+            document.getElementById('close-success-btn')
+                .addEventListener('click', () => toggleModal('success', false));
+
+            /* =========================
+               CANTIDAD ITEM
+               ========================= */
+            document.getElementById('item-decrease-qty')
+                .addEventListener('click', () => {
+                    let qty = parseInt(itemModal.qty.textContent);
+                    if (qty > 1) {
+                        itemModal.qty.textContent = qty - 1;
+                        calculateItemPrice();
+                    }
+                });
+
+            document.getElementById('item-increase-qty')
+                .addEventListener('click', () => {
+                    let qty = parseInt(itemModal.qty.textContent);
+                    itemModal.qty.textContent = qty + 1;
+                    calculateItemPrice();
+                });
+
             itemModal.addBtn.addEventListener('click', addToCart);
-            cartModal.itemsContainer.addEventListener('click', e => { const removeBtn = e.target.closest('.remove-btn'); if (removeBtn) { const cartId = parseInt(removeBtn.dataset.cartId); cart = cart.filter(item => item.cartId !== cartId); renderCart(); } });
+
+            /* =========================
+               ELIMINAR ITEM CARRITO
+               ========================= */
+            cartModal.itemsContainer.addEventListener('click', e => {
+                const removeBtn = e.target.closest('.remove-btn');
+                if (removeBtn) {
+                    const cartId = parseInt(removeBtn.dataset.cartId);
+                    cart = cart.filter(item => item.cartId !== cartId);
+                    renderCart();
+                }
+            });
+
+            /* =========================
+               MÉTODO DE PAGO
+               ========================= */
             document.querySelectorAll('input[name="payment"]').forEach(radio => {
                 radio.addEventListener('change', e => {
-                    document.getElementById('efectivo-details').style.display = e.target.value === 'efectivo' ? 'block' : 'none';
-                    document.getElementById('transferencia-details').style.display = e.target.value === 'transferencia' ? 'block' : 'none';
+                    document.getElementById('efectivo-details').style.display =
+                        e.target.value === 'efectivo' ? 'block' : 'none';
+
+                    document.getElementById('transferencia-details').style.display =
+                        e.target.value === 'transferencia' ? 'block' : 'none';
                 });
             });
         });

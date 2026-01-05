@@ -54,11 +54,14 @@ app.use(session({
   saveUninitialized: true
 }));
 
+const User = require('./models/User');
 const adminRoutes = require('./routes/admin');
 const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
 const estadisticasRouter = require('./routes/estadisticas');
 const pushRoutes = require('./routes/pushRouter');
+const likesRoutes = require('./routes/likes');
+app.use('/likes', likesRoutes);
 app.use('/push', pushRoutes);
 app.use('/admin', adminRoutes);
 app.use('/pedidos', pedidosRouter);
@@ -87,81 +90,69 @@ app.get('/lista', async (req, res) => {
     const { sort, filter, search, page = 1, limit = 6 } = req.query;
     const currentPage = parseInt(page);
     const itemsPerPage = parseInt(limit);
-    
+
+    const now = Date.now();
+    const DAY_48H = 48 * 60 * 60 * 1000;
+
+    const users = await User.find(
+      {},
+      { restauranteId: 1, createdAt: 1, 'likes.count': 1 }
+    ).lean();
+
+    const usersMap = {};
+    users.forEach(u => {
+      usersMap[u.restauranteId] = {
+        likes: u.likes?.count || 0,
+        createdAt: u.createdAt
+      };
+    });
+
     function procesarHorario(schedule) {
-        const ahora = moment().tz('America/Bogota');
-        const dayOfWeek = ahora.day();
-        const currentTime = parseInt(ahora.format('HHmm'));
-        
-        const hoy = schedule.find(s => s.day === dayOfWeek);
-        const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-    
-        const checkIfOpen = (sched) => {
-            if (sched && sched.open === '24h') {
-                return true;
-            }
-            
-            if (!sched || sched.open === 'closed') {
-                return false;
-            }
-            
-            const openTime = parseInt(sched.open.replace(':', ''));
-            const closeTime = parseInt(sched.close.replace(':', ''));
-            if (isNaN(openTime) || isNaN(closeTime)) return false;
-            
-            if (closeTime < openTime) {
-                return currentTime >= openTime || currentTime < closeTime;
-            }
-            return currentTime >= openTime && currentTime < closeTime;
-        };
-        
-        let estaAbierto = false;
-        
-        if (hoy && hoy.open === '24h') {
-            estaAbierto = true;
-        } 
-        
-        else if (checkIfOpen(hoy)) {
-            estaAbierto = true;
-        } 
-        
-        else if (
-            checkIfOpen(ayer) &&
-            ayer.open !== '24h' &&
-            ayer.close.replace(':', '') < ayer.open.replace(':', '') &&
-            currentTime < parseInt(ayer.close.replace(':', ''))
-        ) {
-            estaAbierto = true;
+      const ahora = moment().tz('America/Bogota');
+      const dayOfWeek = ahora.day();
+      const currentTime = parseInt(ahora.format('HHmm'));
+
+      const hoy = schedule.find(s => s.day === dayOfWeek);
+      const ayer = schedule.find(s => s.day === (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+      const checkIfOpen = (sched) => {
+        if (sched && sched.open === '24h') return true;
+        if (!sched || sched.open === 'closed') return false;
+
+        const openTime = parseInt(sched.open.replace(':', ''));
+        const closeTime = parseInt(sched.close.replace(':', ''));
+
+        if (closeTime < openTime) {
+          return currentTime >= openTime || currentTime < closeTime;
         }
-        
-        let aperturaStr, cierreStr;
-        
-        if (!hoy || hoy.open === 'closed') {
-            aperturaStr = 'Cerrado';
-            cierreStr = 'Cerrado';
-        } else if (hoy.open === '24h') {
-            aperturaStr = '24 horas';
-            cierreStr = '24 horas';
-        } else {
-            aperturaStr = hoy.open;
-            cierreStr = hoy.close;
-        }
-        
-        return {
-            abierto: estaAbierto,
-            aperturaStr,
-            cierreStr
-        };
+        return currentTime >= openTime && currentTime < closeTime;
+      };
+
+      let estaAbierto = checkIfOpen(hoy) || (
+        checkIfOpen(ayer) &&
+        ayer.close.replace(':', '') < ayer.open.replace(':', '') &&
+        currentTime < parseInt(ayer.close.replace(':', ''))
+      );
+
+      return {
+        abierto: estaAbierto,
+        aperturaStr: hoy?.open || 'Cerrado',
+        cierreStr: hoy?.close || 'Cerrado'
+      };
     }
-    
+
     let restaurantesInfo = Object.values(menus)
       .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension))
       .map(menu => {
         const config = menu.config;
         const schedule = menu.schedule || [];
-        
         const horario = procesarHorario(schedule);
-        
+
+        const userData = usersMap[config.extension];
+        const isNew = userData?.createdAt
+          ? (now - new Date(userData.createdAt).getTime()) < DAY_48H
+          : false;
+
         return {
           id: config.extension,
           name: config.nombre,
@@ -171,6 +162,8 @@ app.get('/lista', async (req, res) => {
           isOpen: horario.abierto,
           orden: parseInt(config.orden) || 0,
           category: config.category || 'general',
+          likes: userData?.likes || 0,
+          isNew,
           hours: {
             aperturaStr: horario.aperturaStr,
             cierreStr: horario.cierreStr,
@@ -178,57 +171,62 @@ app.get('/lista', async (req, res) => {
           }
         };
       });
-      
-    if (filter === 'open') {
-      restaurantesInfo = restaurantesInfo.filter(r => r.isOpen);
-    } else if (filter === 'closed') {
-      restaurantesInfo = restaurantesInfo.filter(r => !r.isOpen);
-    }
-    
+
+    if (filter === 'open') restaurantesInfo = restaurantesInfo.filter(r => r.isOpen);
+    if (filter === 'closed') restaurantesInfo = restaurantesInfo.filter(r => !r.isOpen);
+
     if (search) {
-      const searchTerm = search.toLowerCase();
-      restaurantesInfo = restaurantesInfo.filter(r => 
-        r.name.toLowerCase().includes(searchTerm)
-      );
+      const s = search.toLowerCase();
+      restaurantesInfo = restaurantesInfo.filter(r => r.name.toLowerCase().includes(s));
     }
 
     if (sort === 'az') {
       restaurantesInfo.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === 'open') {
+    } 
+    else if (sort === 'open') {
       restaurantesInfo.sort((a, b) => {
         if (a.isOpen && !b.isOpen) return -1;
         if (!a.isOpen && b.isOpen) return 1;
         return 0;
       });
-    } else {
-      restaurantesInfo.sort((a, b) => a.orden - b.orden);
+    } 
+    else {
+      restaurantesInfo.sort((a, b) => b.likes - a.likes);
     }
-    
+
     const totalItems = restaurantesInfo.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-    const paginatedRestaurants = restaurantesInfo.slice(startIndex, endIndex);
+    const paginatedRestaurants = restaurantesInfo.slice(startIndex, startIndex + itemsPerPage);
 
-    res.render('lista', {
+    const carouselAds = restaurantesInfo
+      .filter(r => r.isNew)
+      .slice(0, 5);
+    
+    const promociones = require('./data/promociones');
+    const promosActivas = promociones
+      .filter(p => p.activo)
+      .sort((a, b) => a.prioridad - b.prioridad);
+
+    res.render('home', {
       info,
       restaurantes: paginatedRestaurants,
+      carouselAds,
+      promosActivas,
       pagination: {
         currentPage,
         totalPages,
         hasPrev: currentPage > 1,
-        hasNext: currentPage < totalPages,
-        prevPage: currentPage - 1,
-        nextPage: currentPage + 1
+        hasNext: currentPage < totalPages
       },
-      currentSort: sort || 'orden',
+      currentSort: sort || 'likes',
       currentFilter: filter || 'all',
       searchTerm: search || '',
       totalItems
     });
 
   } catch (error) {
-    console.error('Error en la ruta lista:', error);
+    console.error('Error en /lista:', error);
     res.status(500).render('error', {
       info,
       name_page: 'server error',
@@ -269,8 +267,9 @@ app.get('/publi', (req, res) => {
   res.render('iframe', {info});
 });
 
-app.get('/:restaurante', (req, res) => {
+app.get('/:restaurante', async (req, res) => {
   const restauranteData = menus[req.params.restaurante];
+  const restauranteId = req.params.restaurante;
   
   if (!restauranteData) {
     const restaurantesDisponibles = Object.values(menus)
@@ -288,10 +287,19 @@ app.get('/:restaurante', (req, res) => {
       restaurantesDisponibles
     });
   }
+  
+  const user = await User.findOne(
+    { restauranteId },
+    { 'likes.count': 1 }
+  );
 
   res.render('menu', {
     info,
     menuData: restauranteData,
+    // nuevo
+    restauranteId,
+    likes: user?.likes?.count || 0,
+    //
     config: restauranteData.config,
     manifestUrl: `/${req.params.restaurante}/manifest.json`,
     pwa: {
