@@ -15,7 +15,15 @@ module.exports = {
     "tracking-tighter",
     "accent-text",
     "overflow-x-auto",
-    "whitespace-nowrap"
+    "whitespace-nowrap",
+    'bg-gradient-to-br',
+    'bg-gradient-to-tr',
+    {
+      pattern: /from-(red|orange|yellow|green|blue|indigo|purple|pink)-(400|500|600|700)/,
+    },
+    {
+      pattern: /to-(red|orange|yellow|green|blue|indigo|purple|pink)-(400|500|600|700)/,
+    }
   ],
   theme: {
     extend: {
