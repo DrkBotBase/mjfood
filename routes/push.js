@@ -20,16 +20,18 @@ router.post("/subscribe", async (req, res) => {
 });
 
 router.post("/send", async (req, res) => {
-  const { title, body, url, icon } = req.body;
+  const { title, message, url, icon } = req.body;
 
   const payload = JSON.stringify({
     title,
-    body,
+    message,
     url,
     icon
   });
-
   const subscriptions = await PushSubscription.find();
+
+console.log("📤 Enviando push a:", subscriptions.length);
+console.log("📦 Payload:", payload);
 
   let sent = 0;
 
@@ -38,7 +40,9 @@ router.post("/send", async (req, res) => {
       await webpush.sendNotification(sub, payload);
       sent++;
     } catch (err) {
-      if (err.statusCode === 410) {
+      console.error("❌ Push error:", err.statusCode, err.body);
+
+      if (err.statusCode === 410 || err.statusCode === 404) {
         await PushSubscription.deleteOne({ endpoint: sub.endpoint });
       }
     }
