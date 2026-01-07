@@ -1,21 +1,76 @@
 async function enableNotifications() {
+  console.log("🔔 Click en activar notificaciones");
+
+  if (!("Notification" in window)) {
+    console.log("❌ Notificaciones no soportadas");
+    return;
+  }
+
+  // Si ya están concedidas, NO volver a pedir permiso
+  if (Notification.permission === "granted") {
+    console.log("✅ Permiso ya concedido");
+    return await subscribeUser();
+  }
+
+  // Solo aquí se pide permiso
   const permission = await Notification.requestPermission();
-  if (permission !== "granted") return hideNotifyBanner();
+  console.log("📢 Permiso:", permission);
+
+  if (permission !== "granted") {
+    hideNotifyBanner();
+    return;
+  }
+
+  await subscribeUser();
+}
+
+async function subscribeUser() {
+  console.log("📤 Creando suscripción push");
 
   const registration = await navigator.serviceWorker.ready;
+  let subscription = await registration.pushManager.getSubscription();
 
-  const subscription = await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array("BLd5uZznWTEPLYTEec_mMkTehYN6V_5qsFXXkgtXLbRB4sGqTWxX2QaWZX20HTDkWjBcmB3BZbtDeSl17fulVh8")
-  });
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(
+        "BLd5uZznWTEPLYTEec_mMkTehYN6V_5qsFXXkgtXLbRB4sGqTWxX2QaWZX20HTDkWjBcmB3BZbtDeSl17fulVh8"
+      )
+    });
+  }
 
-  await fetch("/api/push/subscribe", {
+  console.log("📦 Subscription:", subscription);
+
+  const res = await fetch("/api/push/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(subscription)
   });
 
-  hideNotifyBanner();
+  console.log("📨 Backend status:", res.status);
+
+  if (res.ok) {
+    hideNotifyBanner();
+    showWelcomeNotification();
+  }
+}
+
+function showWelcomeNotification() {
+  if (localStorage.getItem('welcomeNotificationShown')) return;
+
+  if (!('serviceWorker' in navigator)) return;
+
+  navigator.serviceWorker.ready.then(registration => {
+    registration.showNotification('¡Bienvenido!', {
+      body: 'Ahora recibirás actualizaciones de nuestros menús 🍔🔥',
+      icon: '/assets/icon.png',
+      badge: '/assets/icon.png',
+      vibrate: [200, 100, 200],
+      tag: 'welcome-notification'
+    });
+
+    localStorage.setItem('welcomeNotificationShown', 'true');
+  });
 }
 
 function hideNotifyBanner() {

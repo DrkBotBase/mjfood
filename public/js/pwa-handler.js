@@ -261,30 +261,7 @@ styleInstallBanner() {
         }
     }
     async initNotifications() {
-        if ('Notification' in window) {
-            const permission = await Notification.requestPermission();
-            
-            if (permission === 'granted') {
-                this.showWelcomeNotification();
-            }
-        }
-    }
-    showWelcomeNotification() {
-        if (!localStorage.getItem('welcomeNotificationShown')) {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.ready.then(registration => {
-                    registration.showNotification('¡Bienvenido!', {
-                        body: 'Ahora puedes recibir actualizaciones de nuestros menús',
-                        icon: '/assets/icon.png',
-                        badge: '/assets/icon.png',
-                        vibrate: [200, 100, 200],
-                        tag: 'welcome-notification'
-                    });
-                    
-                    localStorage.setItem('welcomeNotificationShown', 'true');
-                });
-            }
-        }
+      if (!('Notification' in window)) return;
     }
     async shareApp() {
         if (navigator.share) {
