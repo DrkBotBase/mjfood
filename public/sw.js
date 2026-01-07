@@ -1,14 +1,33 @@
 const CACHE_NAME = 'main-app-v2';
+
 const urlsToCache = [
-  '/lista',
+  '/',
   '/assets/icon.png'
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
@@ -21,7 +40,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener("push", event => {
   const data = event.data ? event.data.json() : {};
 
-  const title = data.title || "Notificación";
+  const title = data.title || "MJ Food";
   const body = data.body || "Nueva actualización disponible";
 
   event.waitUntil(
