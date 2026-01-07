@@ -4,12 +4,19 @@ const moment = require('moment-timezone');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
+const webpush = require('web-push');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const session = require('express-session');
 const { info, PORT } = require('./config');
+
+webpush.setVapidDetails(
+  'mailto:admin@mjfood.top',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 app.use((req, res, next) => {
   req.io = io;
@@ -60,8 +67,7 @@ const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
 const estadisticasRouter = require('./routes/estadisticas');
 const likesRoutes = require('./routes/likes');
-const pushRoutes = require('./routes/push');
-app.use("/push", pushRoutes);
+app.use("/push", require('./routes/push'));
 app.use('/likes', likesRoutes);
 app.use('/admin', adminRoutes);
 app.use('/pedidos', pedidosRouter);
