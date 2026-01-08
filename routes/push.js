@@ -2,7 +2,7 @@ require("dotenv")
 const express = require("express");
 const router = express.Router();
 const webpush = require("web-push");
-const PushSubscription = require("../models/PushSubscription");
+const PushSubscription = require("../models/Subscription");
 
 webpush.setVapidDetails(
   "mailto:admin@mjfood.top",
