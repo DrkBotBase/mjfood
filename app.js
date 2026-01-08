@@ -4,19 +4,12 @@ const moment = require('moment-timezone');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
-const webpush = require('web-push');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const session = require('express-session');
 const { info, PORT } = require('./config');
-
-webpush.setVapidDetails(
-  'mailto:admin@mjfood.top',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
 
 app.use((req, res, next) => {
   req.io = io;
