@@ -1,4 +1,3 @@
-// models/Subscription.js
 const mongoose = require("mongoose");
 
 const PushSubscriptionSchema = new mongoose.Schema({
@@ -6,6 +5,11 @@ const PushSubscriptionSchema = new mongoose.Schema({
   keys: {
     p256dh: String,
     auth: String
+  },
+  restaurante: {
+    type: String,
+    required: true,
+    index: true
   },
   createdAt: {
     type: Date,

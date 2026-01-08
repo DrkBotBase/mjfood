@@ -38,7 +38,6 @@ app.use((req, res, next) => {
   const maintenance = process.env.MAINTENANCE === 'true';
   if (maintenance) {
     return res.status(503).render('mantenimiento', {
-      name_page: 'MJFOOD - Fuera de servicio',
       message: 'Trabajamos para estar de vuelta pronto.',
       info
     });

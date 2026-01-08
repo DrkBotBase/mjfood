@@ -1,35 +1,21 @@
 async function enableNotifications() {
-  console.log("🔔 Click en activar notificaciones");
-
   if (!("Notification" in window)) {
-    console.log("❌ Notificaciones no soportadas");
     return;
   }
-
-  // Si ya están concedidas, NO volver a pedir permiso
   if (Notification.permission === "granted") {
-    console.log("✅ Permiso ya concedido");
     return await subscribeUser();
   }
-
-  // Solo aquí se pide permiso
   const permission = await Notification.requestPermission();
-  console.log("📢 Permiso:", permission);
-
   if (permission !== "granted") {
     hideNotifyBanner();
     return;
   }
-
   await subscribeUser();
 }
 
 async function subscribeUser() {
-  console.log("📤 Creando suscripción push");
-
   const registration = await navigator.serviceWorker.ready;
   let subscription = await registration.pushManager.getSubscription();
-
   if (!subscription) {
     subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
@@ -38,16 +24,20 @@ async function subscribeUser() {
       )
     });
   }
-
-  console.log("📦 Subscription:", subscription);
+  
+  const pathSegments = window.location.pathname.split('/').filter(Boolean);
+  const restaurante = pathSegments[0] || 'lista';
+  const payload = {
+    endpoint: subscription.endpoint,
+    keys: subscription.keys,
+    restaurante
+  };
 
   const res = await fetch("/push/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(subscription)
+    body: JSON.stringify(payload)
   });
-
-  console.log("📨 Backend status:", res.status);
 
   if (res.ok) {
     hideNotifyBanner();
@@ -57,9 +47,7 @@ async function subscribeUser() {
 
 function showWelcomeNotification() {
   if (localStorage.getItem('welcomeNotificationShown')) return;
-
   if (!('serviceWorker' in navigator)) return;
-
   navigator.serviceWorker.ready.then(registration => {
     registration.showNotification('¡Bienvenido!', {
       body: 'Ahora recibirás actualizaciones de nuestros menús 🍔🔥',
@@ -68,7 +56,6 @@ function showWelcomeNotification() {
       vibrate: [200, 100, 200],
       tag: 'welcome-notification'
     });
-
     localStorage.setItem('welcomeNotificationShown', 'true');
   });
 }
@@ -91,10 +78,8 @@ function urlBase64ToUint8Array(base64String) {
   const base64 = (base64String + padding)
     .replace(/-/g, '+')
     .replace(/_/g, '/');
-
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
-
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
