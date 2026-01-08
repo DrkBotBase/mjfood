@@ -30,13 +30,14 @@ router.post("/subscribe", async (req, res) => {
 });
 
 router.post("/send", async (req, res) => {
-  const { title, message, url, icon } = req.body;
+  const { title, message, url, icon, image } = req.body;
 
   const payload = JSON.stringify({
     title,
     message,
     url,
-    icon
+    icon,
+    image
   });
 
   const subscriptions = await PushSubscription.find();
