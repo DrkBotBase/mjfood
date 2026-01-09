@@ -35,23 +35,42 @@ router.post("/subscribe", async (req, res) => {
 });
 
 router.post("/send", async (req, res) => {
-  const { restaurante, title, message, image, url } = req.body;
+  const { restaurante, title, message, image, url, icon } = req.body;
 
-  const subs = await PushSubscription.find({
-    restaurantes: restaurante
-  });
+  const query = restaurante
+    ? { restaurantes: restaurante }
+    : {};
+
+  const subs = await PushSubscription.find(query);
+
+  console.log("📦 Subs encontradas:", subs.length);
 
   let sent = 0;
 
   for (const sub of subs) {
+    const pushSub = {
+      endpoint: sub.endpoint,
+      keys: {
+        p256dh: sub.keys.p256dh,
+        auth: sub.keys.auth
+      }
+    };
+
+    const payload = JSON.stringify({
+      title,
+      message,
+      image,
+      icon,
+      url
+    });
+
     try {
-      await webpush.sendNotification(
-        sub,
-        JSON.stringify({ title, message, image, url })
-      );
+      await webpush.sendNotification(pushSub, payload);
       sent++;
     } catch (err) {
-      if (err.statusCode === 410) {
+      console.error("❌ Push error:", err.statusCode, err.body);
+
+      if (err.statusCode === 410 || err.statusCode === 404) {
         await PushSubscription.deleteOne({ endpoint: sub.endpoint });
       }
     }
