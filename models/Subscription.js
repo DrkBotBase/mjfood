@@ -6,10 +6,9 @@ const PushSubscriptionSchema = new mongoose.Schema({
     p256dh: String,
     auth: String
   },
-  restaurante: {
-    type: String,
-    required: true,
-    index: true
+  restaurantes: {
+    type: [String],
+    default: []
   },
   createdAt: {
     type: Date,

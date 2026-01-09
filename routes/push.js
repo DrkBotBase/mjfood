@@ -15,67 +15,49 @@ router.post("/subscribe", async (req, res) => {
     const { endpoint, keys, restaurante } = req.body;
 
     if (!endpoint || !keys || !restaurante) {
-      return res.status(400).json({ message: "Datos inválidos" });
+      return res.status(400).json({ error: "Datos inválidos" });
     }
 
     await PushSubscription.updateOne(
       { endpoint },
-      { endpoint, keys, restaurante },
+      {
+        $set: { keys },
+        $addToSet: { restaurantes: restaurante }
+      },
       { upsert: true }
     );
 
-    res.status(201).json({ success: true });
-  } catch (error) {
-    console.error("❌ Subscribe error:", error);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Subscribe error:", err);
     res.status(500).json({ error: "Error al guardar suscripción" });
   }
 });
 
 router.post("/send", async (req, res) => {
-  const { title, message, url, icon, image, restaurante } = req.body;
+  const { restaurante, title, message, image, url } = req.body;
 
-  if (!restaurante) {
-    return res.status(400).json({ message: "Restaurante requerido" });
-  }
-
-  const payload = JSON.stringify({
-    title,
-    message,
-    url,
-    icon,
-    image
+  const subs = await PushSubscription.find({
+    restaurantes: restaurante
   });
 
-  const subscriptions = await PushSubscription.find({ restaurante });
   let sent = 0;
 
-  for (const sub of subscriptions) {
+  for (const sub of subs) {
     try {
       await webpush.sendNotification(
-        {
-          endpoint: sub.endpoint,
-          keys: {
-            p256dh: sub.keys.p256dh,
-            auth: sub.keys.auth
-          }
-        },
-        payload
+        sub,
+        JSON.stringify({ title, message, image, url })
       );
       sent++;
     } catch (err) {
-      console.error("❌ Push error:", err.statusCode);
-
-      if (err.statusCode === 410 || err.statusCode === 404) {
+      if (err.statusCode === 410) {
         await PushSubscription.deleteOne({ endpoint: sub.endpoint });
       }
     }
   }
 
-  res.json({
-    success: true,
-    restaurante,
-    sent
-  });
+  res.json({ success: true, sent });
 });
 
 module.exports = router;
