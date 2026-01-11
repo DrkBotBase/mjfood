@@ -1,13 +1,25 @@
+<%
+  let nombreFinal = (locals.config && config.nombre) || (locals.info && info.name_page) || 'MJ Food';
+  let esRestaurante = (locals.config && config.extension);
+%>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "MJFOOD",
-  "url": "https://mjfood.top/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://mjfood.top/buscar?q={search_term_string}",
-    "query-input": "required name=search_term_string"
+  "@type": "<%= esRestaurante ? 'Restaurant' : 'WebSite' %>",
+  "name": "<%= nombreFinal %>",
+  "image": "https://mjfood.top<%= locals.config && config.logoUrl || '/assets/banner.png' %>",
+  "url": "https://mjfood.top/<%= locals.cofig && config.extension || '' %>",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "<%= locals.config && config.direccion || 'WebSite' %>",
+    "addressCountry": "CO"
+  },
+  "menu": "https://mjfood.top/<%= locals.cofig && config.extension || ''  %>",
+  "publisher": {
+    "@type": "Organization",
+    "name": "MJ Food",
+    "logo": "https://mjfood.top/assets/banner.png"
   }
 }
 </script>
