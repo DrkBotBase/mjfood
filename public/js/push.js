@@ -74,9 +74,29 @@ function showWelcomeNotification() {
   });
 }
 
+/* Banner */
+function showBannerAnimation() {
+  const banner = document.getElementById("notifyBanner");
+  if (!banner) return;
+
+  // Quitamos el bloqueo de eventos y aplicamos estado visible
+  banner.classList.remove("pointer-events-none", "opacity-0", "translate-y-[-20px]", "scale-95");
+  banner.classList.add("pointer-events-auto", "opacity-100", "translate-y-0", "scale-100");
+}
 function hideNotifyBanner() {
-  document.getElementById("notifyBanner")?.classList.add("hidden");
+  const banner = document.getElementById("notifyBanner");
+  if (!banner) return;
+
+  // Volvemos al estado inicial (se desliza hacia arriba y desaparece)
+  banner.classList.replace("opacity-100", "opacity-0");
+  banner.classList.replace("translate-y-0", "translate-y-[-20px]");
+  banner.classList.replace("scale-100", "scale-95");
+  banner.classList.add("pointer-events-none");
+
   localStorage.setItem("notifyBannerHidden", "1");
+  
+  // Opcional: eliminar del DOM después de la animación
+  setTimeout(() => { banner.style.display = 'none'; }, 500);
 }
 
 function shouldShowBanner() {
@@ -100,7 +120,7 @@ function urlBase64ToUint8Array(base64String) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (shouldShowBanner()) {
-    document.getElementById("notifyBanner")?.classList.remove("hidden");
+    setTimeout(showBannerAnimation, 800);
   }
 
   if (Notification.permission === "granted") {

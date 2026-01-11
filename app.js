@@ -53,12 +53,14 @@ app.use(session({
   saveUninitialized: true
 }));
 
+const seoRouter = require('./routes/seo')
 const User = require('./models/User');
 const adminRoutes = require('./routes/admin');
 const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
 const estadisticasRouter = require('./routes/estadisticas');
 const likesRoutes = require('./routes/likes');
+app.use("/", seoRouter)
 app.use("/push", require('./routes/push'));
 app.use('/likes', likesRoutes);
 app.use('/admin', adminRoutes);

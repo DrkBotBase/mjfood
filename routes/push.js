@@ -43,8 +43,6 @@ router.post("/send", async (req, res) => {
 
   const subs = await PushSubscription.find(query);
 
-  console.log("📦 Subs encontradas:", subs.length);
-
   let sent = 0;
 
   for (const sub of subs) {
