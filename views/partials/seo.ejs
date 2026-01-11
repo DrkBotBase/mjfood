@@ -9,13 +9,13 @@
   "@type": "<%= esRestaurante ? 'Restaurant' : 'WebSite' %>",
   "name": "<%= nombreFinal %>",
   "image": "https://mjfood.top<%= locals.config && config.logoUrl || '/assets/banner.png' %>",
-  "url": "https://mjfood.top/<%= locals.cofig && config.extension || '' %>",
+  "url": "https://mjfood.top/<%= esRestaurante || '' %>",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "<%= locals.config && config.direccion || 'WebSite' %>",
     "addressCountry": "CO"
   },
-  "menu": "https://mjfood.top/<%= locals.cofig && config.extension || ''  %>",
+  "menu": "https://mjfood.top/<%= esRestaurante || ''  %>",
   "publisher": {
     "@type": "Organization",
     "name": "MJ Food",
