@@ -12,7 +12,7 @@
   <% if (locals.config && config.extension) { %>
   "priceRange": "$$", 
   "telephone": "+<%= config.telefonoWhatsApp %>", 
-  "servesCuisine": "<%= (locals.config.pwa && config.pwa.categories.join(', ')) || 'Restaurante' %>"
+  "servesCuisine": "<%= (locals.config.pwa && config.pwa.categories.join(', ')) || 'Restaurante' %>",
   <% } %>
   "address": {
     "@type": "PostalAddress",
