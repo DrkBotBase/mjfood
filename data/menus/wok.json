@@ -24,7 +24,7 @@
           "type": "image/png"
         }
       ],
-      "categories": ["food", "chinese", "restaurant"],
+      "categories": ["Restaurante", "Comida China", "Wok"],
       "lang": "es"
     },
     "nombre": "Taylor Wok",

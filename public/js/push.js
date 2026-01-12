@@ -93,7 +93,7 @@ function hideNotifyBanner() {
   banner.classList.replace("scale-100", "scale-95");
   banner.classList.add("pointer-events-none");
 
-  localStorage.setItem("notifyBannerHidden", "1");
+  //localStorage.setItem("notifyBannerHidden", "1");
   
   // Opcional: eliminar del DOM después de la animación
   setTimeout(() => { banner.style.display = 'none'; }, 500);

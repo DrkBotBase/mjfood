@@ -1,25 +1,32 @@
 <%
   let nombreFinal = (locals.config && config.nombre) || (locals.info && info.name_page) || 'MJ Food';
-  let esRestaurante = (locals.config && config.extension);
 %>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "<%= esRestaurante ? 'Restaurant' : 'WebSite' %>",
+  "@type": "<%= (locals.config && config.extension) ? 'Restaurant' : 'WebSite' %>",
   "name": "<%= nombreFinal %>",
-  "image": "https://mjfood.top<%= locals.config && config.logoUrl || '/assets/banner.png' %>",
-  "url": "https://mjfood.top/<%= esRestaurante || '' %>",
+  "image": "https://mjfood.top<%= (locals.config && config.logoUrl) || '/assets/banner.png' %>",
+  "url": "https://mjfood.top/<%= (locals.config && config.extension) || '' %>",
+  <% if (locals.config && config.extension) { %>
+  "priceRange": "$$", 
+  "telephone": "+<%= config.telefonoWhatsApp %>", 
+  "servesCuisine": "<%= (locals.config.pwa && config.pwa.categories.join(', ')) || 'Restaurante' %>"
+  <% } %>
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "<%= locals.config && config.direccion || 'WebSite' %>",
+    "streetAddress": "<%= (locals.config && config.direccion) || 'MJ Food Online' %>",
     "addressCountry": "CO"
   },
-  "menu": "https://mjfood.top/<%= esRestaurante || ''  %>",
+  "menu": "https://mjfood.top/<%= (locals.config && config.extension) || '' %>",
   "publisher": {
     "@type": "Organization",
     "name": "MJ Food",
-    "logo": "https://mjfood.top/assets/banner.png"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mjfood.top/assets/banner.png"
+    }
   }
 }
 </script>
