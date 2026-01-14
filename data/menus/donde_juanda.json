@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "Donde Juanda",
       "name": "Donde Juanda - Pedidos",
-      "description": "Las mejores Picadas.",
+      "description": "La picada perfecta existe. Las mejores para disfrutar. ¡Pide y comparte!",
       "theme_color": "#ffffff",
       "background_color": "#ffffff",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["food", "roast"],
+      "categories": ["Picadas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Donde Juanda",
-    "direccion": "Carrera 13 # 14 - 05 ( Billares La Amistad )",
+    "direccion": "Carrera 13 # 14 - 05 ( Billares La Amistad ), La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573126116968",
     "logoUrl": "/assets/donde_juanda/banner.png",
     "taxRate": 0

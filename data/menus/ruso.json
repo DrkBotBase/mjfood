@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "The Ruso Fast Food",
       "name": "The Ruso - Pedidos",
-      "description": "Restaurante de comida rapida.",
+      "description": "De todo y para todos! Desde salchipapas y picadas épicas hasta hamburguesas, perros calientes y los mejores asados. Tu antojo más grande, resuelto rápido.",
       "theme_color": "#17171b",
       "background_color": "#17171b",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["fast food", "restaurant"],
+      "categories": ["Restaurante", "Comidas Rapidas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "The Ruso Fast Food",
-    "direccion": "Calle 14 # 13 - 135",
+    "direccion": "Calle 14 # 13 - 135, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573017179786",
     "logoUrl": "/assets/the_ruso/banner.png",
     "taxRate": 0

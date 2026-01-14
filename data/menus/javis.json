@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "Javis",
       "name": "Javis - Pedidos",
-      "description": "Restaurante de comida rapida.",
+      "description": "Tu antojo manda. Salchipapas crujientes, picadas completas y hamburguesas listos en minutos. Comida rápida caliente y rápida a domicilio.",
       "theme_color": "#ffd800",
       "background_color": "#ffd800",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["fast_food", "restaurant"],
+      "categories": ["Restaurante", "Comidas Rapidas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Javis",
-    "direccion": "Cra 18 # 19b - 04",
+    "direccion": "Cra 18 # 19b - 04, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573184023206",
     "logoUrl": "/assets/javis/banner.png",
     "taxRate": 0

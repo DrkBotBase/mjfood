@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "CRB Burger",
       "name": "CRB Burger - Pedidos",
-      "description": "Las mejores Hamburguesas.",
+      "description": "¿Aburrido de lo mismo? Descubre nuestras hamburguesas premium con ingredientes sorprendentes. Pide en línea y disfruta de una experiencia única en casa.",
       "theme_color": "#17171b",
       "background_color": "#17171b",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["fast food", "restaurant"],
+      "categories": ["Restaurante", "Hamburguesas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "CRB Burger",
-    "direccion": "Calle 14 # 14 - 18",
+    "direccion": "Calle 14 # 14 - 18, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573042048572",
     "logoUrl": "/assets/crb_burger/banner.png",
     "taxRate": 0

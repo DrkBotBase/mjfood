@@ -11,15 +11,15 @@
     
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
-    <link rel="canonical" href="<%= info.dominio %>">
+    <link rel="canonical" href="<%= info.dominio %>/<%= (locals.config && config.extension) || '' %>">
     
     <meta property="og:title" content="<%= config.nombre %>">
-    <meta property="og:description" content="<%= pwa.description %>.">
+    <meta property="og:description" content="<%= pwa.description %>">
     <meta property="og:image" content="<%= info.dominio %><%= config.logoUrl %>">
     <meta property="og:image:alt" content="<%= config.nombre %>">
-    <meta property="fb:app_id" content=" ">
-    <meta property="og:url" content="<%= info.dominio %>">
-    <meta property="og:type" content="website">
+    <meta property="fb:app_id" content="<%= info.fb_app_id %>">
+    <meta property="og:url" content="<%= info.dominio %>/<%= (locals.config && config.extension) || '' %>">
+    <meta property="og:type" content="Restaurant">
     <meta property="og:site_name" content="<%= config.nombre %>">
     <meta property="og:locale" content="es_ES">
     

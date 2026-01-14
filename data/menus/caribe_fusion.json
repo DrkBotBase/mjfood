@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "Wok Caribe Fusión",
       "name": "Wok Caribe Fusion - Pedidos",
-      "description": "Comida china y Asados.",
+      "description": "Tu comida china favorita, recién hecha y lista para disfrutar en casa. Sabores auténticos y entrega rápida. ¡Pide online ahora!",
       "theme_color": "#17171b",
       "background_color": "#17171b",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["food", "chinese", "restaurant"],
+      "categories": ["Restaurante", "Comida China", "Wok", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Wok Caribe Fusión",
-    "direccion": "Calle 14 # 10 - 31",
+    "direccion": "Calle 14 # 10 - 31, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573013847510",
     "logoUrl": "/assets/caribe_fusion/banner.png",
     "taxRate": 0

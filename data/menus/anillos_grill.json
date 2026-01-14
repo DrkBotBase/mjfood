@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "Anillos Grill",
       "name": "Anillos Grill - Pedidos",
-      "description": "Restaurante de comida rapida.",
+      "description": "Hamburguesas, perros, salchipapas, asados... ¡Tenemos todo! Comida rápida, abundante y llena de sabor. Para llevar o entregar en tu puerta. ¡Ordena ya!",
       "theme_color": "#feff99",
       "background_color": "#feff99",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["fast_food", "restaurant"],
+      "categories": ["Restaurante", "Comidas Rapidas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Anillos Grill",
-    "direccion": "Calle 14 # 13 - 159",
+    "direccion": "Calle 14 # 13 - 195, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573183369542",
     "logoUrl": "/assets/anillos/banner.png",
     "taxRate": 0

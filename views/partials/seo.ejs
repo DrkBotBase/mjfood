@@ -1,4 +1,11 @@
 <%
+  const direccion = (locals.config && config.direccion) || 'La Playa, Eduardo Santos, Barranquilla, 080001';
+  const partes = direccion.split(', ');
+  
+  const streetAddress = partes[0];
+  const addressLocality = partes.slice(1, -1).join(', ');
+  const postalCode = partes[partes.length - 1];
+  
   let nombreFinal = (locals.config && config.nombre) || (locals.info && info.name_page) || 'MJ Food';
 %>
 
@@ -16,7 +23,9 @@
   <% } %>
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "<%= (locals.config && config.direccion) || 'MJ Food Online' %>",
+    "streetAddress": "<%= streetAddress %>",
+    "addressLocality": "<%= addressLocality %>",
+    "postalCode": "<%= postalCode %>",
     "addressCountry": "CO"
   },
   "menu": "https://mjfood.top/<%= (locals.config && config.extension) || '' %>",

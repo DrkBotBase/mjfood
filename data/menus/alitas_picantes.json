@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["food", "fastfood"],
+      "categories": ["Restaurante", "Comidas Rapidas", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Alitas Picantes",
-    "direccion": "calle 8 # 12 - 05",
+    "direccion": "calle 8 # 12 - 05, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573004863753",
     "logoUrl": "/assets/alitas_picantes/banner.png"
   },

@@ -12,7 +12,7 @@
     "pwa": {
       "short_name": "Taylor Wok",
       "name": "Taylor Wok - Pedidos",
-      "description": "Restaurante de comida china.",
+      "description": "Tu comida china favorita, recién hecha y lista para disfrutar en casa. Sabores auténticos y entrega rápida. ¡Pide online ahora!",
       "theme_color": "#e74c3c",
       "background_color": "#e74c3c",
       "display": "standalone",
@@ -24,11 +24,11 @@
           "type": "image/png"
         }
       ],
-      "categories": ["Restaurante", "Comida China", "Wok"],
+      "categories": ["Restaurante", "Comida China", "Wok", "Domicilios"],
       "lang": "es"
     },
     "nombre": "Taylor Wok",
-    "direccion": "Cra 10 # 8 - 66",
+    "direccion": "Cra 10 # 8 - 66, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573052169035",
     "logoUrl": "/assets/taylor_wok/banner.png",
     "taxRate": 0
