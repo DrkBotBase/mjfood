@@ -274,7 +274,7 @@
     <script>
         const socket = io();
         socket.on('connect', () => {
-            console.log('Conectado...');
+            //console.log('Conectado...');
         });
 
         window.restaurantData = <%- typeof menuData !== "undefined" ? JSON.stringify(menuData) : '{}' %>;

@@ -1,41 +1,96 @@
 <%
   const direccion = (locals.config && config.direccion) || 'La Playa, Eduardo Santos, Barranquilla, 080001';
   const partes = direccion.split(', ');
-  
   const streetAddress = partes[0];
   const addressLocality = partes.slice(1, -1).join(', ');
   const postalCode = partes[partes.length - 1];
-  
-  let nombreFinal = (locals.config && config.nombre) || (locals.info && info.name_page) || 'MJ Food';
+
+  const nombreFinal = (locals.config && config.nombre) 
+        || (locals.info && info.name_page) 
+        || 'MJFOOD';
+
+  const baseUrl = info.dominio;
+  const pageUrl = baseUrl + "/" + ((locals.config && config.extension) || "");
+  const logoUrl = baseUrl + ((locals.config && config.logoUrl) || "/assets/banner.jpg");
 %>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "<%= (locals.config && config.extension) ? 'Restaurant' : 'WebSite' %>",
-  "name": "<%= nombreFinal %>",
-  "image": "https://mjfood.top<%= (locals.config && config.logoUrl) || '/assets/banner.png' %>",
-  "url": "https://mjfood.top/<%= (locals.config && config.extension) || '' %>",
-  <% if (locals.config && config.extension) { %>
-  "priceRange": "$$", 
-  "telephone": "+<%= config.telefonoWhatsApp %>", 
-  "servesCuisine": "<%= (locals.config.pwa && config.pwa.categories.join(', ')) || 'Restaurante' %>",
-  <% } %>
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "<%= streetAddress %>",
-    "addressLocality": "<%= addressLocality %>",
-    "postalCode": "<%= postalCode %>",
-    "addressCountry": "CO"
-  },
-  "menu": "https://mjfood.top/<%= (locals.config && config.extension) || '' %>",
-  "publisher": {
-    "@type": "Organization",
-    "name": "MJ Food",
-    "logo": {
+  "@graph": [
+
+    {
+      "@type": "WebPage",
+      "@id": "<%= pageUrl %>#webpage",
+      "url": "<%= pageUrl %>",
+      "name": "<%= nombreFinal %>",
+      "isPartOf": {
+        "@id": "<%= baseUrl %>#website"
+      },
+      "about": {
+        "@id": "<%= baseUrl %>#organization"
+      },
+      "primaryImageOfPage": {
+        "@id": "<%= logoUrl %>#primaryimage"
+      },
+      "image": {
+        "@id": "<%= logoUrl %>#primaryimage"
+      },
+      "description": <%= info.desc %>",
+      "inLanguage": "es"
+    },
+
+    {
       "@type": "ImageObject",
-      "url": "https://mjfood.top/assets/banner.png"
+      "@id": "<%= logoUrl %>#primaryimage",
+      "url": "<%= logoUrl %>",
+      "contentUrl": "<%= logoUrl %>"
+    },
+
+    {
+      "@type": "WebSite",
+      "@id": "<%= baseUrl %>#website",
+      "url": "<%= baseUrl %>/",
+      "name": "<%= info.name_page %>",
+      "publisher": {
+        "@id": "<%= baseUrl %>#organization"
+      },
+      "inLanguage": "es"
+    },
+
+    {
+      "@type": "Organization",
+      "@id": "<%= baseUrl %>#organization",
+      "name": "<%= info.name_page %>",
+      "url": "<%= baseUrl %>/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "<%= baseUrl %>/assets/banner.jpg",
+        "width": 512,
+        "height": 512
+      }
     }
-  }
+    <% if (locals.config && config.extension) { %>
+    ,
+    {
+      "@type": "Restaurant",
+      "@id": "<%= pageUrl %>#restaurant",
+      "name": "<%= nombreFinal %>",
+      "image": "<%= logoUrl %>",
+      "url": "<%= pageUrl %>",
+      "telephone": "+<%= config.telefonoWhatsApp %>",
+      "priceRange": "$$",
+      "servesCuisine": "<%= (locals.config.pwa && config.pwa.categories.join(', ')) || 'Restaurante' %>",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "<%= streetAddress %>",
+        "addressLocality": "<%= addressLocality %>",
+        "postalCode": "<%= postalCode %>",
+        "addressCountry": "CO"
+      },
+      "menu": "<%= pageUrl %>"
+    }
+    <% } %>
+  ]
 }
 </script>
