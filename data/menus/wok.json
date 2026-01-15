@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/taylor_wok/icon.jpg",
+          "src": "/assets/taylor_wok/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

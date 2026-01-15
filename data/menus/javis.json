@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/javis/icon.jpg",
+          "src": "/assets/javis/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

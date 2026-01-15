@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/crb_burger/icon.jpg",
+          "src": "/assets/crb_burger/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

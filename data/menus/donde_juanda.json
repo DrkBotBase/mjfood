@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/donde_juanda/icon.jpg",
+          "src": "/assets/donde_juanda/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

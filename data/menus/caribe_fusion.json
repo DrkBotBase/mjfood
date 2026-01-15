@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/caribe_fusion/icon.jpg",
+          "src": "/assets/caribe_fusion/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

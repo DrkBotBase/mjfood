@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/alitas_picantes/icon.jpg",
+          "src": "/assets/alitas_picantes/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }

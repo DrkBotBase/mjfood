@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/the_ruso/icon.jpg",
+          "src": "/assets/the_ruso/icon.png",
           "sizes": "512x512",
           "type": "image/png"
         }
