@@ -6,7 +6,7 @@ module.exports = {
     desc: 'MJFOOD: La plataforma líder en menús digitales QR para restaurantes. Optimiza tu servicio, elimina el papel y mejora la experiencia de tus clientes hoy mismo.',
     dominio: 'https://mjfood.top',
     whatsapp: '17755107666',
-    keywords: 'menú digital, restaurantes, comida, pedidos online, código QR, carta digital, menú QR, MJ Food, restaurantes Colombia, tecnología restaurantes',
+    keywords: 'menú digital, restaurantes, comida, pedidos online, código QR, carta digital, menú QR, MJ Food, Restaurantes Colombia, Tecnología Restaurantes',
     colorTheme: '#e0e5ec',
     fb_app_id: '',
     logo: 'banner',

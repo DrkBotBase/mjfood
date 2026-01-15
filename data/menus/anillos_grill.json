@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/anillos/icon.png",
+          "src": "/assets/anillos/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "Anillos Grill",
     "direccion": "Calle 14 # 13 - 195, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573183369542",
-    "logoUrl": "/assets/anillos/banner.png",
+    "logoUrl": "/assets/anillos/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

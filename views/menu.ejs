@@ -311,7 +311,7 @@
             }
         
             const banner = document.getElementById('restaurant-banner');
-            banner.src = data.config.logoUrl || '/assets/banner.png';
+            banner.src = data.config.logoUrl || '/assets/banner.jpg';
             banner.alt = `${data.config.nombre}`;
             
             const transferDetails = document.getElementById('transferencia-details');
@@ -547,7 +547,7 @@
                         <div class="space-y-4">
                         ${cat.items.map(item => `
                             <div class="neumorphic-pressed rounded-2xl p-4 flex items-center gap-4">
-                                <img src="${item.image || window.restaurantData.config.logoUrl || '/assets/banner.png'}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
+                                <img src="${item.image || window.restaurantData.config.logoUrl || '/assets/banner.jpg'}" alt="${item.name}" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg flex-shrink-0">
                                 <div class="flex-grow">
                                     <h3 class="text-sm md:text-lg font-bold">${item.name}</h3>
                                     <p class="text-sm text-color my-1 hidden sm:block">${item.description}</p>

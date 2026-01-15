@@ -5,7 +5,7 @@
     "nombre": "Delipost",
     "direccion": "Calle 8 # 11 - 05, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573242496180",
-    "logoUrl": "/assets/delipost/banner.png"
+    "logoUrl": "/assets/delipost/banner.jpg"
   },
   "schedule": [
     { "day": 0, "open": "16:30", "close": "22:45" }, 

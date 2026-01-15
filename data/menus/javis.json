@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/javis/icon.png",
+          "src": "/assets/javis/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "Javis",
     "direccion": "Cra 18 # 19b - 04, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573184023206",
-    "logoUrl": "/assets/javis/banner.png",
+    "logoUrl": "/assets/javis/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

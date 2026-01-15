@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/crb_burger/icon.png",
+          "src": "/assets/crb_burger/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "CRB Burger",
     "direccion": "Calle 14 # 14 - 18, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573042048572",
-    "logoUrl": "/assets/crb_burger/banner.png",
+    "logoUrl": "/assets/crb_burger/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

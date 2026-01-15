@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/the_ruso/icon.png",
+          "src": "/assets/the_ruso/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "The Ruso Fast Food",
     "direccion": "Calle 14 # 13 - 135, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573017179786",
-    "logoUrl": "/assets/the_ruso/banner.png",
+    "logoUrl": "/assets/the_ruso/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

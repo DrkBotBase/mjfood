@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/taylor_wok/icon.png",
+          "src": "/assets/taylor_wok/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "Taylor Wok",
     "direccion": "Cra 10 # 8 - 66, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573052169035",
-    "logoUrl": "/assets/taylor_wok/banner.png",
+    "logoUrl": "/assets/taylor_wok/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

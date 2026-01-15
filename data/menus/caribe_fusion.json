@@ -19,7 +19,7 @@
       "orientation": "portrait",
       "icons": [
         {
-          "src": "/assets/caribe_fusion/icon.png",
+          "src": "/assets/caribe_fusion/icon.jpg",
           "sizes": "512x512",
           "type": "image/png"
         }
@@ -30,7 +30,7 @@
     "nombre": "Wok Caribe Fusión",
     "direccion": "Calle 14 # 10 - 31, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573013847510",
-    "logoUrl": "/assets/caribe_fusion/banner.png",
+    "logoUrl": "/assets/caribe_fusion/banner.jpg",
     "taxRate": 0
   },
   "schedule": [

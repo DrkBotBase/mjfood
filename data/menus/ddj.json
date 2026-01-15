@@ -5,7 +5,7 @@
     "nombre": "Donde Junior",
     "direccion": "Calle 8 # 11 - 05, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573116688641",
-    "logoUrl": "/assets/ddj/banner.png"
+    "logoUrl": "/assets/ddj/banner.jpg"
   },
   "schedule": [
     { "day": 0, "open": "17:00", "close": "01:00" }, 
