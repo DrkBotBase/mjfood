@@ -332,7 +332,7 @@ app.get('/:restaurante/manifest.json', (req, res) => {
       "sizes": "512x512",
       "type": "image/png"
     }],
-    categories: pwa.categories || ["food", "restaurant"],
+    categories: pwa.categories || ["Restaurantes", "Menú Digital", "App Pedidos"],
     lang: pwa.lang || "es"
   };
 

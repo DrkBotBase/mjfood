@@ -31,9 +31,10 @@
     
     <link rel="manifest" href="<%= typeof manifestUrl !== 'undefined' ? manifestUrl : '/manifest.json' %>">
     
-    <link rel="icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/icon.png' %>">
-    <link rel="apple-touch-icon" href="<%= typeof pwa.icon !== 'undefined' ? pwa.icon : '/assets/icon.png' %>">
-    
+    <link rel="shortcut icon" href="/assets/<%= info.icon %>.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/assets/<%= info.icon %>.png">
+    <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
+  
     <%- include("partials/seo") %>
     
     <link rel="stylesheet" href="/css/output.css">
