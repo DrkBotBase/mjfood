@@ -31,7 +31,8 @@
     "direccion": "Cra 10 # 8 - 66, La Playa, Eduardo Santos, Barranquilla, 080001",
     "telefonoWhatsApp": "573052169035",
     "logoUrl": "/assets/taylor_wok/banner.jpg",
-    "taxRate": 0
+    "taxRate": 0,
+    "lastmod": "2026-01-15"
   },
   "schedule": [
     { "day": 0, "open": "10:00", "close": "20:00" }, 

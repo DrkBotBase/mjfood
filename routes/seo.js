@@ -6,29 +6,30 @@ const { cargarMenusDesdeArchivos } = require('../utils/recargarMenus');
 
 router.get('/sitemap.xml', async (req, res) => {
   try {
-    const menus = await cargarMenusDesdeArchivos();
+    const menus = await cargarMenusDesdeArchivos(); 
     const extensiones = Object.keys(menus);
-
-    const fechaHoy = new Date().toISOString().split('T')[0];
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mjfood.top/</loc>
-    <lastmod>${fechaHoy}</lastmod>
+    <lastmod>2026-01-15</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mjfood.top/lista</loc>
-    <lastmod>${fechaHoy}</lastmod>
+    <lastmod>2026-01-15</lastmod>
     <priority>0.8</priority>
   </url>`;
 
     extensiones.forEach(slug => {
+      const menu = menus[slug];
+      const lastmod = menu.config.lastmod || "2026-01-15";
+
       xml += `
   <url>
     <loc>https://mjfood.top/${slug}</loc>
-    <lastmod>${fechaHoy}</lastmod>
+    <lastmod>${lastmod}</lastmod>
     <priority>0.7</priority>
   </url>`;
     });
@@ -43,7 +44,6 @@ router.get('/sitemap.xml', async (req, res) => {
     res.status(500).end();
   }
 });
-;
 
 router.get('/robots.txt', (req, res) => {
     res.type('text/plain');

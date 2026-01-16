@@ -361,6 +361,7 @@ const { sincronizarUsuarios } = require('./utils/syncUsers');
 
 (async () => {
   menus = await cargarMenusDesdeArchivos();
+  
   console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
 
   await sincronizarUsuarios();
