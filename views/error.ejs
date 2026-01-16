@@ -30,50 +30,47 @@
     <meta name="twitter:image" content="/assets/<%= info.logo %>.png">
     <meta name="twitter:image:alt" content="<%= name_page %>">
     
-    <link rel="shortcut icon" href="/assets/<%= info.icon %>.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" href="/assets/<%= info.icon %>.png">
-    <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="/assets/icon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" href="/assets/icon.png">
     
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="/css/output.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapvis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-    <!-- Estilos personalizados -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-    :root {
-      --text-color: <%= info.colorBase.text %>;
-      --primary-color: <%= info.colorBase.primary %>;
-      --bg-color: <%= info.colorBase.bg %>;
-      --light-shadow: <%= info.colorBase.light %>;
-      --dark-shadow: <%= info.colorBase.dark %>;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    .neumorphic-flat {
-      background: var(--bg-color);
-      box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
-    }
-    .neumorphic-button {
-      background: var(--bg-color);
-      box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
-      transition: all 0.2s ease-in-out;
-    }
-    .neumorphic-button:hover {
-      box-shadow: 3px 3px 7px var(--dark-shadow), -3px -3px 7px var(--light-shadow);
-    }
-    .neumorphic-button:active {
-      box-shadow: inset 3px 3px 7px var(--dark-shadow), inset -3px -3px 7px var(--light-shadow);
-    }
-    .accent-text {
-      color: var(--primary-color);
-    }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+      :root {
+        --text-color: <%= info.colorBase.text %>;
+        --primary-color: <%= info.colorBase.primary %>;
+        --bg-color: <%= info.colorBase.bg %>;
+        --light-shadow: <%= info.colorBase.light %>;
+        --dark-shadow: <%= info.colorBase.dark %>;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+      .neumorphic-flat {
+        background: var(--bg-color);
+        box-shadow: 7px 7px 15px var(--dark-shadow), -7px -7px 15px var(--light-shadow);
+      }
+      .neumorphic-button {
+        background: var(--bg-color);
+        box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+        transition: all 0.2s ease-in-out;
+      }
+      .neumorphic-button:hover {
+        box-shadow: 3px 3px 7px var(--dark-shadow), -3px -3px 7px var(--light-shadow);
+      }
+      .neumorphic-button:active {
+        box-shadow: inset 3px 3px 7px var(--dark-shadow), inset -3px -3px 7px var(--light-shadow);
+      }
+      .accent-text {
+        color: var(--primary-color);
+      }
     </style>
 </head>
 <body class="antialiased">

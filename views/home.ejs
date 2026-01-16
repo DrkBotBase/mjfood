@@ -32,24 +32,19 @@
   
   <link rel="manifest" href="/lista/manifest.json">
   
-  <link rel="shortcut icon" href="/assets/<%= info.icon %>.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" href="/assets/<%= info.icon %>.png">
-  <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
-  
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="shortcut icon" href="/assets/icon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+    
   <%- include("partials/seo") %>
   
   <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS y Font Awesome 
-  <script src="https://cdn.tailwindcss.com"></script>
-  -->
   <link rel="stylesheet" href="/css/output.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,900;1,900&display=swap');
     :root {
       --primary-color: <%= info.colorBase.primary %>;
       --bg-color: <%= info.colorBase.bg %>;

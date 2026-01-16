@@ -31,19 +31,18 @@
   <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.jpg">
   <meta name="twitter:image:alt" content="<%= info.name_page %>">
   
-  <link rel="shortcut icon" href="/assets/<%= info.icon %>.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" href="/assets/<%= info.icon %>.png">
-  <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="shortcut icon" href="/assets/icon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
   
   <%- include("partials/seo") %>
   
   <link rel="stylesheet" href="/css/output.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     :root {
       --text-color: <%= info.colorBase.text %>;
       --primary-color: <%= info.colorBase.primary %>;

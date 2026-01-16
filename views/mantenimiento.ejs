@@ -13,9 +13,10 @@
     <meta property="og:title" content="<%= info.name_page %> - Fuera de servicio">
     <meta property="og:description" content="<%= message %>.">
     
-    <link rel="shortcut icon" href="/assets/<%= info.icon %>.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" href="/assets/<%= info.icon %>.png">
-    <link rel="apple-touch-icon" href="/assets/<%= info.icon %>.png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="/assets/icon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/assets/icon.png">
+    <link rel="apple-touch-icon" href="/assets/icon.png">
   
     <meta property="og:image" content="/assets/<%= info.logo %>.png">
     <meta property="og:image:alt" content="<%= info.name_page %>">
@@ -33,11 +34,10 @@
     
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="/css/output.css">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapvis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-    <!-- Estilos personalizados -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     :root {
       --text-color: <%= info.colorBase.text %>;
       --primary-color: <%= info.colorBase.primary %>;
