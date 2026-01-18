@@ -16,7 +16,7 @@
   
   <meta property="og:title" content="<%= info.name_page %>">
   <meta property="og:description" content="<%= info.desc %>.">
-  <meta property="og:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
+  <meta property="og:image" content="<%= info.dominio %>/assets/<%= info.logo %>.jpg">
   <meta property="og:image:alt" content="<%= info.name_page %>">
   <meta property="fb:app_id" content="<%= info.fb_app_id %>">
   <meta property="og:url" content="<%= info.dominio %>/lista">
@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= info.name_page %>">
   <meta name="twitter:description" content="<%= info.desc %>">
-  <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.png">
+  <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.jpg">
   <meta name="twitter:image:alt" content="<%= info.name_page %>">
   
   <link rel="manifest" href="/lista/manifest.json">
@@ -40,11 +40,12 @@
   <%- include("partials/seo") %>
   
   <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/css/output.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,900;1,900&display=swap');
     :root {
       --primary-color: <%= info.colorBase.primary %>;
       --bg-color: <%= info.colorBase.bg %>;

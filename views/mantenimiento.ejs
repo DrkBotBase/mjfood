@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" href="/assets/icon.png">
     <link rel="apple-touch-icon" href="/assets/icon.png">
   
-    <meta property="og:image" content="/assets/<%= info.logo %>.png">
+    <meta property="og:image" content="/assets/<%= info.logo %>.jpg">
     <meta property="og:image:alt" content="<%= info.name_page %>">
     <meta property="fb:app_id" content="">
     <meta property="og:url" content="<%= info.dominio %>">
@@ -29,16 +29,18 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= info.name_page %> - Fuera de servicio">
     <meta name="twitter:description" content="<%= message %>">
-    <meta name="twitter:image" content="/assets/<%= info.logo %>.png">
+    <meta name="twitter:image" content="/assets/<%= info.logo %>.jpg">
     <meta name="twitter:image:alt" content="<%= info.name_page %>">
     
     <!-- Tailwind CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/css/output.css">
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    :root {
+      :root {
       --text-color: <%= info.colorBase.text %>;
       --primary-color: <%= info.colorBase.primary %>;
       --bg-color: <%= info.colorBase.bg %>;

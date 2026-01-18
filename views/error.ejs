@@ -16,7 +16,7 @@
     <meta property="og:title" content="<%= name_page %>">
     <meta property="og:description" content="<%= message %>.">
     
-    <meta property="og:image" content="/assets/<%= info.logo %>.png">
+    <meta property="og:image" content="/assets/<%= info.logo %>.jpg">
     <meta property="og:image:alt" content="<%= name_page %>">
     <meta property="fb:app_id" content="">
     <meta property="og:url" content="<%= info.dominio %>">
@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<%= name_page %>">
     <meta name="twitter:description" content="<%= message %>">
-    <meta name="twitter:image" content="/assets/<%= info.logo %>.png">
+    <meta name="twitter:image" content="/assets/<%= info.logo %>.jpg">
     <meta name="twitter:image:alt" content="<%= name_page %>">
     
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -37,10 +37,12 @@
     
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="/css/output.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
       :root {
         --text-color: <%= info.colorBase.text %>;
         --primary-color: <%= info.colorBase.primary %>;
