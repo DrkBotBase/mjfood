@@ -210,6 +210,7 @@ app.get('/lista', async (req, res) => {
 
     res.render('home', {
       info,
+      title: "Comida a domicilio",
       desc: "Encuentra los mejores restaurantes con entrega a domicilio cerca de tí. Deléitate con la mejor comida.",
       restaurantes: paginatedRestaurants,
       carouselAds,

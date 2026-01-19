@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Comida a domicilio | MJFOOD</title>
+  <title><%= title %> | <%= info.name_page %></title>
   
   <meta name="description" content="<%= desc %>">
   <meta name="keywords" content="<%= info.keywords %>">
@@ -14,7 +14,7 @@
   <meta name="googlebot" content="index, follow">
   <link rel="canonical" href="<%= info.dominio %>/lista">
   
-  <meta property="og:title" content="<%= info.name_page %>">
+  <meta property="og:title" content="<%= title %>">
   <meta property="og:description" content="<%= desc %>.">
   <meta property="og:image" content="<%= info.dominio %>/assets/banner_restaurante.jpg">
   <meta property="og:image:alt" content="<%= info.name_page %> Restaurantes">
@@ -25,7 +25,7 @@
   <meta property="og:locale" content="es_ES">
   
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="<%= info.name_page %>">
+  <meta name="twitter:title" content="<%= title %>">
   <meta name="twitter:description" content="<%= desc %>">
   <meta name="twitter:image" content="<%= info.dominio %>/assets/<%= info.logo %>.jpg">
   <meta name="twitter:image:alt" content="<%= info.name_page %> Restaurantes">
