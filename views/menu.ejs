@@ -31,10 +31,10 @@
     
     <link rel="manifest" href="<%= typeof manifestUrl !== 'undefined' ? manifestUrl : '/manifest.json' %>">
     
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="shortcut icon" href="/assets/icon.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" href="/assets/icon.png">
-    <link rel="apple-touch-icon" href="/assets/icon.png">
+    <link rel="icon" href="<%= info.dominio %>/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="<%= info.dominio %>/assets/icon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="<%= info.dominio %>/assets/icon.png">
+    <link rel="apple-touch-icon" href="<%= info.dominio %>/assets/icon.png">
   
     <%- include("partials/seo") %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
