@@ -48,10 +48,10 @@
   ],
   "paymentInfo": {
     "transfer": { 
-      "bankName": "Nequi", 
+      "bankName": "Nequi",
       "accountType": "Cuenta", 
       "accountNumber": "3013829664", 
-      "accountHolder": "Kev*** Per***" 
+      "accountHolder": "Kev** Per**" 
     }
   },
   "menu": [

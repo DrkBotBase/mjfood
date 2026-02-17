@@ -247,7 +247,7 @@ app.get('/lista/manifest.json', (req, res) => {
     "display": "standalone",
     "orientation": "portrait",
     "start_url": "/lista",
-    "scope": "/lista",
+    "scope": "/",
     "icons": [
       {
         "src": "/assets/icon.png",
@@ -325,7 +325,7 @@ app.get('/:restaurante/manifest.json', (req, res) => {
     background_color: pwa.background_color || "#e0e5ec",
     display: pwa.display || "standalone",
     start_url: pwa.start_url || `/${req.params.restaurante}/`,
-    scope: pwa.scope || `/${req.params.restaurante}/`,
+    scope: "/",
     icons: pwa.icons || [{
       "src": `/assets/icon.png`,
       "sizes": "512x512",
