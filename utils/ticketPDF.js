@@ -1,4 +1,4 @@
-const PDFDocument = require('pdfkit');
+/*const PDFDocument = require('pdfkit');
 const QRCode = require('qrcode');
 
 async function generarTicketPDF(pedido) {
@@ -65,4 +65,4 @@ async function generarTicketPDF(pedido) {
   });
 }
 
-module.exports = { generarTicketPDF };
+module.exports = { generarTicketPDF };*/
