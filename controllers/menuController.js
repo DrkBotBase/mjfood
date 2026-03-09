@@ -107,13 +107,17 @@ exports.addItem = async (req, res) => {
             });
         });
         item.id = maxId + 1;
+        item.variants = item.variants || [];
 
-        await Menu.findOneAndUpdate(
+        const updatedMenu = await Menu.findOneAndUpdate(
             { restauranteId: extension, "menu._id": categoryId },
-            { $push: { "menu.$.items": item } }
+            { $push: { "menu.$.items": item } },
+            { new: true }
         );
 
-        res.json({ success: true, message: 'Producto añadido.' });
+        const addedItem = updatedMenu.menu.id(categoryId).items.find(i => i.id === item.id);
+
+        res.json({ success: true, message: 'Producto añadido.', item: addedItem });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al añadir producto.' });
@@ -125,18 +129,24 @@ exports.updateItem = async (req, res) => {
         const { extension } = req.session.user;
         const { categoryId, itemId, item } = req.body;
 
+        const updateFields = {
+            "menu.$[cat].items.$[itm].name": item.name,
+            "menu.$[cat].items.$[itm].description": item.description,
+            "menu.$[cat].items.$[itm].basePrice": item.basePrice,
+            "menu.$[cat].items.$[itm].image": item.image
+        };
+
+        if (item.variants) {
+            updateFields["menu.$[cat].items.$[itm].variants"] = item.variants;
+        }
+
         await Menu.findOneAndUpdate(
             {
                 restauranteId: extension,
                 "menu._id": categoryId
             },
             {
-                $set: {
-                    "menu.$[cat].items.$[itm].name": item.name,
-                    "menu.$[cat].items.$[itm].description": item.description,
-                    "menu.$[cat].items.$[itm].basePrice": item.basePrice,
-                    "menu.$[cat].items.$[itm].image": item.image
-                }
+                $set: updateFields
             },
             {
                 arrayFilters: [
@@ -146,10 +156,41 @@ exports.updateItem = async (req, res) => {
             }
         );
 
-        res.json({ success: true, message: 'Producto actualizado.' });
+        res.json({ success: true, message: 'Producto actualizado.', item: { id: parseInt(itemId), ...item } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar producto.' });
+    }
+};
+
+exports.updateVariants = async (req, res) => {
+    try {
+        const { extension } = req.session.user;
+        const { categoryId, itemId, variants } = req.body;
+
+        await Menu.findOneAndUpdate(
+            {
+                restauranteId: extension,
+                "menu._id": categoryId
+            },
+            {
+                $set: {
+                    "menu.$[cat].items.$[itm].variants": variants
+                }
+            },
+            {
+                arrayFilters: [
+                    { "cat._id": categoryId },
+                    { "itm.id": parseInt(itemId) }
+                ],
+                new: true
+            }
+        );
+
+        res.json({ success: true, message: 'Variantes actualizadas.', variants });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al actualizar variantes.' });
     }
 };
 

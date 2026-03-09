@@ -50,7 +50,8 @@ async function sincronizarUsuarios() {
     // Ensure a super admin exists
     const superAdmin = await User.findOne({ username: 'superadmin' });
     if (!superAdmin) {
-      const hashedPassword = await bcrypt.hash('admin1234', 10);
+      const adminPassword = process.env.ADMIN_PASSWORD || Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
       const newAdmin = new User({
         username: 'superadmin',
         password: hashedPassword,
@@ -58,7 +59,13 @@ async function sincronizarUsuarios() {
         role: 'admin'
       });
       await newAdmin.save();
-      console.log('Usuario superadmin creado (username: superadmin, password: admin1234)');
+      console.log('Usuario superadmin creado.');
+      if (!process.env.ADMIN_PASSWORD) {
+        console.log(`===========================================`);
+        console.log(`⚠️  Contraseña generada aleatoriamente para superadmin: ${adminPassword}`);
+        console.log(`Por favor, anótala o cámbiala.`);
+        console.log(`===========================================`);
+      }
     }
 
   } catch (error) {

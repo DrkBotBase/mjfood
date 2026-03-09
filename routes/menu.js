@@ -9,6 +9,7 @@ router.post('/category', isAuthenticated, menuController.addCategory);
 router.delete('/category/:categoryId', isAuthenticated, menuController.deleteCategory);
 router.post('/item', isAuthenticated, menuController.addItem);
 router.put('/item', isAuthenticated, menuController.updateItem);
+router.put('/item/variants', isAuthenticated, menuController.updateVariants);
 router.delete('/item/:categoryId/:itemId', isAuthenticated, menuController.deleteItem);
 
 module.exports = router;
