@@ -9,6 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 const session = require('express-session');
+const passport = require('passport');
+require('./config/passport')(passport);
 const { info, PORT } = require('./config');
 
 app.use((req, res, next) => {
@@ -48,14 +50,31 @@ app.use((req, res, next) => {
 const { cargarMenusDesdeArchivos } = require('./utils/recargarMenus');
 
 app.use(session({
-  secret: process.env.SECRET_KEY,
+  secret: process.env.SECRET_KEY || 'secret',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Compatibilidad con código viejo (req.session.user)
+app.use((req, res, next) => {
+  if (req.isAuthenticated() && !req.session.user) {
+    req.session.user = {
+      extension: req.user.restauranteId,
+      username: req.user.username,
+      role: req.user.role
+    };
+  }
+  next();
+});
 
 const seoRouter = require('./routes/seo')
 const User = require('./models/User');
+const Menu = require('./models/Menu');
 const adminRoutes = require('./routes/admin');
+const menuRoutes = require('./routes/menu');
 const pedidosRouter = require('./routes/pedidos');
 const jornadaRouter = require('./routes/jornada');
 const estadisticasRouter = require('./routes/estadisticas');
@@ -64,12 +83,12 @@ app.use("/", seoRouter)
 app.use("/push", require('./routes/push'));
 app.use('/likes', likesRoutes);
 app.use('/admin', adminRoutes);
+app.use('/menu', menuRoutes);
 app.use('/pedidos', pedidosRouter);
 app.use('/jornada', jornadaRouter);
 app.use('/panel', estadisticasRouter);
 
-let menus = {};
-const IDS_EXCLUIR = ['demo'];
+const IDS_EXCLUIR = ['demo', 'admin_panel'];
 app.get('/', (req,res) => {
   try {
     res.render('index', {
@@ -141,9 +160,9 @@ app.get('/lista', async (req, res) => {
       };
     }
 
-    let restaurantesInfo = Object.values(menus)
-      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension))
-      .map(menu => {
+    const menus = await Menu.find({ restauranteId: { $nin: IDS_EXCLUIR } }).lean();
+
+    let restaurantesInfo = menus.map(menu => {
         const config = menu.config;
         const schedule = menu.schedule || [];
         const horario = procesarHorario(schedule);
@@ -267,12 +286,12 @@ app.get('/ping', (req, res) => {
 });
 
 app.get('/:restaurante', async (req, res) => {
-  const restauranteData = menus[req.params.restaurante];
   const restauranteId = req.params.restaurante;
+  const restauranteData = await Menu.findOne({ restauranteId }).lean();
   
   if (!restauranteData) {
-    const restaurantesDisponibles = Object.values(menus)
-      .filter(menu => !IDS_EXCLUIR.includes(menu.config.extension))
+    const menusActivos = await Menu.find({ restauranteId: { $nin: IDS_EXCLUIR } }).lean();
+    const restaurantesDisponibles = menusActivos
       .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
       .map(menu => ({
         id: menu.config.extension,
@@ -310,13 +329,15 @@ app.get('/:restaurante', async (req, res) => {
     color: restauranteData.config?.color
   });
 });
-app.get('/:restaurante/manifest.json', (req, res) => {
-  const restauranteData = menus[req.params.restaurante];
+app.get('/:restaurante/manifest.json', async (req, res) => {
+  const restauranteId = req.params.restaurante;
+  const restauranteData = await Menu.findOne({ restauranteId }).lean();
+
   if (!restauranteData) {
     return res.status(404).json({ error: 'Restaurante no encontrado' });
   }
 
-  const pwa = restauranteData.config.pwa || {};
+  const pwa = restauranteData.config?.pwa || {};
   const manifest = {
     short_name: pwa.short_name || restauranteData.config.nombre,
     name: pwa.name || `${restauranteData.config.nombre} - Menú Digital`,
@@ -339,13 +360,14 @@ app.get('/:restaurante/manifest.json', (req, res) => {
 });
 
 app.get('/admin/recargar-menus', async (req, res) => {
-  menus = await cargarMenusDesdeArchivos();
-  const ordenados = Object.values(menus)
+  await sincronizarUsuarios();
+  const menus = await Menu.find().lean();
+  const ordenados = menus
     .sort((a, b) => (a.config.orden ?? 999) - (b.config.orden ?? 999))
     .map(menu => menu.config.extension);
   res.json({
     success: true,
-    message: `Menús recargados. ${ordenados.length} restaurantes cargados`,
+    message: `Menús sincronizados en BD. ${ordenados.length} restaurantes procesados`,
     restaurantes: ordenados
   });
 });
@@ -359,11 +381,12 @@ setInterval(() => {
 const { sincronizarUsuarios } = require('./utils/syncUsers');
 
 (async () => {
-  menus = await cargarMenusDesdeArchivos();
-  
-  console.log(`Carga inicial completada: ${Object.keys(menus).length} restaurantes cargados`);
+  const mongoose = require('mongoose');
+  await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mjfood');
 
   await sincronizarUsuarios();
+
+  console.log(`Carga inicial y sincronización completada.`);
 
   server.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);

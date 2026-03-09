@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   restauranteId: { type: String, required: true },
-  role: { type: String, default: 'admin' },
+  role: { type: String, enum: ['admin', 'restaurante'], default: 'restaurante' },
   likes: {
     count: { type: Number, default: 0 },
     ips: { type: [String], default: [] }

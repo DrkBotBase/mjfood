@@ -17,31 +17,34 @@ exports.getLogin = (req, res) => {
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-exports.postLogin = async (req, res) => {
-    const { username, password } = req.body;
+const passport = require('passport');
 
-    try {
-        const user = await User.findOne({ username });
-
-        if (user && bcrypt.compareSync(password, user.password)) {
-            req.session.user = {
-                extension: user.restauranteId,
-                username: user.username
-            };
-            res.redirect('/admin/panel');
-        } else {
-            res.render('panel-login', {
-                info: {
-                    name_page: 'Login'
-                },
-                error: 'Credenciales incorrectas',
+exports.postLogin = (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            console.error('Error en el login:', err);
+            return res.status(500).send('Error interno del servidor');
+        }
+        if (!user) {
+            return res.render('panel-login', {
+                info: { name_page: 'Login' },
+                error: info ? info.message : 'Credenciales incorrectas',
                 restaurante: 'general'
             });
         }
-    } catch (error) {
-        console.error('Error en el login:', error);
-        res.status(500).send('Error interno del servidor');
-    }
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error('Error en req.logIn:', err);
+                return res.status(500).send('Error interno del servidor');
+            }
+            req.session.user = {
+                extension: user.restauranteId,
+                username: user.username,
+                role: user.role
+            };
+            res.redirect('/admin/panel');
+        });
+    })(req, res, next);
 };
 
 exports.getPanel = async (req, res) => {
@@ -103,8 +106,67 @@ exports.getPanel = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    req.session.destroy();
-    res.redirect('/admin/login');
+    req.logout(() => {
+        req.session.destroy();
+        res.redirect('/admin/login');
+    });
+};
+
+exports.getRegister = (req, res) => {
+    if (req.session.user.role !== 'admin') {
+        return res.status(403).send('Acceso denegado. Solo administradores pueden registrar restaurantes.');
+    }
+    res.render('register', {
+        info: { name_page: 'Registro de Restaurante' },
+        error: null,
+        success: null,
+        restaurante: req.session.user.extension
+    });
+};
+
+exports.postRegister = async (req, res) => {
+    if (req.session.user.role !== 'admin') {
+        return res.status(403).send('Acceso denegado.');
+    }
+
+    const { username, password, restauranteId } = req.body;
+
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.render('register', {
+                info: { name_page: 'Registro de Restaurante' },
+                error: 'El nombre de usuario ya existe',
+                success: null,
+                restaurante: req.session.user.extension
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            username,
+            password: hashedPassword,
+            restauranteId,
+            role: 'restaurante'
+        });
+
+        await newUser.save();
+
+        res.render('register', {
+            info: { name_page: 'Registro de Restaurante' },
+            error: null,
+            success: 'Restaurante registrado exitosamente',
+            restaurante: req.session.user.extension
+        });
+    } catch (error) {
+        console.error('Error en el registro:', error);
+        res.status(500).render('register', {
+            info: { name_page: 'Registro de Restaurante' },
+            error: 'Error interno del servidor',
+            success: null,
+            restaurante: req.session.user.extension
+        });
+    }
 };
 
 exports.changePassword = async (req, res) => {

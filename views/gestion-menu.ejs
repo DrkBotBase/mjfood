@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Menú - <%= restaurante %></title>
+    <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Gestión de Menú</h1>
+            <a href="/admin/panel" class="bg-gray-500 text-white px-4 py-2 rounded">Volver al Panel</a>
+        </div>
+
+        <div class="bg-white rounded shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Añadir Categoría</h2>
+            <div class="flex gap-4">
+                <input type="text" id="newCategoryName" placeholder="Nombre de categoría" class="border p-2 rounded flex-1">
+                <button onclick="addCategory()" class="bg-blue-500 text-white px-4 py-2 rounded">Añadir</button>
+            </div>
+        </div>
+
+        <div id="categoriesContainer" class="space-y-6">
+            <% if(menuData && menuData.menu) { %>
+                <% menuData.menu.forEach((cat) => { %>
+                    <div class="bg-white rounded shadow p-6">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                            <h2 class="text-2xl font-bold text-gray-800"><%= cat.category %></h2>
+                            <div>
+                                <button onclick="openAddItemModal('<%= cat._id %>')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">Añadir Producto</button>
+                                <button onclick="deleteCategory('<%= cat._id %>')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Eliminar Categoría</button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <% cat.items.forEach((item) => { %>
+                                <div class="border rounded p-4 flex justify-between items-center">
+                                    <div class="flex items-center gap-4">
+                                        <% if(item.image) { %>
+                                            <img src="<%= item.image %>" class="w-16 h-16 object-cover rounded">
+                                        <% } else { %>
+                                            <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-500"><i class="fa fa-image"></i></div>
+                                        <% } %>
+                                        <div>
+                                            <h3 class="font-bold"><%= item.name %></h3>
+                                            <p class="text-sm text-gray-600"><%= item.description %></p>
+                                            <p class="text-green-600 font-semibold">$<%= item.basePrice %></p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button onclick="openEditItemModal('<%= cat._id %>', '<%= item.id %>', '<%= item.name %>', '<%= item.description %>', <%= item.basePrice %>, '<%= item.image %>')" class="text-blue-500 hover:text-blue-700 mr-2">Editar</button>
+                                        <button onclick="deleteItem('<%= cat._id %>', '<%= item.id %>')" class="text-red-500 hover:text-red-700">Eliminar</button>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Modal para añadir/editar producto -->
+    <div id="addItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4" id="modalTitle">Añadir Producto</h3>
+            <input type="hidden" id="modalCategoryId">
+            <input type="hidden" id="modalItemId">
+            <div class="space-y-4">
+                <input type="text" id="itemName" placeholder="Nombre" class="w-full border p-2 rounded">
+                <textarea id="itemDesc" placeholder="Descripción" class="w-full border p-2 rounded"></textarea>
+                <input type="number" id="itemPrice" placeholder="Precio Base" class="w-full border p-2 rounded">
+                <input type="text" id="itemImage" placeholder="URL de la imagen (opcional)" class="w-full border p-2 rounded">
+            </div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button onclick="closeAddItemModal()" class="bg-gray-300 px-4 py-2 rounded">Cancelar</button>
+                <button onclick="submitItem()" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function addCategory() {
+            const name = document.getElementById('newCategoryName').value;
+            if(!name) return;
+            const res = await fetch('/menu/category', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ category: name })
+            });
+            if(res.ok) window.location.reload();
+        }
+
+        async function deleteCategory(id) {
+            if(!confirm('¿Eliminar categoría?')) return;
+            const res = await fetch(`/menu/category/${id}`, { method: 'DELETE' });
+            if(res.ok) window.location.reload();
+        }
+
+        function openAddItemModal(catId) {
+            document.getElementById('modalTitle').innerText = 'Añadir Producto';
+            document.getElementById('modalCategoryId').value = catId;
+            document.getElementById('modalItemId').value = '';
+
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemDesc').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemImage').value = '';
+
+            document.getElementById('addItemModal').classList.remove('hidden');
+        }
+
+        function openEditItemModal(catId, itemId, name, desc, price, image) {
+            document.getElementById('modalTitle').innerText = 'Editar Producto';
+            document.getElementById('modalCategoryId').value = catId;
+            document.getElementById('modalItemId').value = itemId;
+
+            document.getElementById('itemName').value = name;
+            document.getElementById('itemDesc').value = desc;
+            document.getElementById('itemPrice').value = price;
+            document.getElementById('itemImage').value = image || '';
+
+            document.getElementById('addItemModal').classList.remove('hidden');
+        }
+
+        function closeAddItemModal() {
+            document.getElementById('addItemModal').classList.add('hidden');
+        }
+
+        async function submitItem() {
+            const catId = document.getElementById('modalCategoryId').value;
+            const itemId = document.getElementById('modalItemId').value;
+
+            const item = {
+                name: document.getElementById('itemName').value,
+                description: document.getElementById('itemDesc').value,
+                basePrice: parseFloat(document.getElementById('itemPrice').value) || 0,
+                image: document.getElementById('itemImage').value
+            };
+
+            let url = '/menu/item';
+            let method = 'POST';
+
+            // Si es nuevo item, mandamos array de variants vacío
+            if (!itemId) {
+                item.variants = [];
+            }
+
+            let body = { categoryId: catId, item };
+
+            if (itemId) {
+                method = 'PUT';
+                item.id = parseInt(itemId);
+                body = { categoryId: catId, itemId: itemId, item };
+            }
+
+            const res = await fetch(url, {
+                method: method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+            if(res.ok) window.location.reload();
+        }
+
+        async function deleteItem(catId, itemId) {
+            if(!confirm('¿Eliminar producto?')) return;
+            const res = await fetch(`/menu/item/${catId}/${itemId}`, { method: 'DELETE' });
+            if(res.ok) window.location.reload();
+        }
+    </script>
+</body>
+</html>
