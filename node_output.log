@@ -1,0 +1,35 @@
+✅ Conexión exitosa a MongoDB Atlas
+Base de datos: mjfood
+Host: localhost
+Menú sincronizado para alitas_picantes
+Menú sincronizado para wok_caribe_fusion
+Menú sincronizado para https://vinapp.co/comidarapida-dondejunior
+Menú sincronizado para anillos_grill
+Menú sincronizado para https://vinapp.co/delipost
+Menú sincronizado para picadas_donde_juanda
+Menú sincronizado para crb_burger
+Menú sincronizado para the_ruso_fast_food
+Menú sincronizado para javis
+Menú sincronizado para taylor_wok
+Carga inicial y sincronización completada.
+node:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at /app/app.js:391:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1976:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v22.22.0
