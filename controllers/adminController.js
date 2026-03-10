@@ -2,6 +2,7 @@
 const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
 const Pedido = require('../models/pedido');
 const EstadisticasJornada = require('../models/EstadisticasJornada');
+const Menu = require('../models/Menu');
 const moment = require('moment-timezone');
 
 exports.getLogin = (req, res) => {
@@ -49,7 +50,7 @@ exports.postLogin = (req, res, next) => {
 
 exports.getPanel = async (req, res) => {
     try {
-        const { extension } = req.session.user;
+        const { extension, role } = req.session.user;
         const estadisticas = await RestauranteEstadisticas.findOne({ extension });
         const inicioMes = moment().tz('America/Bogota').startOf('month').toDate();
         const finMes = moment().tz('America/Bogota').endOf('month').toDate();
@@ -72,6 +73,8 @@ exports.getPanel = async (req, res) => {
         const historialPedidos = await Pedido.find({ extension })
             .sort({ fechaPedido: -1 })
             .limit(10);
+
+        const menuData = await Menu.findOne({ restauranteId: extension }).lean() || {};
 
         res.render('panel', {
             info: {
@@ -97,7 +100,9 @@ exports.getPanel = async (req, res) => {
                     total: await Pedido.countDocuments({ extension }),
                     paginas: Math.ceil(await Pedido.countDocuments({ extension }) / 10)
                 }
-            }
+            },
+            menuData: menuData,
+            userRole: role
         });
     } catch (error) {
         console.error('Error al obtener el panel:', error);

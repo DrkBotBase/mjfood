@@ -16,7 +16,7 @@ async function sincronizarUsuarios() {
       // Ensure user exists
       const existingUser = await User.findOne({ restauranteId });
       if (!existingUser) {
-        const tempPassword = 'user1234';//Math.random().toString(36).slice(-8);
+        const tempPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(tempPassword, 10);
         const newUser = new User({
           username: restauranteId,

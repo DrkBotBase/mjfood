@@ -29,11 +29,7 @@ exports.getMenuAdmin = async (req, res) => {
             await menu.save();
         }
 
-        res.render('gestion-menu', {
-            info: { name_page: 'Gestión de Menú' },
-            restaurante: extension,
-            menuData: menu
-        });
+        res.redirect('/admin/panel');
     } catch (error) {
         console.error('Error al obtener menú:', error);
         res.status(500).send('Error interno del servidor');
