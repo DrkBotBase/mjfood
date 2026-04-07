@@ -10,4 +10,7 @@ router.get('/panel', isAuthenticated, adminController.getPanel);
 router.get('/logout', adminController.logout);
 router.post('/change-password', isAuthenticated, adminController.changePassword);
 
+router.get('/register', isAuthenticated, adminController.getRegister);
+router.post('/register', isAuthenticated, adminController.postRegister);
+
 module.exports = router;
