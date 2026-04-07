@@ -1,4 +1,3 @@
-// controllers/estadisticasController.js
 const Pedido = require('../models/pedido');
 const EstadisticasJornada = require('../models/EstadisticasJornada');
 const RestauranteEstadisticas = require('../models/restaurante_estadisticas');

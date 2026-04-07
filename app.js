@@ -58,7 +58,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Compatibilidad con código viejo (req.session.user)
 app.use((req, res, next) => {
   if (req.isAuthenticated() && !req.session.user) {
     req.session.user = {
@@ -281,6 +280,137 @@ app.get('/lista/manifest.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(manifest));
 });
+app.get('/demo', (req, res) => {
+    const menuDemo = {
+      "config": {
+        "extension": "demo",
+        "orden": "999",
+        "color": {
+          "text": "#e0e1e5",
+          "primary": "#0cf106",
+          "bg": "#17171b",
+          "light": "#262222",
+          "dark": "#000000"
+        },
+        "pwa": {
+          "short_name": "MJ Street Prime",
+          "name": "MJ Street Prime - Pedidos",
+          "description": "Comida Urban-Premium.",
+          "theme_color": "#17171b",
+          "background_color": "#17171b",
+          "display": "standalone",
+          "orientation": "portrait",
+          "icons": [
+            {
+              "src": "/assets/demo/icon.png",
+              "sizes": "512x512",
+              "type": "image/png"
+            }
+          ],
+          "categories": ["food", "urban", "premium"],
+          "lang": "es"
+        },
+        "nombre": "MJ Street Prime",
+        "direccion": "Calle 94 # 51B",
+        "telefonoWhatsApp": "17755107666",
+        "logoUrl": "/assets/demo/banner.jpg",
+        "taxRate": 0
+      },
+      "schedule": [
+        { "day": 0, "open": "24h", "close": "24h" }, 
+        { "day": 1, "open": "24h", "close": "24h" }, 
+        { "day": 2, "open": "24h", "close": "24h" }, 
+        { "day": 3, "open": "24h", "close": "24h" }, 
+        { "day": 4, "open": "24h", "close": "24h" }, 
+        { "day": 5, "open": "24h", "close": "24h" }, 
+        { "day": 6, "open": "24h", "close": "24h" }
+      ],
+      "shippingZones": [
+        { "name": "Villa Carolina", "price": 6000 },
+        { "name": "Miramar", "price": 8000 },
+        { "name": "Ciudad Mayorquín", "price": 8000 },
+        { "name": "Villa Country", "price": 10000 },
+        { "name": "Alameda del Río", "price": 12000 },
+        { "name": "Villa Campestre", "price": 12000 },
+        { "name": "El Prado", "price": 12000},
+        { "name": "Otra (consultar)", "price": 0 }
+      ],
+      "paymentInfo": {
+        "transfer": {
+          "bankName": "Ahorros",
+          "accountType": "Cuenta",
+          "accountNumber": "08-0000-1234",
+          "accountHolder": "MJFOOD"
+        }
+      },
+      "menu": [
+        {"category": "Signature Combos", "items": [
+          {"id": 1, "name": "Combo Urban King", "description": "Doble Smash Burger OG + Papas Brutales + Bebida Urban 400ml", "basePrice": 36000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+          {"id": 2, "name": "Combo Mafia Supreme", "description": "Smash Bacon Mafia + Papas con cheddar + Bebida Premium Mix", "basePrice": 39000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+          {"id": 3, "name": "Combo Fire Bowl", "description": "Fire Chicken Bowl + Papas Brutales + Bebida Urban 400ml", "basePrice": 35000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+          {"id": 4, "name": "Combo La Truffle", "description": "Smash La Truffle + Papas finas + Bebida Premium", "basePrice": 42000, "image": "", "placeholder": "Descripción para el producto...", "variants": []},
+          {"id": 5, "name": "Combo Dúo Trap", "description": "2 Smash OG + Papas Brutales XL + 2 Bebidas Urban 400ml", "basePrice": 58000, "image": "", "placeholder": "Descripción para el producto...", "variants": []}
+        ]},
+        {"category": "Smash Burgers", "items": [
+          {"id": 6, "name": "Smash OG", "description": "Carne angus smash, doble cheddar, salsa house y pan brioche", "basePrice": 22000, "image": "", "placeholder": "Sin cebolla? Queso extra? etc...",
+            "variants": [
+              {"type": "radio", "name": "Nivel Picante", "options": [{"label": "Suave", "price": 0}, {"label": "Medio", "price": 0}, {"label": "🔥 Fuego", "price": 3000}]},
+              {"type": "checkbox", "name": "Extras", "options": [{"label": "Extra Cheddar", "price": 4000}, {"label": "Bacon", "price": 5000}, {"label": "Guacamole", "price": 5000}]}
+          ]},
+          {"id": 7, "name": "Bacon Mafia", "description": "Smash caramelizada, tocineta ahumada, cheddar fundido, salsa secreta", "basePrice": 26000, "image": "", "placeholder": "Sin cebolla? Extra bacon? etc...",
+            "variants": [
+              {"type": "radio", "name": "Nivel Picante", "options": [{"label": "Suave", "price": 0}, {"label": "🔥 Medio", "price": 2000}, {"label": "🔥🔥 Mafia Fuego", "price": 4000}]},
+              {"type": "checkbox", "name": "Extras", "options": [{"label": "Queso Extra", "price": 4000}, {"label": "Bacon Extra", "price": 5000}]}
+          ]},
+          {"id": 8, "name": "La Truffle", "description": "Salsa de trufa premium, queso gouda fundido, toque ahumado deluxe", "basePrice": 29000, "image": "", "placeholder": "Extra trufa? Sin salsa? etc...",
+            "variants": [
+              {"type": "radio", "name": "Nivel Picante", "options": [{"label": "Zero Picante", "price": 0}, {"label": "🔥 Suave", "price": 3000}]},
+              {"type": "checkbox", "name": "Extras", "options": [{"label": "Extra Truffle", "price": 6000}, {"label": "Queso Doble", "price": 4000}]}
+          ]},
+          {"id": 9, "name": "Spicy Queen", "description": "Smash con jalapeño, cheddar flaming, salsa latin fuego", "basePrice": 28000, "image": "", "placeholder": "Sin picante? extra salsa? etc...",
+            "variants": [
+              {"type": "radio", "name": "Nivel Picante", "options": [{"label": "Zero picante", "price": 0}, {"label": "🔥 Medio", "price": 0}, {"label": "🔥🔥🔥 Insano", "price": 0}]}
+          ]}
+        ]},
+        {"category": "Bowls & Street Meals", "items": [
+          {"id": 10, "name": "Fire Chicken Bowl", "description": "Pollo ahumado, maíz dulce, aguacate, arroz frito urbano", "basePrice": 23000, "image": "", "placeholder": "Extra proteína? Sin cebolla? etc...",
+            "variants": [
+            {"type": "radio", "name": "Tamaño", "options": [{"label": "Personal", "price": 0}, {"label": "Grande", "price": 6000}]},
+            {"type": "radio", "name": "Nivel Picante", "options": [{"label": "Suave", "price": 0}, {"label": "🔥 Medio", "price": 3000}, {"label": "🔥🔥🔥 Inmortal", "price": 5000}]},
+            {"type": "checkbox", "name": "Extras", "options": [{"label": "Guacamole Premium", "price": 5000}, {"label": "Cheddar Fundido", "price": 4000}, {"label": "Bacon", "price": 5000}]}
+          ]},
+          {"id": 11, "name": "Carne Street Bowl", "description": "Carne a la parrilla, vegetales salteados, arroz latino con garlic butter", "basePrice": 24000, "image": "", "placeholder": "Extra bacon? menos arroz? etc...",
+            "variants": [
+              {"type": "radio", "name": "Tamaño", "options": [{"label": "Personal", "price": 0}, {"label": "Grande", "price": 6000}]},
+              {"type": "checkbox", "name": "Extras", "options": [{"label": "Doble Carne", "price": 6000}, {"label": "Queso fundido", "price": 4000}]}
+          ]},
+          {"id": 12, "name": "Veggie Supreme", "description": "Mix vegetal con aguacate, champiñones grill y maíz dulce", "basePrice": 21000, "image": "", "placeholder": "Sin cebolla? extra aguacate? etc...",
+            "variants": [
+              {"type": "radio", "name": "Tamaño", "options": [{"label": "Personal", "price": 0}, {"label": "Grande", "price": 6000}]}
+          ]}
+        ]},
+        {"category": "Postres Urbanos", "items": [
+          {"id": 13, "name": "Churro Supreme", "description": "Churros artesanales con baño de dulce de leche & canela", "basePrice": 12000, "image": "", "placeholder": "Extra nutella? etc...", "variants": []},
+          {"id": 14, "name": "Brownie Criminal", "description": "Brownie caliente con helado suave y fudge oscuro", "basePrice": 14000, "image": "", "placeholder": "Extra helado? etc...", "variants": []}
+        ]},
+        {"category": "Bebidas Urbanas", "items": [
+          {"id": 15, "name": "Coca Cola 400ml", "description": "Botella fría", "basePrice": 4000, "image": "", "placeholder": "", "variants": []},
+          {"id": 16, "name": "Limonada Fresa Frozen", "description": "Frozen estilo urbano, fresca, natural", "basePrice": 7000, "image": "", "placeholder": "", "variants": []},
+          {"id": 17, "name": "Maracuyá Cold", "description": "Frappé de maracuyá natural", "basePrice": 7000, "image": "", "placeholder": "", "variants": []}
+        ]},
+        {"category": "Bebidas Premium & Mixology", "items": [
+          {"id": 18, "name": "Michelada Latina", "description": "Versión urbana refrescante con borde sal-limón y fusión cítrica", "basePrice": 10000, "image": "", "placeholder": "", "variants": []},
+          {"id": 19, "name": "Red Bull Fusión Tropical", "description": "Red Bull + maracuyá frost + aire frutal fresco", "basePrice": 14000, "image": "", "placeholder": "", "variants": []},
+          {"id": 20, "name": "Limonada Negra Premium", "description": "Limonada con carbón activado detox y notas cítricas", "basePrice": 11000, "image": "", "placeholder": "", "variants": []}
+        ]}
+      ]
+    }
+  res.render('demo', {
+    info,
+    likes: '250',
+    demo: menuDemo
+  })
+})
 app.get('/ping', (req, res) => {
   res.send('Pong');
 });
@@ -314,10 +444,8 @@ app.get('/:restaurante', async (req, res) => {
   res.render('menu', {
     info,
     menuData: restauranteData,
-    // nuevo
     restauranteId,
     likes: user?.likes?.count || 0,
-    //
     config: restauranteData.config,
     manifestUrl: `/${req.params.restaurante}/manifest.json`,
     pwa: {
@@ -376,19 +504,19 @@ setInterval(() => {
   fetch(`${info.dominio}/ping`)
     .then(res => console.log('Ping interno enviado:', res.status))
     .catch(err => console.error('Error en el ping:', err.message));
-}, 14 * 60 * 1000);
+}, 25 * 60 * 1000);
 
-const { sincronizarUsuarios } = require('./utils/syncUsers');
+//const { sincronizarUsuarios } = require('./utils/syncUsers');
 
 (async () => {
   const mongoose = require('mongoose');
   await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mjfood');
 
-  await sincronizarUsuarios();
+  //await sincronizarUsuarios();
 
   console.log(`Carga inicial y sincronización completada.`);
 
   server.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor ejecutándose en el puerto: ${PORT}`);
   });
 })();

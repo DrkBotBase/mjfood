@@ -11,9 +11,8 @@ async function sincronizarUsuarios() {
     const restaurantesIds = Object.keys(menus);
 
     for (const restauranteId of restaurantesIds) {
-      if (restauranteId === 'demo') continue;
+      //if (restauranteId === 'demo') continue;
 
-      // Ensure user exists
       const existingUser = await User.findOne({ restauranteId });
       if (!existingUser) {
         const tempPassword = Math.random().toString(36).slice(-8);
@@ -32,10 +31,8 @@ async function sincronizarUsuarios() {
         console.log(`===========================================`);
       }
 
-      // Sync menu data to MongoDB
       const menuData = menus[restauranteId];
       if (menuData) {
-        // Ensure restauranteId is set on the document
         menuData.restauranteId = restauranteId;
 
         await Menu.findOneAndUpdate(
@@ -47,7 +44,6 @@ async function sincronizarUsuarios() {
       }
     }
 
-    // Ensure a super admin exists
     const superAdmin = await User.findOne({ username: 'superadmin' });
     if (!superAdmin) {
       const adminPassword = process.env.ADMIN_PASSWORD || Math.random().toString(36).slice(-8);

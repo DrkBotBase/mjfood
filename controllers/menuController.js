@@ -5,12 +5,9 @@ exports.getMenuAdmin = async (req, res) => {
         const { extension, role } = req.session.user;
         let menu;
 
-        // Si es admin, puede ver el menú que desee o su propio panel.
-        // Aquí simplificamos para que el owner edite su menú
         menu = await Menu.findOne({ restauranteId: extension });
 
         if (!menu) {
-            // crear uno vacio
             menu = new Menu({
                 restauranteId: extension,
                 config: {
@@ -41,7 +38,6 @@ exports.updateMenuConfig = async (req, res) => {
         const { extension } = req.session.user;
         const configData = req.body;
 
-        // update config partially
         await Menu.findOneAndUpdate(
             { restauranteId: extension },
             { $set: { config: configData } },
@@ -94,7 +90,6 @@ exports.addItem = async (req, res) => {
         const { extension } = req.session.user;
         const { categoryId, item } = req.body;
 
-        // generate new item id
         const menu = await Menu.findOne({ restauranteId: extension });
         let maxId = 0;
         menu.menu.forEach(cat => {

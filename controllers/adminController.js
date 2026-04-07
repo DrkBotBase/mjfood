@@ -1,4 +1,3 @@
-// controllers/adminController.js
 const RestauranteEstadisticas = require('../models/restaurante_estadisticas');
 const Pedido = require('../models/pedido');
 const EstadisticasJornada = require('../models/EstadisticasJornada');
@@ -75,7 +74,7 @@ exports.getPanel = async (req, res) => {
             .limit(10);
 
         const menuData = await Menu.findOne({ restauranteId: extension }).lean() || {};
-
+        
         res.render('panel', {
             info: {
                 name_page: 'Panel de Control',
@@ -154,8 +153,11 @@ exports.postRegister = async (req, res) => {
             restauranteId,
             role: 'restaurante'
         });
-
         await newUser.save();
+        
+        const menuData = crearMenuPorDefecto(restauranteId, username);
+        const newMenu = new Menu(menuData);
+        await newMenu.save();
 
         res.render('register', {
             info: { name_page: 'Registro de Restaurante' },
@@ -195,3 +197,65 @@ exports.changePassword = async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor.' });
     }
 };
+
+function crearMenuPorDefecto(restauranteId, nombreRestaurante) {
+    const extension = restauranteId.toLowerCase().replace(/\s+/g, '_');
+    
+    return {
+        restauranteId: restauranteId,
+        config: {
+            extension: extension,
+            orden: "999",
+            color: {
+                text: "#e0e1e5",
+                primary: "#0cf106",
+                bg: "#17171b",
+                light: "#262222",
+                dark: "#000000"
+            },
+            pwa: {
+                short_name: nombreRestaurante.substring(0, 15) || "Mi Restaurante",
+                name: nombreRestaurante + " - Pedidos",
+                description: "Realiza tus pedidos online de manera fácil y rápida. Disfruta de nuestros deliciosos platos en la comodidad de tu hogar.",
+                theme_color: "#17171b",
+                background_color: "#17171b",
+                display: "standalone",
+                orientation: "portrait",
+                icons: [
+                    {
+                        src: "/assets/icon.png",
+                        sizes: "512x512",
+                        type: "image/png"
+                    }
+                ],
+                categories: ["Restaurante", "Comida", "Domicilios"],
+                lang: "es"
+            },
+            nombre: nombreRestaurante,
+            direccion: "direccíon por definir",
+            telefonoWhatsApp: "",
+            logoUrl: "/assets/banner.jpg",
+            taxRate: 0
+        },
+        schedule: [
+            { day: 0, open: "11:30", close: "22:00" },
+            { day: 1, open: "11:30", close: "22:00" },
+            { day: 2, open: "11:30", close: "22:00" },
+            { day: 3, open: "11:30", close: "22:00" },
+            { day: 4, open: "11:30", close: "22:00" },
+            { day: 5, open: "11:30", close: "22:00" },
+            { day: 6, open: "11:30", close: "22:00" }
+        ],
+        shippingZones: [{ "name": "Otra (consultar)", "price": 0 }],
+        paymentInfo: {
+            transfer: {
+                bankName: "Por definir",
+                accountType: "Cuenta",
+                accountNumber: "",
+                accountHolder: ""
+            }
+        },
+        activeCategory: "",
+        menu: []
+    };
+}
